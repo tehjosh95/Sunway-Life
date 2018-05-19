@@ -120,11 +120,6 @@ public class Inbox extends AppCompatActivity {
                 else{
                     noUsersText.setVisibility(View.GONE);
                     usersList.setVisibility(View.VISIBLE);
-                    Log.d("***al","" + al.size());
-                    Log.d("***al2","" + al2.size());
-                    Log.d("***al3","" + al3.size());
-                    Log.d("***al4","" + al4.size());
-                    Log.d("***totalusers2","" + totalUsers);
                     myAdapter = new ArrayAdapter<String>(Inbox.this,android.R.layout.simple_list_item_1,al4);
                     usersList.setAdapter(myAdapter);
                 }
