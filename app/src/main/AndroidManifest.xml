@@ -50,7 +50,8 @@
         <activity android:name=".ActivityPosted" />
         <activity android:name=".ViewActivity" />
         <activity android:name=".AddActivity" />
-        <activity android:name=".EditActivity"></activity>
+        <activity android:name=".EditActivity" />
+        <activity android:name=".ListOfClubsActivity"></activity>
     </application>
 
 </manifest>

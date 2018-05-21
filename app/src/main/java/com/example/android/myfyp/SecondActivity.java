@@ -207,7 +207,7 @@ public class SecondActivity extends AppCompatActivity {
         PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(3).withName("Edit and View Posted");
         PrimaryDrawerItem item4 = new PrimaryDrawerItem().withIdentifier(4).withName("Logout");
         PrimaryDrawerItem item5 = new PrimaryDrawerItem().withIdentifier(5).withName("Inbox");
-
+        PrimaryDrawerItem item6 = new PrimaryDrawerItem().withIdentifier(6).withName("List of Clubs with search");
 
         Drawer result = new DrawerBuilder()
                 .withActivity(this)
@@ -218,7 +218,8 @@ public class SecondActivity extends AppCompatActivity {
                         item2,
                         item3,
                         item4,
-                        item5
+                        item5,
+                        item6
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -238,6 +239,9 @@ public class SecondActivity extends AppCompatActivity {
                                 break;
                             case 5:
                                 startActivity(new Intent(SecondActivity.this, Inbox.class));
+                                break;
+                            case 6:
+                                startActivity(new Intent(SecondActivity.this, ListOfClubsActivity.class));
                                 break;
                         }
                         return true;
