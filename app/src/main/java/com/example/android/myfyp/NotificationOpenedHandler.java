@@ -39,7 +39,7 @@ class NotificationOpenedHandler implements OneSignal.NotificationOpenedHandler {
     }
 
     private void startApp() {
-        Intent intent = new Intent(mContext, Chat.class)
+        Intent intent = new Intent(mContext, Inbox.class)
                 .setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("recipient", "atan@email,com");
         intent.putExtra("sender", "tei@email,com");

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Adapter;
@@ -43,6 +44,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Inbox extends AppCompatActivity {
+    Toolbar toolbar;
+
     ListView usersList;
     TextView noUsersText;
     ArrayList<Long> al = new ArrayList<>();
@@ -66,7 +69,8 @@ public class Inbox extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance();
         mDataRef = mDatabase.getReference();
         firebaseAuth = FirebaseAuth.getInstance();
-
+        toolbar = (Toolbar)findViewById(R.id.toolbarMain);
+        toolbar.setTitle("Long Press to Delete");
         usersList = (ListView)findViewById(R.id.usersList);
         noUsersText = (TextView)findViewById(R.id.noUsersText);
         firebaseAuth = FirebaseAuth.getInstance();
@@ -120,6 +124,7 @@ public class Inbox extends AppCompatActivity {
                 else{
                     noUsersText.setVisibility(View.GONE);
                     usersList.setVisibility(View.VISIBLE);
+
                     myAdapter = new ArrayAdapter<String>(Inbox.this,android.R.layout.simple_list_item_1,al4);
                     usersList.setAdapter(myAdapter);
                 }

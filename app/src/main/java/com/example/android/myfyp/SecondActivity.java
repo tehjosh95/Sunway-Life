@@ -86,7 +86,7 @@ public class SecondActivity extends AppCompatActivity {
 //                .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
 //                .unsubscribeWhenNotificationsAreDisabled(true)
 //                .init();
-//        OneSignal.sendTag("User_ID",firebaseAuth.getCurrentUser().getEmail());
+        OneSignal.sendTag("User_ID",firebaseAuth.getCurrentUser().getEmail());
 
         mDataRef = firebaseDatabase.getReference().child("Item Information");
 //        mDataRef = mDataRef.child("Item Information");
