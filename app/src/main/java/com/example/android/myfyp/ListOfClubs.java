@@ -4,7 +4,8 @@ public class ListOfClubs {
 
     private String name;
     private String image;
-    private String status;
+    private String contact;
+    private String desc;
 
     public ListOfClubs(){
     }
@@ -25,17 +26,18 @@ public class ListOfClubs {
         this.image = image;
     }
 
-    public String getStatus() {
-        return status;
-    }
+    public String getDesc() { return desc; }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+    public void setDesc(String desc) { this.desc = desc; }
 
-    public ListOfClubs(String name, String image, String status) {
+    public String getContact() { return contact; }
+
+    public void setContact(String contact) { this.contact = contact; }
+
+    public ListOfClubs(String name, String image, String contact, String desc) {
         this.name = name;
         this.image = image;
-        this.status = status;
+        this.contact = contact;
+        this.desc = desc;
     }
 }

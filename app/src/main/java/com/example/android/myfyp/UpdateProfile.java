@@ -27,6 +27,7 @@ public class UpdateProfile extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference mDataRef;
+    String userType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,7 @@ public class UpdateProfile extends AppCompatActivity {
                 newUserName.setText(userProfile.getUserName());
                 newUserAge.setText(userProfile.getUserAge());
                 newUserEmail.setText(userProfile.getUserEmail());
+                userType = userProfile.getUserType();
             }
 
             @Override
@@ -66,7 +68,8 @@ public class UpdateProfile extends AppCompatActivity {
                 String name = newUserName.getText().toString();
                 String age = newUserAge.getText().toString();
                 String email = newUserEmail.getText().toString();
-                UserProfile userProfile = new UserProfile(age, email, name);
+                String type = userType;
+                UserProfile userProfile = new UserProfile(age, email, name, type);
 
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -80,15 +83,10 @@ public class UpdateProfile extends AppCompatActivity {
                             public void onComplete(@NonNull Task<Void> task) {
                             }
                         });
-
-
                 mDataRef.setValue(userProfile);
-
                 finish();
             }
         });
-
-
     }
 
     @Override

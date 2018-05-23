@@ -263,14 +263,10 @@ public class SecondActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(SecondActivity.this, AddActivity.class));
+                startActivity(new Intent(SecondActivity.this, AddClubs.class));
             }
         });
-
-
     }
-
-
 
     private void Logout(){
         Log.d("out","###############################"+ username);

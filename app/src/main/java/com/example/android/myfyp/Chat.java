@@ -102,7 +102,7 @@ public class Chat extends AppCompatActivity {
                     addMessageBox("Me:-\n" + message, 1);
                 }
                 else{
-                    addMessageBox(UserDetails.chatWith + ":-\n" + message, 2);
+                    addMessageBox(decodeUserEmail(UserDetails.chatWith) + ":-\n" + message, 2);
                 }
             }
 

@@ -80,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
 
         progressDialog.setMessage("Please wait");
         progressDialog.show();
-
         firebaseAuth.signInWithEmailAndPassword(userName, userPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {

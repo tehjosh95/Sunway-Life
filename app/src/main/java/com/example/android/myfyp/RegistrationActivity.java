@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,10 +25,11 @@ public class RegistrationActivity extends AppCompatActivity{
 
     private EditText userName, userPassword, userEmail, userAge;
     private Button regButton;
-    private TextView userLogin;
+    private TextView userLogin, referAdmin;
     private FirebaseAuth firebaseAuth;
+    private Switch switch1;
     private ImageView userProfilePic;
-    String email, name, age, password;
+    String email, name, age, password, type;
     private DatabaseReference mDataRef;
     private FirebaseDatabase mDatabase;
 
@@ -37,6 +39,7 @@ public class RegistrationActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+
         setupUIViews();
 
         mDatabase = FirebaseDatabase.getInstance();
@@ -89,6 +92,29 @@ public class RegistrationActivity extends AppCompatActivity{
         userLogin = (TextView)findViewById(R.id.tvUserLogin);
         userAge = (EditText)findViewById(R.id.etAge);
         userProfilePic = (ImageView)findViewById(R.id.ivProfile);
+        switch1 = (Switch)findViewById(R.id.switch1);
+        referAdmin = (TextView)findViewById(R.id.referAdmin);
+
+        switch1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (switch1.isChecked()){
+                    userName.setVisibility(View.GONE);
+                    userPassword.setVisibility(View.GONE);
+                    userEmail.setVisibility(View.GONE);
+                    userAge.setVisibility(View.GONE);
+                    regButton.setVisibility(View.GONE);
+                    referAdmin.setVisibility(View.VISIBLE);
+                }else{
+                    userName.setVisibility(View.VISIBLE);
+                    userPassword.setVisibility(View.VISIBLE);
+                    userEmail.setVisibility(View.VISIBLE);
+                    userAge.setVisibility(View.VISIBLE);
+                    regButton.setVisibility(View.VISIBLE);
+                    referAdmin.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     private Boolean validate(){
@@ -98,6 +124,7 @@ public class RegistrationActivity extends AppCompatActivity{
         password = userPassword.getText().toString();
         email = userEmail.getText().toString();
         age = userAge.getText().toString();
+        type = "student";
 
 
         if(name.isEmpty() || password.isEmpty() || email.isEmpty() || age.isEmpty()){
@@ -132,7 +159,7 @@ public class RegistrationActivity extends AppCompatActivity{
 
     private void sendUserData(){
 
-        UserProfile userProfile = new UserProfile(age, email, name);
+        UserProfile userProfile = new UserProfile(age, email, name, type);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 

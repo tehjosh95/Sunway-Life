@@ -43,7 +43,9 @@
         <activity android:name=".ProfileActivity" />
         <activity android:name=".UpdateProfile" />
         <activity android:name=".Users" />
-        <activity android:name=".Chat" />
+        <activity
+            android:name=".Chat"
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".Inbox" />
         <activity android:name=".UpdatePassword" />
         <activity android:name=".MainActivity" />
@@ -51,7 +53,8 @@
         <activity android:name=".ViewActivity" />
         <activity android:name=".AddActivity" />
         <activity android:name=".EditActivity" />
-        <activity android:name=".ListOfClubsActivity"></activity>
+        <activity android:name=".ListOfClubsActivity" />
+        <activity android:name=".AddClubs"></activity>
     </application>
 
 </manifest>

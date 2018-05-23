@@ -50,9 +50,8 @@ public class ClubListAdapter extends RecyclerView.Adapter<ClubListAdapter.ViewHo
         ImageView image = holder.image;
 
         name.setText(contact.getName());
-        status.setText(contact.getStatus());
+        status.setText(contact.getDesc());
         Glide.with(mContext).load(contact.getImage()).into(image);
-
     }
 
 
