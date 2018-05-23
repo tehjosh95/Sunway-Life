@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,10 +19,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ClubProfileActivity extends AppCompatActivity {
 
     private ImageView profilePic;
-    private TextView profileName, profileAge, profileEmail, profileType;
+    private TextView profileName, profileContact, profileDesc, profileType;
     private Button profileUpdate, changePassword;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
@@ -31,12 +32,12 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_club_profile);
 
         profilePic = findViewById(R.id.ivProfilePic);
         profileName = findViewById(R.id.tvProfileName);
-        profileAge = findViewById(R.id.tvProfileAge);
-        profileEmail = findViewById(R.id.tvProfileEmail);
+        profileContact = findViewById(R.id.tvProfileContact);
+        profileDesc = findViewById(R.id.tvProfileDesc);
         profileUpdate = findViewById(R.id.btnProfileUpdate);
         changePassword = findViewById(R.id.btnChangePassword);
         profileType = findViewById(R.id.tvProfileType);
@@ -48,42 +49,44 @@ public class ProfileActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
 
         mDataRef = firebaseDatabase.getReference();
-        mDataRef = mDataRef.child("Users").child(firebaseAuth.getCurrentUser().getUid());
+        mDataRef = mDataRef.child("Clubs").child(firebaseAuth.getCurrentUser().getUid());
 
         mDataRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
-                profileName.setText("Name: " + userProfile.getUserName());
-                profileAge.setText("Age: " + userProfile.getUserAge());
-                profileEmail.setText("Email: " + userProfile.getUserEmail());
-                profileType.setText("User Type: " + userProfile.getUserType());
+                ListOfClubs listOfClubs = dataSnapshot.getValue(ListOfClubs.class);
+                profileName.setText("Name: " + listOfClubs.getName());
+                profileContact.setText("Contact: " + listOfClubs.getContact());
+                profileDesc.setText("Desc: " + listOfClubs.getDesc());
+                profileType.setText("User Type: " + listOfClubs.getUserType());
+                Glide.with(ClubProfileActivity.this).load(listOfClubs.getImage()).into(profilePic);
+
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(ProfileActivity.this, databaseError.getCode(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ClubProfileActivity.this, databaseError.getCode(), Toast.LENGTH_SHORT).show();
             }
         });
 
         profileUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(ProfileActivity.this, UpdateProfile.class));
+                startActivity(new Intent(ClubProfileActivity.this, UpdateProfile.class));
             }
         });
 
         changePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(ProfileActivity.this, UpdatePassword.class));
+                startActivity(new Intent(ClubProfileActivity.this, UpdatePassword.class));
             }
         });
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
-                startActivity(new Intent(ProfileActivity.this, SecondActivity.class));
+                startActivity(new Intent(ClubProfileActivity.this, SecondActivity.class));
             }
         });
     }

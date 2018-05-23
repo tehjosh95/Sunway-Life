@@ -7,6 +7,8 @@ public class ListOfClubs {
     private String contact;
     private String desc;
 
+    private String userType;
+
     public ListOfClubs(){
     }
 
@@ -34,10 +36,15 @@ public class ListOfClubs {
 
     public void setContact(String contact) { this.contact = contact; }
 
-    public ListOfClubs(String name, String image, String contact, String desc) {
+    public String getUserType() { return userType; }
+
+    public void setUserType(String userType) { this.userType = userType; }
+
+    public ListOfClubs(String name, String image, String contact, String desc, String userType) {
         this.name = name;
         this.image = image;
         this.contact = contact;
         this.desc = desc;
+        this.userType = userType;
     }
 }

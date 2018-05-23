@@ -43,6 +43,7 @@ import java.util.UUID;
 public class AddClubs extends AppCompatActivity {
     private ListOfClubs listofclubs= new ListOfClubs();
 
+    private String uid;
     private FirebaseStorage mStorage;
     private StorageReference mStorRef;
     private FirebaseDatabase mDatabase;
@@ -201,6 +202,7 @@ public class AddClubs extends AppCompatActivity {
                 String name = clubName.getText().toString().trim();
                 String cont = clubContact.getText().toString().trim();
                 String desc = clubDesc.getText().toString().trim();
+                String usertype = "club";
 
 //        if (isInputInvalid(name, place, price)) {
 //            onFailedSave();
@@ -209,6 +211,7 @@ public class AddClubs extends AppCompatActivity {
                 listofclubs.setName(name);
                 listofclubs.setContact(cont);
                 listofclubs.setDesc(desc);
+                listofclubs.setUserType(usertype);
 
                 final ProgressDialog progDialog = new ProgressDialog(AddClubs.this,
                         R.style.Theme_AppCompat_DayNight_NoActionBar);
@@ -216,11 +219,11 @@ public class AddClubs extends AppCompatActivity {
                 progDialog.setIndeterminate(true);
                 progDialog.setMessage("Uploading....");
                 progDialog.show();
-                final ListOfClubs listofclubs = new ListOfClubs(name, imgUrl, cont, desc);
+                final ListOfClubs listofclubs = new ListOfClubs(name, imgUrl, cont, desc, usertype);
                 final Runnable uploadTask = new Runnable() {
                     @Override
                     public void run() {
-                        mDataRef.child("Clubs").push().setValue(listofclubs);
+                        mDataRef.child("Clubs").child(uid).setValue(listofclubs);
                         progDialog.dismiss();
                     }
                 };
@@ -233,16 +236,17 @@ public class AddClubs extends AppCompatActivity {
     private void registration(){
         String user_email = clubEmail.getText().toString().trim();
         String user_password = clubPass.getText().toString().trim();
-
+        Log.d("****1", "1");
         firebaseAuth2.createUserWithEmailAndPassword(user_email, user_password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
 
                 if(task.isSuccessful()){
                     //sendEmailVerification();
-                    Toast.makeText(AddClubs.this, "Successfully Registered, Upload complete!", Toast.LENGTH_SHORT).show();
+                    uid = firebaseAuth2.getCurrentUser().getUid();
                     uploadImageToFirebase();
                     firebaseAuth2.signOut();
+                    Toast.makeText(AddClubs.this, "Successfully Registered, Upload complete!", Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(AddClubs.this, "Registration Failed", Toast.LENGTH_SHORT).show();
                 }

@@ -59,7 +59,7 @@ public class SecondActivity extends AppCompatActivity {
 
     private ProgressDialog progDialog;
     private FirebaseAuth firebaseAuth;
-    private DatabaseReference mDataRef;
+    private DatabaseReference mDataRef, mDataRef2, mDataRef3;
     private FirebaseDatabase mDatabase;
     private Button logout;
     private String key;
@@ -89,6 +89,9 @@ public class SecondActivity extends AppCompatActivity {
         OneSignal.sendTag("User_ID",firebaseAuth.getCurrentUser().getEmail());
 
         mDataRef = firebaseDatabase.getReference().child("Item Information");
+        mDataRef2 = firebaseDatabase.getReference().child("Clubs");
+        mDataRef3 = firebaseDatabase.getReference().child("Users");
+
 //        mDataRef = mDataRef.child("Item Information");
 
 
@@ -107,9 +110,6 @@ public class SecondActivity extends AppCompatActivity {
 //                Toast.makeText(SecondActivity.this, databaseError.getCode(), Toast.LENGTH_SHORT).show();
 //            }
 //        });
-
-
-
 
 //        finish();
 
@@ -137,15 +137,9 @@ public class SecondActivity extends AppCompatActivity {
                 for (DataSnapshot child: snapshot.getChildren()) {
                     clubModel ClubModel = child.getValue(clubModel.class);
                     clubModelList.add(ClubModel);
-//                    Log.d("@@@@@@@@@@@@@@@@@@@@", "" + ClubModel.getItem_name());
-//                    Log.d("@@@@@@@@@@@@@@@@@@@@", "" + ClubModel.getItem_place());
-//                    Log.d("@@@@@@@@@@@@@@@@@@@@", "" + ClubModel.getItem_price());
-//                    Log.d("@@@@@@@@@@@@@@@@@@@@", "" + ClubModel.getItem_image());
-//                    Log.d("@@@@@@@@@@@@@@@@@@@@", "" + ClubModel.getItem_owner());
                 }
                 arrayName = new clubModel[clubModelList.size()];
                 arrayName = clubModelList.toArray(arrayName);
-//                Log.d("@@@@@@@@@@@@@@@@array", "" + arrayName.length);
                 adapter = new clubAdapter(SecondActivity.this, clubModelList);
                 recyclerView.setAdapter(adapter);
                 progDialog.dismiss();
@@ -155,10 +149,7 @@ public class SecondActivity extends AppCompatActivity {
                 System.out.println("The read failed: " + databaseError.getMessage());
             }
         });
-
 //        int[] images = {R.drawable.club, R.drawable.club, R.drawable.club, R.drawable.club, R.drawable.club, R.drawable.club, R.drawable.club};
-
-
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -226,7 +217,23 @@ public class SecondActivity extends AppCompatActivity {
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         switch(position){
                             case 1:
-                                startActivity(new Intent(SecondActivity.this, ProfileActivity.class));
+                                mDataRef3.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        if (dataSnapshot.hasChild(firebaseAuth.getCurrentUser().getUid())){
+                                            if (!firebaseAuth.getCurrentUser().getUid().equals("XHR842kZD3cTZTwz7nM5LWJESW72")) {
+                                                startActivity(new Intent(SecondActivity.this, ProfileActivity.class));
+                                            }
+                                        }else{
+                                            startActivity(new Intent(SecondActivity.this, ClubProfileActivity.class));
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
                                 break;
                             case 2:
                                 startActivity(new Intent(SecondActivity.this, Users.class));
@@ -260,12 +267,36 @@ public class SecondActivity extends AppCompatActivity {
         Log.d("after","############################### wait");
         progDialog.setContentView(new ProgressBar(this));
 
-        fab.setOnClickListener(new View.OnClickListener() {
+        mDataRef3.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onClick(View view) {
-                startActivity(new Intent(SecondActivity.this, AddClubs.class));
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(firebaseAuth.getCurrentUser().getUid())){
+                    if (!firebaseAuth.getCurrentUser().getUid().equals("XHR842kZD3cTZTwz7nM5LWJESW72")) {
+                        fab.setVisibility(View.GONE);
+                    }else{
+                        fab.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                startActivity(new Intent(SecondActivity.this, AddClubs.class));
+                            }
+                        });
+                    }
+                }else{
+                    fab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            startActivity(new Intent(SecondActivity.this, AddActivity.class));
+                        }
+                    });
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
+
+
     }
 
     private void Logout(){
