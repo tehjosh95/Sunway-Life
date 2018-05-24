@@ -86,6 +86,7 @@ public class Chat extends AppCompatActivity {
                     lastTime.put("lasttime", ServerValue.TIMESTAMP);
                     mDataRef.child(UserDetails.chatWith + "_" + UserDetails.username).updateChildren(lastTime);
                     mDataRef.child(UserDetails.username + "_" + UserDetails.chatWith).updateChildren(lastTime);
+
                     messageArea.setText("");
                     sendNotification();
                 }
@@ -102,7 +103,7 @@ public class Chat extends AppCompatActivity {
                     addMessageBox("Me:-\n" + message, 1);
                 }
                 else{
-                    addMessageBox(decodeUserEmail(UserDetails.chatWith) + ":-\n" + message, 2);
+                    addMessageBox(decodeUserEmail(UserDetails.name) + ":-\n" + message, 2);
                 }
             }
 

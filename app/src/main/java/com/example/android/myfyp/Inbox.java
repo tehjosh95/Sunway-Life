@@ -52,14 +52,17 @@ public class Inbox extends AppCompatActivity {
     ArrayList<Long> al2 = new ArrayList<>();
     ArrayList<String> al3 = new ArrayList<>();
     ArrayList<String> al4 = new ArrayList<>();
+    ArrayList<String> al5 = new ArrayList<>();
+    ArrayList<String> al6 = new ArrayList<>();
     int totalUsers = 0;
     ProgressDialog pd;
 
-    private DatabaseReference mDataRef;
+    private DatabaseReference mDataRef, mDataRef2;
     private FirebaseDatabase mDatabase;
     private FirebaseAuth firebaseAuth;
     private ListAdapter myAdapter;
     private FirebaseDatabase firebaseDatabase;
+    private String Chatname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,20 +80,20 @@ public class Inbox extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
 
         mDataRef = firebaseDatabase.getReference("messages");
+        mDataRef2 = firebaseDatabase.getReference("Users");
         mDataRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 al.clear();
-                String currentuser = firebaseAuth.getCurrentUser().getEmail().toString();
+                String currentuser = firebaseAuth.getCurrentUser().getUid();
                 int x = 0;
                 for (DataSnapshot child: snapshot.getChildren()) {
-                    String email = child.getKey();
-                    int index = email.indexOf("_");
-                    String key1 = decodeUserEmail(email.substring(0,index));
-                    String key2 = decodeUserEmail(email.substring(index + 1));
-                    String time1 = key1 + "_" + key2;
-                    String time2 = key2 + "_" + key1;
+                    String key = child.getKey();
+                    int index = key.indexOf("_");
+                    String key1 = decodeUserEmail(key.substring(0,index));
+                    final String key2 = decodeUserEmail(key.substring(index + 1));
                     long timing = child.child("lasttime").getValue(Long.class);
+                    Log.d("*****key2", "" + key2);
 
                     if(key1.equals(currentuser)){
                         Log.d("***orderby","" + child.getKey());
@@ -98,35 +101,67 @@ public class Inbox extends AppCompatActivity {
                         al.add(timing);
                         al2.add(timing);
                         al3.add(key2);
+
+                        mDataRef2.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot child : dataSnapshot.getChildren()) {
+
+                                    if (child.getKey().equals(key2)) {
+                                        String caca = child.child("userName").getValue(String.class);
+                                        al5.add(caca);
+
+
+                                        mDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                Collections.sort(al);
+                                                Collections.reverse(al);
+                                                Log.d("***sizeal","" + al6.size());
+                                                al6.clear();
+
+                                                for(int loop1 = 0 ; loop1 < al.size();loop1++){
+                                                    for(int loop2 = 0 ; loop2 < al2.size();loop2++){
+                                                        if(al.get(loop1).equals(al2.get(loop2))){
+                                                            al4.add(loop1, al3.get(loop2));
+                                                            al6.add(loop1, al5.get(loop2));
+                                                        }
+                                                    }
+                                                }
+
+                                                if(totalUsers == 0){
+                                                    Log.d("***totalusers1","" + totalUsers);
+                                                    noUsersText.setVisibility(View.VISIBLE);
+                                                    usersList.setVisibility(View.GONE);
+                                                }
+                                                else{
+                                                    noUsersText.setVisibility(View.GONE);
+                                                    usersList.setVisibility(View.VISIBLE);
+                                                    Log.d("*****list8", "" + al6.size());
+                                                    myAdapter = new ArrayAdapter<String>(Inbox.this,android.R.layout.simple_list_item_1,al6);
+                                                    usersList.setAdapter(myAdapter);
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+
+                                    }
+                                }
+                            }
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                        Log.d("*****al5size", "" + al5.size());
+//                        al5.add(Chatname);
                         x += 1;
                         totalUsers++;
                     }
-                }
-//                arrayName = new lala[contacts.size()];
-//                arrayName = contacts.toArray(arrayName);
-                Collections.sort(al);
-                Collections.reverse(al);
-
-                for(int loop1 = 0 ; loop1 < al.size();loop1++){
-                    for(int loop2 = 0 ; loop2 < al2.size();loop2++){
-                        if(al.get(loop1).equals(al2.get(loop2))){
-                            al4.add(loop1, al3.get(loop2));
-                            Log.d("***hello","" );
-                        }
-                    }
-                }
-
-                if(totalUsers == 0){
-                    Log.d("***totalusers1","" + totalUsers);
-                    noUsersText.setVisibility(View.VISIBLE);
-                    usersList.setVisibility(View.GONE);
-                }
-                else{
-                    noUsersText.setVisibility(View.GONE);
-                    usersList.setVisibility(View.VISIBLE);
-
-                    myAdapter = new ArrayAdapter<String>(Inbox.this,android.R.layout.simple_list_item_1,al4);
-                    usersList.setAdapter(myAdapter);
                 }
             }
             @Override
@@ -140,8 +175,9 @@ public class Inbox extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-                UserDetails.username = encodeUserEmail(user.getEmail());
+                UserDetails.username = encodeUserEmail(user.getUid());
                 UserDetails.chatWith = encodeUserEmail(al4.get(position));
+                UserDetails.name = al6.get(position);
                 Log.d("****chatwith1","****chatwith" + UserDetails.chatWith);
                 Log.d("****username2","****username" + UserDetails.username);
                 startActivity(new Intent(com.example.android.myfyp.Inbox.this, Chat.class));
@@ -165,7 +201,7 @@ public class Inbox extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
 
                         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                        UserDetails.username = encodeUserEmail(user.getEmail());
+                        UserDetails.username = encodeUserEmail(user.getUid());
                         UserDetails.chatWith = encodeUserEmail(al4.get(position));
                         String delete = UserDetails.username + "_" + UserDetails.chatWith;
                         String delete2 = UserDetails.chatWith + "_" + UserDetails.username;

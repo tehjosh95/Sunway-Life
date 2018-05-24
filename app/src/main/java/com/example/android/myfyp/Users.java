@@ -36,9 +36,9 @@ public class Users extends AppCompatActivity {
     ListView usersList;
     TextView noUsersText;
     ArrayList<String> al = new ArrayList<>();
+    ArrayList<String> al2 = new ArrayList<>();
     int totalUsers = 0;
     ProgressDialog pd;
-
     private DatabaseReference mDataRef;
     private FirebaseDatabase mDatabase;
     private FirebaseAuth firebaseAuth;
@@ -123,8 +123,9 @@ public class Users extends AppCompatActivity {
 
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-                UserDetails.username = encodeUserEmail(user.getEmail());
+                UserDetails.username = encodeUserEmail(user.getUid());
                 UserDetails.chatWith = encodeUserEmail(al.get(position));
+                UserDetails.name = (al2.get(position));
                 startActivity(new Intent(Users.this, Chat.class));
             }
         });
@@ -147,7 +148,8 @@ public class Users extends AppCompatActivity {
 
 
                 if(!key.equals(currentuser)) {
-                    al.add(user.getString("userEmail"));
+                    al.add(key);
+                    al2.add(user.getString("userName"));
                 }
 
                 totalUsers++;
@@ -164,7 +166,7 @@ public class Users extends AppCompatActivity {
         else{
             noUsersText.setVisibility(View.GONE);
             usersList.setVisibility(View.VISIBLE);
-            usersList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, al));
+            usersList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, al2));
         }
 
         pd.dismiss();
