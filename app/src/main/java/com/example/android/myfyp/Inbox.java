@@ -85,6 +85,11 @@ public class Inbox extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 al.clear();
+                al2.clear();
+                al3.clear();
+                al4.clear();
+                al5.clear();
+                al6.clear();
                 String currentuser = firebaseAuth.getCurrentUser().getUid();
                 int x = 0;
                 for (DataSnapshot child: snapshot.getChildren()) {
@@ -111,7 +116,6 @@ public class Inbox extends AppCompatActivity {
                                         String caca = child.child("userName").getValue(String.class);
                                         al5.add(caca);
 
-
                                         mDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -119,16 +123,23 @@ public class Inbox extends AppCompatActivity {
                                                 Collections.reverse(al);
                                                 Log.d("***sizeal","" + al6.size());
                                                 al6.clear();
-
+                                                al4.clear();
                                                 for(int loop1 = 0 ; loop1 < al.size();loop1++){
                                                     for(int loop2 = 0 ; loop2 < al2.size();loop2++){
-                                                        if(al.get(loop1).equals(al2.get(loop2))){
+                                                        if(al.get(loop1).equals(al2.get(loop2))) {
                                                             al4.add(loop1, al3.get(loop2));
-                                                            al6.add(loop1, al5.get(loop2));
+                                                            if (al5.size() == al2.size()) {
+                                                                al6.add(loop1, al5.get(loop2));
+                                                            }
                                                         }
                                                     }
                                                 }
-
+                                                Log.d("####size1","" + al.size());
+                                                Log.d("####size2","" + al2.size());
+                                                Log.d("####size3","" + al3.size());
+                                                Log.d("####size4","" + al4.size());
+                                                Log.d("####size5","" + al5.size());
+                                                Log.d("####size6","" + al6.size());
                                                 if(totalUsers == 0){
                                                     Log.d("***totalusers1","" + totalUsers);
                                                     noUsersText.setVisibility(View.VISIBLE);
@@ -156,6 +167,8 @@ public class Inbox extends AppCompatActivity {
                             public void onCancelled(DatabaseError databaseError) {
 
                             }
+
+
                         });
                         Log.d("*****al5size", "" + al5.size());
 //                        al5.add(Chatname);

@@ -16,7 +16,7 @@
         android:name=".MyApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -54,7 +54,6 @@
         <activity android:name=".AddActivity" />
         <activity android:name=".EditActivity" />
         <activity android:name=".ListOfClubsActivity" />
-        <activity android:name=".testing" />
         <activity android:name=".AddClubs" />
         <activity android:name=".ClubProfileActivity"></activity>
     </application>

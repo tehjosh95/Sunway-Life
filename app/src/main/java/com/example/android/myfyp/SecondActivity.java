@@ -90,13 +90,7 @@ public class SecondActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
 
-//        // OneSignal Initialization
-//        OneSignal.startInit(this)
-//                .setNotificationOpenedHandler(new NotificationOpenedHandler(this))
-//                .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
-//                .unsubscribeWhenNotificationsAreDisabled(true)
-//                .init();
-        OneSignal.sendTag("User_ID",firebaseAuth.getCurrentUser().getEmail());
+        OneSignal.sendTag("User_ID",firebaseAuth.getCurrentUser().getUid());
 
         mDataRef = firebaseDatabase.getReference().child("Item Information");
         mDataRef2 = firebaseDatabase.getReference().child("Clubs");
@@ -131,7 +125,6 @@ public class SecondActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setNestedScrollingEnabled(false);
-
 
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(SecondActivity.this, new RecyclerItemClickListener.OnItemClickListener() {

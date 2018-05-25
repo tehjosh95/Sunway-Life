@@ -27,6 +27,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -37,6 +40,7 @@ public class Chat extends AppCompatActivity {
     RelativeLayout layout_2;
     ImageView sendButton;
     EditText messageArea;
+    TextView chatname;
     ScrollView scrollView;
     Firebase reference1, reference2;
     private DatabaseReference mDataRef;
@@ -49,6 +53,7 @@ public class Chat extends AppCompatActivity {
 
         layout = (LinearLayout) findViewById(R.id.layout1);
         layout_2 = (RelativeLayout)findViewById(R.id.layout2);
+        chatname = (TextView)findViewById(R.id.chatname);
         sendButton = (ImageView)findViewById(R.id.sendButton);
         messageArea = (EditText)findViewById(R.id.messageArea);
         scrollView = (ScrollView)findViewById(R.id.scrollView);
@@ -56,7 +61,7 @@ public class Chat extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
 
         mDataRef = firebaseDatabase.getReference().child("messages");
-
+        chatname.setText(UserDetails.name);
         Intent startingIntent = getIntent();
         String recipient = startingIntent.getStringExtra("recipient");
         String sender = startingIntent.getStringExtra("sender");
@@ -76,12 +81,22 @@ public class Chat extends AppCompatActivity {
             public void onClick(View v) {
                 String messageText = messageArea.getText().toString();
                 if(!messageText.equals("")){
-                    Map<String, String> map = new HashMap<>();
-                    map.put("message", messageText);
-                    map.put("user", UserDetails.username);
-                    reference1.push().setValue(map);
-                    reference2.push().setValue(map);
 
+                    ChatModel chatModel = new ChatModel();
+                    chatModel.setUser(UserDetails.username);
+                    chatModel.setMessage(messageText);
+                    chatModel.setTimestamp(ServerValue.TIMESTAMP);
+
+                    reference1.push().setValue(chatModel);
+                    reference2.push().setValue(chatModel);
+
+//                    Map<String, String> map = new HashMap<>();
+//                    map.put("message", messageText);
+//                    map.put("user", UserDetails.username);
+//                    String one = reference1.push().getKey();
+//                    String two = reference2.push().getKey();
+//                    reference1.child(one).setValue(map);
+//                    reference2.child(two).setValue(map);
                     Map lastTime = new HashMap();
                     lastTime.put("lasttime", ServerValue.TIMESTAMP);
                     mDataRef.child(UserDetails.chatWith + "_" + UserDetails.username).updateChildren(lastTime);
@@ -96,14 +111,21 @@ public class Chat extends AppCompatActivity {
         reference1.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Map map = dataSnapshot.getValue(Map.class);
-                String message = map.get("message").toString();
-                String userName = map.get("user").toString();
+                ChatModel chatModel = dataSnapshot.getValue(ChatModel.class);
+                String message = chatModel.getMessage();
+                String userName = chatModel.getUser();
+                Long time = (Long)chatModel.getTimestamp() ;
+
+                DateFormat sfd = DateFormat.getDateTimeInstance();
+                Date netDate = (new Date(time));
+                //                sfd.format(new Date(time));
+                Log.d("***time", "" + sfd.format(netDate));
                 if(userName.equals(UserDetails.username)){
-                    addMessageBox("Me:-\n" + message, 1);
+                    addMessageBox("" + sfd.format(netDate) +":-\n" +  message, 1);
+//                    addMessageBox("Me:-\n" + message, 1);
                 }
                 else{
-                    addMessageBox(decodeUserEmail(UserDetails.name) + ":-\n" + message, 2);
+                    addMessageBox("" + sfd.format(netDate) +":-\n" + message, 2);
                 }
             }
 
@@ -171,7 +193,7 @@ public class Chat extends AppCompatActivity {
 
                     //This is a Simple Logic to Send Notification different Device Programmatically....
                         send_email = decodeUserEmail(UserDetails.chatWith);
-
+                        Log.d("******************", "" + send_email);
                     try {
 
                         String jsonResponse;

@@ -126,6 +126,7 @@ public class Users extends AppCompatActivity {
                 UserDetails.username = encodeUserEmail(user.getUid());
                 UserDetails.chatWith = encodeUserEmail(al.get(position));
                 UserDetails.name = (al2.get(position));
+                finish();
                 startActivity(new Intent(Users.this, Chat.class));
             }
         });

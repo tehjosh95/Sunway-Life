@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText Name;
     private EditText Password;
-    private TextView Info;
     private Button Login;
     private int counter = 5;
     private TextView userRegistration;
@@ -38,12 +37,9 @@ public class MainActivity extends AppCompatActivity {
 
         Name = (EditText)findViewById(R.id.etName);
         Password = (EditText)findViewById(R.id.etPassword);
-        Info = (TextView)findViewById(R.id.tvInfo);
         Login = (Button)findViewById(R.id.btnLogin);
         userRegistration = (TextView)findViewById(R.id.tvRegister);
         forgotPassword = (TextView)findViewById(R.id.tvForgotPassword);
-
-        Info.setText("No of attempts remaining: 5");
         FirebaseApp.initializeApp(this);
         firebaseAuth = FirebaseAuth.getInstance();
         progressDialog = new ProgressDialog(this);
@@ -90,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
                 }else{
                     Toast.makeText(MainActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
                     counter--;
-                    Info.setText("No of attempts remaining: " + counter);
                     progressDialog.dismiss();
                     if(counter == 0){
                         Login.setEnabled(false);
