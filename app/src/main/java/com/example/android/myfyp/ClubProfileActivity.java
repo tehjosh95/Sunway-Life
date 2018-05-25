@@ -72,7 +72,7 @@ public class ClubProfileActivity extends AppCompatActivity {
         profileUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(ClubProfileActivity.this, UpdateProfile.class));
+                startActivity(new Intent(ClubProfileActivity.this, UpdateClubProfile.class));
             }
         });
 

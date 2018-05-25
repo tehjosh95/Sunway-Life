@@ -55,7 +55,8 @@
         <activity android:name=".EditActivity" />
         <activity android:name=".ListOfClubsActivity" />
         <activity android:name=".AddClubs" />
-        <activity android:name=".ClubProfileActivity"></activity>
+        <activity android:name=".ClubProfileActivity" />
+        <activity android:name=".UpdateClubProfile"></activity>
     </application>
 
 </manifest>
