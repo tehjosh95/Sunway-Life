@@ -6,4 +6,5 @@
     <color name="black">#000</color>
     <color name="lightorange">#fdf2df</color>
     <color name="lightorangedark">#ebd6ab</color>
+    <color name="colorTransBg">#26000000</color>
 </resources>

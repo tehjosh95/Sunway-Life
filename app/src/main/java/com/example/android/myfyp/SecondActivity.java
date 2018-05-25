@@ -1,5 +1,6 @@
 package com.example.android.myfyp;
 
+import android.animation.Animator;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +21,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,6 +58,10 @@ public class SecondActivity extends AppCompatActivity {
     Toolbar toolbar;
     RecyclerView recyclerView;
     ArrayList<clubModel> clubModelList;
+    FloatingActionButton fab, fab1, fab2;
+    LinearLayout fabLayout1, fabLayout2;
+    View fabBGLayout;
+    boolean isFABOpen=false;
 
     private ProgressDialog progDialog;
     private FirebaseAuth firebaseAuth;
@@ -64,7 +70,6 @@ public class SecondActivity extends AppCompatActivity {
     private Button logout;
     private String key;
     private String [] arrayDelete;
-    private FloatingActionButton fab = null;
     private FirebaseDatabase firebaseDatabase;
     private clubAdapter adapter;
     private String uId = FirebaseAuth.getInstance().getCurrentUser().toString();
@@ -76,6 +81,11 @@ public class SecondActivity extends AppCompatActivity {
         setContentView(R.layout.activity_second);
 
         fab = (FloatingActionButton)findViewById(R.id.fab);
+        fabLayout1= (LinearLayout) findViewById(R.id.fabLayout1);
+        fabLayout2= (LinearLayout) findViewById(R.id.fabLayout2);
+        fab1 = (FloatingActionButton) findViewById(R.id.fab1);
+        fab2= (FloatingActionButton) findViewById(R.id.fab2);
+        fabBGLayout=findViewById(R.id.fabBGLayout);
         FirebaseApp.initializeApp(this);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -91,39 +101,6 @@ public class SecondActivity extends AppCompatActivity {
         mDataRef = firebaseDatabase.getReference().child("Item Information");
         mDataRef2 = firebaseDatabase.getReference().child("Clubs");
         mDataRef3 = firebaseDatabase.getReference().child("Users");
-
-//        mDataRef = mDataRef.child("Item Information");
-
-
-//        mDataRef = mDataRef.child("Users").child(firebaseAuth.getCurrentUser().getUid());
-//        mDataRef.addValueEventListener(new ValueEventListener() {
-//        @Override
-//        public void onDataChange(DataSnapshot dataSnapshot) {
-//            UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
-//            username =  userProfile.getUserName().toString();
-//            age = userProfile.getUserAge().toString();
-//            email = userProfile.getUserEmail().toString();
-//            Log.d("before","#############################" + username);
-//        }
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                Toast.makeText(SecondActivity.this, databaseError.getCode(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-
-//        finish();
-
-//        logout = (Button)findViewById(R.id.btnLogout);
-
-//        logout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Logout();
-//            }
-//        });
-
-//        super.onCreate(savedInstanceState);
-//          setContentView(R.layout.activity_second);
 
         recyclerView = findViewById(R.id.rvv);
         toolbar = (Toolbar)findViewById(R.id.toolbarMain);
@@ -255,13 +232,6 @@ public class SecondActivity extends AppCompatActivity {
                     }
                 })
                 .build();
-        Log.d("after","###############################"+ username);
-
-//        progDialog = new ProgressDialog(SecondActivity.this,
-//                R.style.Theme_AppCompat_DayNight_NoActionBar);
-//        progDialog.setIndeterminate(true);
-//        progDialog.setMessage("Wait....");
-//        progDialog.show();
 
         progDialog=ProgressDialog.show(this,null,"Wait.....");
         Log.d("after","############################### wait");
@@ -277,7 +247,23 @@ public class SecondActivity extends AppCompatActivity {
                         fab.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                startActivity(new Intent(SecondActivity.this, AddClubs.class));
+                                if(!isFABOpen){
+                                    showFABMenu();
+                                    fab1.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            startActivity(new Intent(SecondActivity.this, AddClubs.class));
+                                        }
+                                    });
+                                    fab2.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            startActivity(new Intent(SecondActivity.this, AddActivity.class));
+                                        }
+                                    });
+                                }else{
+                                    closeFABMenu();
+                                }
                             }
                         });
                     }
@@ -292,11 +278,8 @@ public class SecondActivity extends AppCompatActivity {
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
-
-
     }
 
     private void Logout(){
@@ -306,28 +289,51 @@ public class SecondActivity extends AppCompatActivity {
         startActivity(new Intent(SecondActivity.this, MainActivity.class));
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu, menu);
-//        return true;
-//    }
+    private void showFABMenu(){
+        isFABOpen=true;
+        fabLayout1.setVisibility(View.VISIBLE);
+        fabLayout2.setVisibility(View.VISIBLE);
+        fabBGLayout.setVisibility(View.VISIBLE);
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//
-//        switch(item.getItemId()){
-//            case R.id.logoutMenu:{
-//                Logout();
-//            }
-//            case R.id.profileMenu:
-//                startActivity(new Intent(SecondActivity.this, ProfileActivity.class));
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
+        fab.animate().rotationBy(180);
+        fabLayout1.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
+        fabLayout2.animate().translationY(-getResources().getDimension(R.dimen.standard_100));
+    }
+
+    private void closeFABMenu(){
+        isFABOpen=false;
+        fabBGLayout.setVisibility(View.GONE);
+        fab.animate().rotationBy(-180);
+        fabLayout1.animate().translationY(0);
+        fabLayout2.animate().translationY(0).setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                if(!isFABOpen){
+                    fabLayout1.setVisibility(View.GONE);
+                    fabLayout2.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+            }
+        });
+    }
 
     @Override
     public void onBackPressed() {
-        Log.d("backpressed", "onBackPressed Called");
-        finish();
+        if(isFABOpen){
+            closeFABMenu();
+        }else{
+            super.onBackPressed();
+        }
     }
 }
