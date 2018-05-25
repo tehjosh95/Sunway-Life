@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -51,10 +53,27 @@ public class ListOfClubsActivity extends AppCompatActivity {
 
         mSearchField = (EditText) findViewById(R.id.search_field);
         mSearchBtn = (ImageButton) findViewById(R.id.search_btn);
-
+        mSearchBtn.setVisibility(View.GONE);
         recyclerView = (RecyclerView) findViewById(R.id.result_list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mUserDatabase.addChildEventListener(childEventListener);
+        mSearchField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mSearchBtn.performClick();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         mSearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,20 +81,25 @@ public class ListOfClubsActivity extends AppCompatActivity {
 
                 String searchText = mSearchField.getText().toString();
 
-                firebaseUserSearch(searchText);
+                if(searchText.length() > 0) {
+                    firebaseUserSearch(searchText);
+                }else{
+                    AllClubsList.clear();
+                    mUserDatabase.addChildEventListener(childEventListener);
+                }
 
             }
         });
-
     }
 
     private void firebaseUserSearch(String searchText) {
 
-        Toast.makeText(ListOfClubsActivity.this, "Started Search", Toast.LENGTH_LONG).show();
+//        Toast.makeText(ListOfClubsActivity.this, "Started Search", Toast.LENGTH_LONG).show();
+            AllClubsList.clear();
+            Query firebaseSearchQuery = mUserDatabase.orderByChild("name").startAt(searchText).endAt(searchText + "\uf8ff");
+            firebaseSearchQuery.addChildEventListener(childEventListener);
 
-        Query firebaseSearchQuery = mUserDatabase.orderByChild("name").startAt(searchText).endAt(searchText + "\uf8ff");
-        firebaseSearchQuery.addChildEventListener(childEventListener);
-        Log.d("***searched", "" + searchText);
+        Log.d("***searched", "a" + searchText);
 
     }
 
