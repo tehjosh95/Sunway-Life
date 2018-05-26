@@ -36,9 +36,12 @@ import com.google.firebase.database.ValueEventListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -120,7 +123,11 @@ public class Inbox extends AppCompatActivity {
                                         if (al.get(loop1).equals(al2.get(loop2))) {
                                             al4.add(loop1, al3.get(loop2));
                                             if (al5.size() == al2.size()) {
-                                                al6.add(loop1, al5.get(loop2));
+                                                DateFormat sfd = DateFormat.getDateTimeInstance();
+                                                SimpleDateFormat sdf2 = new SimpleDateFormat("EEE \t\t\t" + "HH:mm");
+                                                String simple = sdf2.format(al2.get(loop2));
+                                                Date netDate = (new Date(al2.get(loop2)));
+                                                al6.add(loop1, al5.get(loop2) + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t" + "(" + simple + ")");
                                             }
                                         }
                                     }
