@@ -99,77 +99,48 @@ public class Inbox extends AppCompatActivity {
                     final String key2 = decodeUserEmail(key.substring(index + 1));
                     long timing = child.child("lasttime").getValue(Long.class);
                     Log.d("*****key2", "" + key2);
-
+                    String theirname = child.child("others").getValue(String.class);
                     if(key1.equals(currentuser)){
                         Log.d("***orderby","" + child.getKey());
                         Log.d("***timing","" + timing);
                         al.add(timing);
                         al2.add(timing);
                         al3.add(key2);
-
-                        mDataRef2.addValueEventListener(new ValueEventListener() {
+                        al5.add(theirname);
+                        mDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                for (DataSnapshot child : dataSnapshot.getChildren()) {
-
-                                    if (child.getKey().equals(key2)) {
-                                        String caca = child.child("userName").getValue(String.class);
-                                        al5.add(caca);
-
-                                        mDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                Collections.sort(al);
-                                                Collections.reverse(al);
-                                                Log.d("***sizeal","" + al6.size());
-                                                al6.clear();
-                                                al4.clear();
-                                                for(int loop1 = 0 ; loop1 < al.size();loop1++){
-                                                    for(int loop2 = 0 ; loop2 < al2.size();loop2++){
-                                                        if(al.get(loop1).equals(al2.get(loop2))) {
-                                                            al4.add(loop1, al3.get(loop2));
-                                                            if (al5.size() == al2.size()) {
-                                                                al6.add(loop1, al5.get(loop2));
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                Log.d("####size1","" + al.size());
-                                                Log.d("####size2","" + al2.size());
-                                                Log.d("####size3","" + al3.size());
-                                                Log.d("####size4","" + al4.size());
-                                                Log.d("####size5","" + al5.size());
-                                                Log.d("####size6","" + al6.size());
-                                                if(totalUsers == 0){
-                                                    Log.d("***totalusers1","" + totalUsers);
-                                                    noUsersText.setVisibility(View.VISIBLE);
-                                                    usersList.setVisibility(View.GONE);
-                                                }
-                                                else{
-                                                    noUsersText.setVisibility(View.GONE);
-                                                    usersList.setVisibility(View.VISIBLE);
-                                                    Log.d("*****list8", "" + al6.size());
-                                                    myAdapter = new ArrayAdapter<String>(Inbox.this,android.R.layout.simple_list_item_1,al6);
-                                                    usersList.setAdapter(myAdapter);
-                                                }
+                                Collections.sort(al);
+                                Collections.reverse(al);
+                                Log.d("***sizeal", "" + al6.size());
+                                al6.clear();
+                                al4.clear();
+                                for (int loop1 = 0; loop1 < al.size(); loop1++) {
+                                    for (int loop2 = 0; loop2 < al2.size(); loop2++) {
+                                        if (al.get(loop1).equals(al2.get(loop2))) {
+                                            al4.add(loop1, al3.get(loop2));
+                                            if (al5.size() == al2.size()) {
+                                                al6.add(loop1, al5.get(loop2));
                                             }
-
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
-
-                                            }
-                                        });
-
+                                        }
                                     }
                                 }
-                            }
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-
-
-                        });
+                                if (totalUsers == 0) {
+                                   Log.d("***totalusers1", "" + totalUsers);
+                                    noUsersText.setVisibility(View.VISIBLE);
+                                    usersList.setVisibility(View.GONE);
+                                    } else {
+                                    noUsersText.setVisibility(View.GONE);
+                                    usersList.setVisibility(View.VISIBLE);
+                                    Log.d("*****list8", "" + al6.size());
+                                    myAdapter = new ArrayAdapter<String>(Inbox.this, android.R.layout.simple_list_item_1, al6);
+                                    usersList.setAdapter(myAdapter);
+                                    }
+                                    }
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                }
+                                });
                         Log.d("*****al5size", "" + al5.size());
 //                        al5.add(Chatname);
                         x += 1;

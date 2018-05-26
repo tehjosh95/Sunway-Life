@@ -27,6 +27,8 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -212,6 +214,7 @@ public class AddClubs extends AppCompatActivity {
                 listofclubs.setContact(cont);
                 listofclubs.setDesc(desc);
                 listofclubs.setUserType(usertype);
+                listofclubs.setMyUid(uid);
 
                 final ProgressDialog progDialog = new ProgressDialog(AddClubs.this,
                         R.style.Theme_AppCompat_DayNight_NoActionBar);
@@ -219,7 +222,7 @@ public class AddClubs extends AppCompatActivity {
                 progDialog.setIndeterminate(true);
                 progDialog.setMessage("Uploading....");
                 progDialog.show();
-                final ListOfClubs listofclubs = new ListOfClubs(name, imgUrl, cont, desc, usertype);
+                final ListOfClubs listofclubs = new ListOfClubs(name, imgUrl, cont, desc, usertype, uid);
                 final Runnable uploadTask = new Runnable() {
                     @Override
                     public void run() {
@@ -244,6 +247,18 @@ public class AddClubs extends AppCompatActivity {
                 if(task.isSuccessful()){
                     //sendEmailVerification();
                     uid = firebaseAuth2.getCurrentUser().getUid();
+                    FirebaseUser user = firebaseAuth2.getCurrentUser();
+
+                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                            .setDisplayName(clubName.getText().toString())
+                            .build();
+
+                    user.updateProfile(profileUpdates)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                }
+                            });
                     uploadImageToFirebase();
                     firebaseAuth2.signOut();
                     Toast.makeText(AddClubs.this, "Successfully Registered, Upload complete!", Toast.LENGTH_SHORT).show();

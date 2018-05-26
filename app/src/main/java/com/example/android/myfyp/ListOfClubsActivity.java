@@ -1,6 +1,7 @@
 package com.example.android.myfyp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.app.AppCompatActivity;
@@ -46,10 +47,7 @@ public class ListOfClubsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_of_clubs);
         AllClubsList = new ArrayList<>();
-
-
         mUserDatabase = FirebaseDatabase.getInstance().getReference("Clubs");
-
 
         mSearchField = (EditText) findViewById(R.id.search_field);
         mSearchBtn = (ImageButton) findViewById(R.id.search_btn);
@@ -61,7 +59,6 @@ public class ListOfClubsActivity extends AppCompatActivity {
         mSearchField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
@@ -71,7 +68,6 @@ public class ListOfClubsActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
         });
 
@@ -87,7 +83,6 @@ public class ListOfClubsActivity extends AppCompatActivity {
                     AllClubsList.clear();
                     mUserDatabase.addChildEventListener(childEventListener);
                 }
-
             }
         });
     }
@@ -98,9 +93,6 @@ public class ListOfClubsActivity extends AppCompatActivity {
             AllClubsList.clear();
             Query firebaseSearchQuery = mUserDatabase.orderByChild("name").startAt(searchText).endAt(searchText + "\uf8ff");
             firebaseSearchQuery.addChildEventListener(childEventListener);
-
-        Log.d("***searched", "a" + searchText);
-
     }
 
     ChildEventListener childEventListener = new ChildEventListener() {
@@ -112,6 +104,26 @@ public class ListOfClubsActivity extends AppCompatActivity {
             adapter = new ClubListAdapter(ListOfClubsActivity.this, AllClubsList);
             recyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
+
+            recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(ListOfClubsActivity.this, new RecyclerItemClickListener.OnItemClickListener() {
+                @Override
+                public void onItemClick(View childView, int position) {
+                    ListOfClubs listOfClubs = AllClubsList.get(position);
+                    Intent intent = new Intent(ListOfClubsActivity.this, ListOfClubsView.class);
+                    intent.putExtra("isname", listOfClubs.getName());
+                    intent.putExtra("iscont", listOfClubs.getContact());
+                    intent.putExtra("isdesc",listOfClubs.getDesc());
+                    intent.putExtra("isimg",listOfClubs.getImage());
+                    intent.putExtra("isuid", listOfClubs.getMyUid());
+                    Log.d("^^^^^^^", "" + listOfClubs.getMyUid());
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onItemLongPress(View childView, int position) {
+
+                }
+            }));
         }
 
         public void onChildRemoved(DataSnapshot snapshot) {

@@ -5,12 +5,11 @@ import android.os.Bundle;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -31,8 +30,8 @@ public class ViewActivity extends AppCompatActivity {
 
         profilePic = findViewById(R.id.ivimage);
         profileName = findViewById(R.id.tvname);
-        profilePlace = findViewById(R.id.tvplace);
-        profilePrice = findViewById(R.id.tvprice);
+        profilePlace = findViewById(R.id.tvcont);
+        profilePrice = findViewById(R.id.tvdesc);
         EditButton = findViewById(R.id.btnEdit);
         fabbb = (FloatingActionButton)findViewById(R.id.fabbb);
 

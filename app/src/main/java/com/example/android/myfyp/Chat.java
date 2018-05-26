@@ -23,6 +23,7 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ServerValue;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -44,6 +45,7 @@ public class Chat extends AppCompatActivity {
     ScrollView scrollView;
     Firebase reference1, reference2;
     private DatabaseReference mDataRef;
+    private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
 
     @Override
@@ -57,7 +59,7 @@ public class Chat extends AppCompatActivity {
         sendButton = (ImageView)findViewById(R.id.sendButton);
         messageArea = (EditText)findViewById(R.id.messageArea);
         scrollView = (ScrollView)findViewById(R.id.scrollView);
-
+        firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
 
         mDataRef = firebaseDatabase.getReference().child("messages");
@@ -101,6 +103,14 @@ public class Chat extends AppCompatActivity {
                     lastTime.put("lasttime", ServerValue.TIMESTAMP);
                     mDataRef.child(UserDetails.chatWith + "_" + UserDetails.username).updateChildren(lastTime);
                     mDataRef.child(UserDetails.username + "_" + UserDetails.chatWith).updateChildren(lastTime);
+
+                    Map one = new HashMap<>();
+                    one.put("others", UserDetails.name);
+                    mDataRef.child(UserDetails.username + "_" + UserDetails.chatWith).updateChildren(one);
+
+                    Map two = new HashMap<>();
+                    two.put("others", firebaseAuth.getCurrentUser().getDisplayName());
+                    mDataRef.child(UserDetails.chatWith + "_" + UserDetails.username).updateChildren(two);
 
                     messageArea.setText("");
                     sendNotification();
@@ -192,7 +202,7 @@ public class Chat extends AppCompatActivity {
                     String send_email;
 
                     //This is a Simple Logic to Send Notification different Device Programmatically....
-                        send_email = decodeUserEmail(UserDetails.chatWith);
+                        send_email = UserDetails.chatWith;
                         Log.d("******************", "" + send_email);
                     try {
 
@@ -247,13 +257,6 @@ public class Chat extends AppCompatActivity {
                 }
             }
         });
-    }
-    static String encodeUserEmail(String userEmail) {
-        return userEmail.replace(".", ",");
-    }
-
-    static String decodeUserEmail(String userEmail) {
-        return userEmail.replace(",", ".");
     }
 
     @Override

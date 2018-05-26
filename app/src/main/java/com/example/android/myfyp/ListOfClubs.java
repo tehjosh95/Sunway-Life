@@ -6,6 +6,7 @@ public class ListOfClubs {
     private String image;
     private String contact;
     private String desc;
+    private String myUid;
 
     private String userType;
 
@@ -40,11 +41,16 @@ public class ListOfClubs {
 
     public void setUserType(String userType) { this.userType = userType; }
 
-    public ListOfClubs(String name, String image, String contact, String desc, String userType) {
+    public String getMyUid() { return myUid; }
+
+    public void setMyUid(String myUid) { this.myUid = myUid; }
+
+    public ListOfClubs(String name, String image, String contact, String desc, String userType, String myUid) {
         this.name = name;
         this.image = image;
         this.contact = contact;
         this.desc = desc;
         this.userType = userType;
+        this.myUid = myUid;
     }
 }

@@ -178,6 +178,7 @@ public class UpdateClubProfile extends AppCompatActivity {
                 String cont = newUserCont.getText().toString();
                 String desc = newUserDesc.getText().toString();
                 String type = userType;
+                String myuid = firebaseAuth.getCurrentUser().getUid();
                 int position = 0;
 
                 save.setEnabled(false);
@@ -189,7 +190,7 @@ public class UpdateClubProfile extends AppCompatActivity {
                 progDialog.setIndeterminate(true);
                 progDialog.setMessage("Uploading....");
                 progDialog.show();
-                final ListOfClubs listOfClubs = new ListOfClubs(name, imgUrl ,cont, desc, type);
+                final ListOfClubs listOfClubs = new ListOfClubs(name, imgUrl ,cont, desc, type, myuid);
 
                 final Runnable uploadTask = new Runnable() {
                     @Override
