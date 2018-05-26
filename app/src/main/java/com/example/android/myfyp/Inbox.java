@@ -127,12 +127,13 @@ public class Inbox extends AppCompatActivity {
                                                 SimpleDateFormat sdf2 = new SimpleDateFormat("EEE \t\t\t" + "HH:mm");
                                                 String simple = sdf2.format(al2.get(loop2));
                                                 Date netDate = (new Date(al2.get(loop2)));
-                                                al6.add(loop1, al5.get(loop2) + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t" + "(" + simple + ")");
+//                                              al6.add(loop1, al5.get(loop2) + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t" + "(" + simple + ")");
+                                                al6.add(loop1, al5.get(loop2));
                                             }
                                         }
                                     }
                                 }
-                                if (totalUsers == 0) {
+                                if (al6.size() < 1) {
                                    Log.d("***totalusers1", "" + totalUsers);
                                     noUsersText.setVisibility(View.VISIBLE);
                                     usersList.setVisibility(View.GONE);
@@ -165,7 +166,6 @@ public class Inbox extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
                 UserDetails.username = encodeUserEmail(user.getUid());
                 UserDetails.chatWith = encodeUserEmail(al4.get(position));
                 UserDetails.name = al6.get(position);

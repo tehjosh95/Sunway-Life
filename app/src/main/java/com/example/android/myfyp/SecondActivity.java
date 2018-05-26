@@ -17,6 +17,9 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.support.v7.widget.RecyclerView;
 
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -54,7 +57,6 @@ import java.util.List;
 import static java.security.AccessController.getContext;
 
 public class SecondActivity extends AppCompatActivity {
-
     Toolbar toolbar;
     RecyclerView recyclerView;
     ArrayList<clubModel> clubModelList;
@@ -73,6 +75,10 @@ public class SecondActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase;
     private clubAdapter adapter;
     private String uId = FirebaseAuth.getInstance().getCurrentUser().toString();
+
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private StorageReference storageRef;
+
     clubModel [] arrayName ;
     String username, email, age;;
     @Override
@@ -120,7 +126,6 @@ public class SecondActivity extends AppCompatActivity {
                 System.out.println("The read failed: " + databaseError.getMessage());
             }
         });
-//        int[] images = {R.drawable.club, R.drawable.club, R.drawable.club, R.drawable.club, R.drawable.club, R.drawable.club, R.drawable.club};
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -137,13 +142,47 @@ public class SecondActivity extends AppCompatActivity {
                         intent.putExtra("myurl",ClubModel1.getImageLink());
                         intent.putExtra("mykey",mDataRef.getKey().toString());
 
-
-                        Log.d("****itemname","" + ClubModel1.getItem_name());
-                        Log.d("****itemplace","" + ClubModel1.getItem_place());
-                        Log.d("****itemprice","" + ClubModel1.getItem_price());
                         startActivity(intent);
                     }
-                    public void onItemLongPress(View childView, int position) {
+                    public void onItemLongPress(View childView, final int position) {
+                        if(firebaseAuth.getCurrentUser().getUid().equals("XHR842kZD3cTZTwz7nM5LWJESW72")){
+                            final clubModel ClubModel1 = clubModelList.get(position);
+                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(SecondActivity.this);
+                            alertDialog.setTitle("Delete?");
+
+                            alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,int which) {
+                                    dialog.cancel();
+                                }
+                            });
+
+                            alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    mDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            arrayDelete = new String[(int) dataSnapshot.getChildrenCount()];
+                                            int x = 0;
+                                            for (DataSnapshot postsnapshot : dataSnapshot.getChildren()) {
+                                                key = postsnapshot.getKey();
+                                                arrayDelete[x] = key;
+                                                x += 1;
+                                            }
+                                            String getUrl = ClubModel1.getImageLink();
+                                            storageRef = storage.getReferenceFromUrl(getUrl);
+                                            storageRef.delete();
+                                            dataSnapshot.getRef().child(arrayDelete[position]).removeValue();
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+                                }
+                            });
+                            alertDialog.show();
+                        }
                     }
                 })
         );

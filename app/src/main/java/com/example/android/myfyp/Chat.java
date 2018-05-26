@@ -67,10 +67,13 @@ public class Chat extends AppCompatActivity {
         Intent startingIntent = getIntent();
         String recipient = startingIntent.getStringExtra("recipient");
         String sender = startingIntent.getStringExtra("sender");
+        String name = startingIntent.getStringExtra("name");
 
         if ((UserDetails.username.equals("")) && (UserDetails.chatWith.equals("")) ){
             UserDetails.username = sender;
             UserDetails.chatWith = recipient;
+            UserDetails.name = name;
+            chatname.setText(name);
         }
 
         Firebase.setAndroidContext(this);
@@ -194,10 +197,12 @@ public class Chat extends AppCompatActivity {
                     Intent startingIntent = getIntent();
                     String recipient = startingIntent.getStringExtra("recipient");
                     String sender = startingIntent.getStringExtra("sender");
+                    String name = startingIntent.getStringExtra("name");
 
                     if ((UserDetails.username.equals("")) && (UserDetails.chatWith.equals("")) ){
                         UserDetails.username = sender;
                         UserDetails.chatWith = recipient;
+                        UserDetails.name = name;
                     }
                     String send_email;
 
@@ -223,8 +228,8 @@ public class Chat extends AppCompatActivity {
 
                                 + "\"filters\": [{\"field\": \"tag\", \"key\": \"User_ID\", \"relation\": \"=\", \"value\": \"" + send_email + "\"}],"
 
-                                + "\"data\": {\"UserDetails.username\": \"UserDetails.chatWith\", \"UserDetails.chatWith\": \"UserDetails.username\"},"
-                                + "\"contents\": {\"en\": \"You have a new message from " + UserDetails.username + "\"}"
+                                + "\"data\": {\"sender\": \"" + UserDetails.chatWith + "\", \"recipient\": \"" + UserDetails.username + "\" , \"name\" : \"" + firebaseAuth.getCurrentUser().getDisplayName() + "\"},"
+                                + "\"contents\": {\"en\": \"You have a new message from " + firebaseAuth.getCurrentUser().getDisplayName() + "\"}"
                                 + "}";
 
 
