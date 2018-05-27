@@ -53,7 +53,7 @@ public class clubAdapter extends RecyclerView.Adapter<clubAdapter.ViewHolder>{
         item_name.setText(contact.getItem_name());
         item_place.setText(contact.getItem_place());
         item_price.setText(contact.getItem_price());
-        Glide.with(mContext).load(contact.getImageLink()).into(item_img);
+        Glide.with(mContext).load(contact.getImageLink()).thumbnail(0.1f).into(item_img);
 
     }
 

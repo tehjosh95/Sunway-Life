@@ -11,4 +11,6 @@
     <dimen name="standard_55">55dp</dimen>
     <dimen name="standard_100">100dp</dimen>
     <dimen name="standard_145">145dp</dimen>
+    <dimen name="imageview_width">331dp</dimen>
+    <dimen name="imageview_height">199dp</dimen>
 </resources>

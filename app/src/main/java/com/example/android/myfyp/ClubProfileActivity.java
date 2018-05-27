@@ -59,8 +59,7 @@ public class ClubProfileActivity extends AppCompatActivity {
                 profileContact.setText("Contact: " + listOfClubs.getContact());
                 profileDesc.setText("Desc: " + listOfClubs.getDesc());
                 profileType.setText("User Type: " + listOfClubs.getUserType());
-                Glide.with(ClubProfileActivity.this).load(listOfClubs.getImage()).into(profilePic);
-
+                Glide.with(ClubProfileActivity.this).load(listOfClubs.getImage()).thumbnail(0.1f).into(profilePic);
             }
 
             @Override

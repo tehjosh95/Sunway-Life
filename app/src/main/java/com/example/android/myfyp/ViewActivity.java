@@ -43,7 +43,7 @@ public class ViewActivity extends AppCompatActivity {
         final String Owner = startingIntent.getStringExtra("myowner");
         final String myKey = startingIntent.getStringExtra("mykey");
 
-        Glide.with(this).load(myurl).into(profilePic);
+        Glide.with(this).load(myurl).thumbnail(0.1f).into(profilePic);
         profileName.setText(Name);
         profilePlace.setText(Place);
         profilePrice.setText(Price);

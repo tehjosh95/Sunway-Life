@@ -51,7 +51,7 @@ public class ClubListAdapter extends RecyclerView.Adapter<ClubListAdapter.ViewHo
 
         name.setText(contact.getName());
         status.setText(contact.getDesc());
-        Glide.with(mContext).load(contact.getImage()).into(image);
+        Glide.with(mContext).load(contact.getImage()).thumbnail(0.1f).into(image);
     }
 
 

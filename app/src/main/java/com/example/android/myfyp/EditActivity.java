@@ -79,7 +79,7 @@ public class EditActivity extends AppCompatActivity {
         String theOwner = startingIntent.getStringExtra("theowner");
         theKey = startingIntent.getStringExtra("thekey");
 
-        Glide.with(this).load(theUrl).into(profilePic);
+        Glide.with(this).load(theUrl).thumbnail(0.1f).into(profilePic);
         profileName.setText(theName);
         profilePlace.setText(thePlace);
         profilePrice.setText(thePrice);

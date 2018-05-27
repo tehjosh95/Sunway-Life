@@ -171,6 +171,7 @@ public class Inbox extends AppCompatActivity {
                 UserDetails.name = al6.get(position);
                 Log.d("****chatwith1","****chatwith" + UserDetails.chatWith);
                 Log.d("****username2","****username" + UserDetails.username);
+                finish();
                 startActivity(new Intent(com.example.android.myfyp.Inbox.this, Chat.class));
             }
         });
