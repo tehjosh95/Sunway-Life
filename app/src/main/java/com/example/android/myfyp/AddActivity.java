@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -204,7 +206,9 @@ public class AddActivity extends AppCompatActivity {
         // Get the data from an ImageView as bytes
         this.imageView.setDrawingCacheEnabled(true);
         this.imageView.buildDrawingCache();
+
         Bitmap bitmap = this.imageView.getDrawingCache();
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
