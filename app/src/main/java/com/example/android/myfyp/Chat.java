@@ -1,13 +1,20 @@
 package com.example.android.myfyp;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Camera;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -52,6 +59,9 @@ import static com.bumptech.glide.load.engine.DiskCacheStrategy.NONE;
 
 public class Chat extends AppCompatActivity {
 
+    private static final int REQUEST_CAMERA = 2;
+
+
     private FirebaseStorage mStorage;
     private StorageReference mStorRef;
     private FirebaseDatabase mDatabase;
@@ -61,7 +71,7 @@ public class Chat extends AppCompatActivity {
     private DatabaseReference mUserRef;
     private String imgUrl;
     private String imgIdentity = "";
-
+    private Camera camera;
     LinearLayout layout;
     RelativeLayout layout_2;
     ImageView sendButton, upload, ivimage;
@@ -213,6 +223,19 @@ public class Chat extends AppCompatActivity {
         startActivityForResult(pickerPhotoIntent, 1);
     }
 
+    public void handleCameraImage(View view){
+//        if ( ContextCompat.checkSelfPermission( this, Manifest.permission.CAMERA ) != PackageManager.PERMISSION_GRANTED ) {
+//        }
+        if ( Build.VERSION.SDK_INT >= 23 &&
+                ContextCompat.checkSelfPermission( this, android.Manifest.permission.CAMERA ) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions( this, new String[] {  Manifest.permission.CAMERA  },
+                    REQUEST_CAMERA );
+        }else{
+            Intent photoCaptureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(photoCaptureIntent, 2);
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
@@ -227,9 +250,15 @@ public class Chat extends AppCompatActivity {
                     this.ivimage.setImageURI(selectedImage);
                     messageArea.setText(selectedImage.toString());
                     imgIdentity = selectedImage.toString();
-//                    imgUpload();
                 }
                 break;
+            case 2:
+                if (resultCode == RESULT_OK) {
+                    Bitmap photo = (Bitmap) imageReturnedIntent.getExtras().get("data");
+                    this.ivimage.setImageBitmap(photo);
+                    messageArea.setText(photo.toString());
+                    imgIdentity = photo.toString();
+                }
         }
     }
 
