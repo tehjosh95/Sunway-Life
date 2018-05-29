@@ -203,11 +203,11 @@ public class SecondActivity extends AppCompatActivity {
                 .build();
 
         PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName("Profile");
-        PrimaryDrawerItem item2 = new PrimaryDrawerItem().withIdentifier(2).withName("List of users");
-        PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(3).withName("Edit and View Posted");
+        PrimaryDrawerItem item2 = new PrimaryDrawerItem().withIdentifier(2).withName("Inbox");
+        PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(3).withName("List of Clubs with search");
         PrimaryDrawerItem item4 = new PrimaryDrawerItem().withIdentifier(4).withName("Logout");
-        PrimaryDrawerItem item5 = new PrimaryDrawerItem().withIdentifier(5).withName("Inbox");
-        PrimaryDrawerItem item6 = new PrimaryDrawerItem().withIdentifier(6).withName("List of Clubs with search");
+        PrimaryDrawerItem item5 = new PrimaryDrawerItem().withIdentifier(5).withName("Edit and view posted");
+        PrimaryDrawerItem item6 = new PrimaryDrawerItem().withIdentifier(6).withName("List of users");
 
         Drawer result = new DrawerBuilder()
                 .withActivity(this)
@@ -218,6 +218,7 @@ public class SecondActivity extends AppCompatActivity {
                         item2,
                         item3,
                         item4,
+                        new DividerDrawerItem(),
                         item5,
                         item6
                 )
@@ -245,19 +246,21 @@ public class SecondActivity extends AppCompatActivity {
                                 });
                                 break;
                             case 2:
-                                startActivity(new Intent(SecondActivity.this, Users.class));
+                                startActivity(new Intent(SecondActivity.this, Inbox.class));
                                 break;
                             case 3:
-                                startActivity(new Intent(SecondActivity.this, ActivityPosted.class));
+                                startActivity(new Intent(SecondActivity.this, ListOfClubsActivity.class));
                                 break;
                             case 4:
                                 Logout();
                                 break;
                             case 5:
-                                startActivity(new Intent(SecondActivity.this, Inbox.class));
                                 break;
                             case 6:
-                                startActivity(new Intent(SecondActivity.this, ListOfClubsActivity.class));
+                                startActivity(new Intent(SecondActivity.this, ActivityPosted.class));
+                                break;
+                            case 7:
+                                startActivity(new Intent(SecondActivity.this, Users.class));
                                 break;
                         }
                         return true;
@@ -266,7 +269,6 @@ public class SecondActivity extends AppCompatActivity {
                 .build();
 
         progDialog=ProgressDialog.show(this,null,"Wait.....");
-        Log.d("after","############################### wait");
         progDialog.setContentView(new ProgressBar(this));
 
         mDataRef3.addListenerForSingleValueEvent(new ValueEventListener() {

@@ -15,14 +15,14 @@
 
         <ImageView
             android:id="@+id/image_preview"
-            android:layout_width="331dp"
+            android:layout_width="match_parent"
             android:layout_height="199dp"
             android:layout_gravity="center"
             android:layout_marginTop="0dp"
-            android:scaleType="centerCrop"
-            android:onClick="handleChooseImage"
             android:background="@color/md_blue_grey_100"
-             />
+            android:onClick="handleChooseImage"
+            android:scaleType="centerCrop" />
+
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
