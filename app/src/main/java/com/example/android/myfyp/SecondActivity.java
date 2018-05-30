@@ -208,6 +208,8 @@ public class SecondActivity extends AppCompatActivity {
         PrimaryDrawerItem item4 = new PrimaryDrawerItem().withIdentifier(4).withName("Logout");
         PrimaryDrawerItem item5 = new PrimaryDrawerItem().withIdentifier(5).withName("Edit and view posted");
         PrimaryDrawerItem item6 = new PrimaryDrawerItem().withIdentifier(6).withName("List of users");
+        PrimaryDrawerItem item7 = new PrimaryDrawerItem().withIdentifier(7).withName("List of pendings for clubs");
+        PrimaryDrawerItem item8 = new PrimaryDrawerItem().withIdentifier(8).withName("List of successful for clubs");
 
         Drawer result = new DrawerBuilder()
                 .withActivity(this)
@@ -220,7 +222,9 @@ public class SecondActivity extends AppCompatActivity {
                         item4,
                         new DividerDrawerItem(),
                         item5,
-                        item6
+                        item6,
+                        item7,
+                        item8
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -257,10 +261,16 @@ public class SecondActivity extends AppCompatActivity {
                             case 5:
                                 break;
                             case 6:
-                                startActivity(new Intent(SecondActivity.this, List_of_pending.class));
+                                startActivity(new Intent(SecondActivity.this, ActivityPosted.class));
                                 break;
                             case 7:
                                 startActivity(new Intent(SecondActivity.this, Users.class));
+                                break;
+                            case 8:
+                                startActivity(new Intent(SecondActivity.this, List_of_pending.class));
+                                break;
+                            case 9:
+                                startActivity(new Intent(SecondActivity.this, List_of_successful.class));
                                 break;
                         }
                         return true;

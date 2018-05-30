@@ -90,30 +90,11 @@ public class ListOfClubsView extends AppCompatActivity{
         EditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                UserDetails.username = firebaseAuth.getCurrentUser().getUid();
-//                UserDetails.chatWith = Myuid;
-//                UserDetails.name = Name;
-//                startActivity(new Intent(ListOfClubsView.this, Chat.class));
-//                finish();
-
-                mDataRef3 = mDataRef.child(firebaseAuth.getCurrentUser().getUid());
-                mDataRef3.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        count = 0;
-                        for (DataSnapshot postsnapshot : dataSnapshot.getChildren()) {
-                            join_list joinList = postsnapshot.getValue(join_list.class);
-                            if (joinList.getStatus().equals("pending")) {
-                                count++;
-                            }
-                        }
-                        Toast.makeText(ListOfClubsView.this, "Total amount subscribed: " + count, Toast.LENGTH_LONG).show();
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+                UserDetails.username = firebaseAuth.getCurrentUser().getUid();
+                UserDetails.chatWith = Myuid;
+                UserDetails.name = Name;
+                startActivity(new Intent(ListOfClubsView.this, Chat.class));
+                finish();
             }
         });
 

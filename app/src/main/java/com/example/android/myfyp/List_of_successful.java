@@ -33,7 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class List_of_pending extends AppCompatActivity {
+public class List_of_successful extends AppCompatActivity {
     RecyclerView recyclerView;
     ArrayList<join_list> AllClubsList;
     ArrayList<String> keys;
@@ -94,13 +94,8 @@ public class List_of_pending extends AppCompatActivity {
     private void firebaseUserSearch(String searchText) {
 //        Toast.makeText(ListOfClubsActivity.this, "Started Search", Toast.LENGTH_LONG).show();
         AllClubsList.clear();
-        if(!searchText.equals("")) {
-            Query firebaseSearchQuery = mUserDatabase.orderByChild("myname").startAt(searchText).endAt(searchText + "\uf8ff");
-            firebaseSearchQuery.addListenerForSingleValueEvent(valueEventListener);
-        }else{
-            Query firebaseSearchQuery = mUserDatabase;
-            firebaseSearchQuery.addListenerForSingleValueEvent(valueEventListener);
-        }
+        Query firebaseSearchQuery = mUserDatabase.orderByChild("myname").startAt(searchText).endAt(searchText + "\uf8ff");
+        firebaseSearchQuery.addListenerForSingleValueEvent(valueEventListener);
     }
     ValueEventListener valueEventListener = new ValueEventListener() {
         @Override
@@ -109,19 +104,19 @@ public class List_of_pending extends AppCompatActivity {
             keys.clear();
             for (DataSnapshot postsnapshot : dataSnapshot.getChildren()) {
                 final join_list joinList = postsnapshot.getValue(join_list.class);
-                if (joinList.getStatus().equals("pending")) {
+                if (joinList.getStatus().equals("successful")) {
                     AllClubsList.add(joinList);
                     keys.add(postsnapshot.getKey().toString());
-                    adapter = new PendingListAdapter(List_of_pending.this, AllClubsList);
+                    adapter = new PendingListAdapter(List_of_successful.this, AllClubsList);
                     recyclerView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
 
-                    recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(List_of_pending.this, new RecyclerItemClickListener.OnItemClickListener() {
+                    recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(List_of_successful.this, new RecyclerItemClickListener.OnItemClickListener() {
                         @Override
                         public void onItemClick(View childView, int position) {
-                            join_list joinList1 = AllClubsList.get(position);
-                            mUserDatabase.child(keys.get(position)).child("status").setValue("successful");
-                            mSearchBtn.performClick();
+//                            join_list joinList1 = AllClubsList.get(position);
+//                            mUserDatabase.child(keys.get(position)).child("status").setValue("successful");
+//                            mSearchBtn.performClick();
                         }
 
                         @Override
