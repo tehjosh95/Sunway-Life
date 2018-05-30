@@ -210,6 +210,7 @@ public class SecondActivity extends AppCompatActivity {
         PrimaryDrawerItem item6 = new PrimaryDrawerItem().withIdentifier(6).withName("List of users");
         PrimaryDrawerItem item7 = new PrimaryDrawerItem().withIdentifier(7).withName("List of pendings for clubs");
         PrimaryDrawerItem item8 = new PrimaryDrawerItem().withIdentifier(8).withName("List of successful for clubs");
+        PrimaryDrawerItem item9 = new PrimaryDrawerItem().withIdentifier(9).withName("List of joined for students");
 
         Drawer result = new DrawerBuilder()
                 .withActivity(this)
@@ -224,7 +225,8 @@ public class SecondActivity extends AppCompatActivity {
                         item5,
                         item6,
                         item7,
-                        item8
+                        item8,
+                        item9
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -271,6 +273,9 @@ public class SecondActivity extends AppCompatActivity {
                                 break;
                             case 9:
                                 startActivity(new Intent(SecondActivity.this, List_of_successful.class));
+                                break;
+                            case 10:
+                                startActivity(new Intent(SecondActivity.this, List_of_joined.class));
                                 break;
                         }
                         return true;
@@ -327,7 +332,6 @@ public class SecondActivity extends AppCompatActivity {
     }
 
     private void Logout(){
-        Log.d("out","###############################"+ username);
         firebaseAuth.signOut();
         finish();
         startActivity(new Intent(SecondActivity.this, MainActivity.class));

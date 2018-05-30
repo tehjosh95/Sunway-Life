@@ -63,7 +63,8 @@
         <activity android:name=".UpdateClubProfile" />
         <activity android:name=".ListOfClubsView" />
         <activity android:name=".List_of_pending" />
-        <activity android:name=".List_of_successful"></activity>
+        <activity android:name=".List_of_successful" />
+        <activity android:name=".List_of_joined"></activity>
     </application>
 
 </manifest>
