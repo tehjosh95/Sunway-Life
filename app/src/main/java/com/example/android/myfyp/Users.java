@@ -43,7 +43,6 @@ public class Users extends AppCompatActivity {
     private FirebaseDatabase mDatabase;
     private FirebaseAuth firebaseAuth;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,30 +76,6 @@ public class Users extends AppCompatActivity {
         RequestQueue rQueue = Volley.newRequestQueue(Users.this);
         rQueue.add(request);
 
-//        usersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-//                Log.d("****clicked","****clicked" );
-//
-//                mDataRef.addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                        UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
-//                        UserDetails.chatWith = al.get(position);
-//                        UserDetails.username = userProfile.getUserName();
-//                        Log.d("****chatwith","****chatwith" + UserDetails.chatWith);
-//                        Log.d("****chatwith","****chatwith" + UserDetails.username);
-//                        startActivity(new Intent(Users.this, Chat.class));
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//                    }
-//                });
-//
-//            }
-//        });
-
         usersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -120,7 +95,6 @@ public class Users extends AppCompatActivity {
 //                        Toast.makeText(Users.this, databaseError.getCode(), Toast.LENGTH_SHORT).show();
 //                    }
 //                });
-
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                 UserDetails.username = encodeUserEmail(user.getUid());
@@ -130,9 +104,6 @@ public class Users extends AppCompatActivity {
                 startActivity(new Intent(Users.this, Chat.class));
             }
         });
-
-
-
     }
 
     public void doOnSuccess(String s){
@@ -147,12 +118,10 @@ public class Users extends AppCompatActivity {
                 key = i.next().toString();
                 JSONObject user = obj.getJSONObject(key);
 
-
                 if(!key.equals(currentuser)) {
                     al.add(key);
                     al2.add(user.getString("userName"));
                 }
-
                 totalUsers++;
             }
 
@@ -169,16 +138,13 @@ public class Users extends AppCompatActivity {
             usersList.setVisibility(View.VISIBLE);
             usersList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, al2));
         }
-
         pd.dismiss();
     }
 
     static String encodeUserEmail(String userEmail) {
         return userEmail.replace(".", ",");
     }
-
     static String decodeUserEmail(String userEmail) {
         return userEmail.replace(",", ".");
     }
-
 }

@@ -257,7 +257,7 @@ public class SecondActivity extends AppCompatActivity {
                             case 5:
                                 break;
                             case 6:
-                                startActivity(new Intent(SecondActivity.this, ActivityPosted.class));
+                                startActivity(new Intent(SecondActivity.this, List_of_pending.class));
                                 break;
                             case 7:
                                 startActivity(new Intent(SecondActivity.this, Users.class));

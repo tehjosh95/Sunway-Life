@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
@@ -60,7 +61,8 @@
         <activity android:name=".AddClubs" />
         <activity android:name=".ClubProfileActivity" />
         <activity android:name=".UpdateClubProfile" />
-        <activity android:name=".ListOfClubsView"></activity>
+        <activity android:name=".ListOfClubsView" />
+        <activity android:name=".List_of_pending"></activity>
     </application>
 
 </manifest>

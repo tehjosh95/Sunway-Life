@@ -20,8 +20,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.List;
 
-public class ListOfClubsView extends AppCompatActivity {
+public class ListOfClubsView extends AppCompatActivity{
+    public interface MyCallback {
+         void onCallback(String value);
+
+    }
+
     private ImageView profilePic;
     private TextView profileName, profileCont, profileDesc;
     private Button EditButton, btnJoin;
@@ -29,7 +35,9 @@ public class ListOfClubsView extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
     private FirebaseDatabase mDatabase;
-    private DatabaseReference mDataRef, mDataRef2;
+    private DatabaseReference mDataRef, mDataRef2, mDataRef3;
+    private String nameofclub;
+    private int count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +58,7 @@ public class ListOfClubsView extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance();
         mDataRef = mDatabase.getReference();
         mDataRef = firebaseDatabase.getReference().child("join_list");
+        mDataRef2 = firebaseDatabase.getReference();
 
         Intent startingIntent = getIntent();
         final String myurl = startingIntent.getStringExtra("isimg");
@@ -81,34 +90,60 @@ public class ListOfClubsView extends AppCompatActivity {
         EditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UserDetails.username = firebaseAuth.getCurrentUser().getUid();
-                UserDetails.chatWith = Myuid;
-                UserDetails.name = Name;
-                startActivity(new Intent(ListOfClubsView.this, Chat.class));
-                finish();
+//                UserDetails.username = firebaseAuth.getCurrentUser().getUid();
+//                UserDetails.chatWith = Myuid;
+//                UserDetails.name = Name;
+//                startActivity(new Intent(ListOfClubsView.this, Chat.class));
+//                finish();
+
+                mDataRef3 = mDataRef.child(firebaseAuth.getCurrentUser().getUid());
+                mDataRef3.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        count = 0;
+                        for (DataSnapshot postsnapshot : dataSnapshot.getChildren()) {
+                            join_list joinList = postsnapshot.getValue(join_list.class);
+                            if (joinList.getStatus().equals("pending")) {
+                                count++;
+                            }
+                        }
+                        Toast.makeText(ListOfClubsView.this, "Total amount subscribed: " + count, Toast.LENGTH_LONG).show();
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
         });
 
         btnJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                readData(new MyCallback(){
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (!dataSnapshot.child(Myuid).hasChild(firebaseAuth.getCurrentUser().getUid())){
-                            String status = "pending";
-                            join_list joinList = new join_list(status);
-                            mDataRef.child(Myuid).child(firebaseAuth.getCurrentUser().getUid()).setValue(joinList);
-                            Toast.makeText(ListOfClubsView.this, "On pending list...", Toast.LENGTH_LONG).show();
-                        }else{
-                            Toast.makeText(ListOfClubsView.this, "Already joined!!", Toast.LENGTH_LONG).show();
+                    public void onCallback(String value) {
+                        nameofclub = value;
+                        Log.d("***method2", "" + nameofclub);
+                        mDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if (!dataSnapshot.child(Myuid).hasChild(firebaseAuth.getCurrentUser().getUid())){
+                                    String status = "pending";
+                                    join_list joinList = new join_list(status, nameofclub, firebaseAuth.getCurrentUser().getDisplayName());
+                                    mDataRef.child(Myuid).child(firebaseAuth.getCurrentUser().getUid()).setValue(joinList);
+                                    Log.d("***method3", "" + nameofclub);
+                                    Toast.makeText(ListOfClubsView.this, "On pending list...", Toast.LENGTH_LONG).show();
+                                }else{
+                                    Toast.makeText(ListOfClubsView.this, "Already joined!!", Toast.LENGTH_LONG).show();
+                                }
+                            }
 
-                        }
-                    }
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
+                            }
+                        });
                     }
                 });
             }
@@ -127,5 +162,25 @@ public class ListOfClubsView extends AppCompatActivity {
 //                startActivity(intent);
 //            }
 //        });
+    }
+    public void readData( final MyCallback myCallback){
+        Intent startingIntent = getIntent();
+        final String Myuid = startingIntent.getStringExtra("isuid");
+        mDataRef2 = mDataRef2.child("Clubs").child(Myuid);
+        mDataRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ListOfClubs listOfClubs = dataSnapshot.getValue(ListOfClubs.class);
+                nameofclub = listOfClubs.getName();
+                myCallback.onCallback(nameofclub);
+                Log.d("***method", "" + nameofclub);
+                Log.d("***methoddown", "" + Myuid);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }
