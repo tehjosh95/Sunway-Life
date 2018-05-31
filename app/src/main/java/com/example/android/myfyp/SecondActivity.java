@@ -186,105 +186,319 @@ public class SecondActivity extends AppCompatActivity {
                     }
                 })
         );
-        AccountHeader headerResult = new AccountHeaderBuilder()
-
-                .withActivity(this)
-                .withHeaderBackground(R.drawable.header)
-                .addProfiles(
-                        new ProfileDrawerItem().withName(firebaseAuth.getCurrentUser().getDisplayName()).withEmail(firebaseAuth.getCurrentUser().getEmail())
-//                                .withIcon(getResources().getDrawable(R.drawable.profile))
-                )
-                .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
-                    @Override
-                    public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
-                        return false;
-                    }
-                })
-                .build();
-
-        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName("Profile");
-        PrimaryDrawerItem item2 = new PrimaryDrawerItem().withIdentifier(2).withName("Inbox");
-        PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(3).withName("List of Clubs with search");
-        PrimaryDrawerItem item4 = new PrimaryDrawerItem().withIdentifier(4).withName("Logout");
-        PrimaryDrawerItem item5 = new PrimaryDrawerItem().withIdentifier(5).withName("Edit and view posted");
-        PrimaryDrawerItem item6 = new PrimaryDrawerItem().withIdentifier(6).withName("List of users");
-        PrimaryDrawerItem item7 = new PrimaryDrawerItem().withIdentifier(7).withName("List of pendings for clubs");
-        PrimaryDrawerItem item8 = new PrimaryDrawerItem().withIdentifier(8).withName("List of successful for clubs");
-        PrimaryDrawerItem item9 = new PrimaryDrawerItem().withIdentifier(9).withName("List of joined for students");
-
-        Drawer result = new DrawerBuilder()
-                .withActivity(this)
-                .withAccountHeader(headerResult)
-                .withToolbar(toolbar)
-                .addDrawerItems(
-                        item1,
-                        item2,
-                        item3,
-                        item4,
-                        new DividerDrawerItem(),
-                        item5,
-                        item6,
-                        item7,
-                        item8,
-                        item9
-                )
-                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                    @Override
-                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        switch(position){
-                            case 1:
-                                mDataRef3.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        if (dataSnapshot.hasChild(firebaseAuth.getCurrentUser().getUid())){
-                                            if (!firebaseAuth.getCurrentUser().getUid().equals("XHR842kZD3cTZTwz7nM5LWJESW72")) {
-                                                startActivity(new Intent(SecondActivity.this, ProfileActivity.class));
-                                            }
-                                        }else{
-                                            startActivity(new Intent(SecondActivity.this, ClubProfileActivity.class));
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
-                                });
-                                break;
-                            case 2:
-                                startActivity(new Intent(SecondActivity.this, Inbox.class));
-                                break;
-                            case 3:
-                                startActivity(new Intent(SecondActivity.this, ListOfClubsActivity.class));
-                                break;
-                            case 4:
-                                Logout();
-                                break;
-                            case 5:
-                                break;
-                            case 6:
-                                startActivity(new Intent(SecondActivity.this, ActivityPosted.class));
-                                break;
-                            case 7:
-                                startActivity(new Intent(SecondActivity.this, Users.class));
-                                break;
-                            case 8:
-                                startActivity(new Intent(SecondActivity.this, List_of_pending.class));
-                                break;
-                            case 9:
-                                startActivity(new Intent(SecondActivity.this, List_of_successful.class));
-                                break;
-                            case 10:
-                                startActivity(new Intent(SecondActivity.this, List_of_joined.class));
-                                break;
-                        }
-                        return true;
-                    }
-                })
-                .build();
 
         progDialog=ProgressDialog.show(this,null,"Wait.....");
         progDialog.setContentView(new ProgressBar(this));
+        mDataRef3.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(firebaseAuth.getCurrentUser().getUid()) && !firebaseAuth.getCurrentUser().getUid().equals("XHR842kZD3cTZTwz7nM5LWJESW72")) {
+                    AccountHeader headerResult = new AccountHeaderBuilder()
+                            .withActivity(SecondActivity.this)
+                            .withHeaderBackground(R.drawable.header)
+                            .addProfiles(
+                                    new ProfileDrawerItem().withName(firebaseAuth.getCurrentUser().getDisplayName()).withEmail(firebaseAuth.getCurrentUser().getEmail())
+//                                .withIcon(getResources().getDrawable(R.drawable.profile))
+                            )
+                            .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
+                                @Override
+                                public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
+                                    return false;
+                                }
+                            })
+                            .build();
+
+                    PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName("Profile");
+                    PrimaryDrawerItem item2 = new PrimaryDrawerItem().withIdentifier(2).withName("Inbox");
+                    PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(3).withName("List of Clubs with search");
+                    PrimaryDrawerItem item4 = new PrimaryDrawerItem().withIdentifier(4).withName("List of joined for students");
+                    PrimaryDrawerItem item5 = new PrimaryDrawerItem().withIdentifier(5).withName("Logout");
+
+
+                    Drawer result = new DrawerBuilder()
+                            .withActivity(SecondActivity.this)
+                            .withAccountHeader(headerResult)
+                            .withToolbar(toolbar)
+                            .addDrawerItems(
+                                    item1,
+                                    item2,
+                                    item3,
+                                    item4,
+                                    new DividerDrawerItem(),
+                                    item5
+                            )
+                            .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                                @Override
+                                public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                                    switch(position){
+                                        case 1:
+                                            startActivity(new Intent(SecondActivity.this, ProfileActivity.class));
+                                            break;
+                                        case 2:
+                                            startActivity(new Intent(SecondActivity.this, Inbox.class));
+                                            break;
+                                        case 3:
+                                            startActivity(new Intent(SecondActivity.this, ListOfClubsActivity.class));
+                                            break;
+                                        case 4:
+                                            startActivity(new Intent(SecondActivity.this, List_of_joined.class));
+                                            break;
+                                        case 5:
+                                            break;
+                                        case 6:
+                                            Logout();
+                                            break;
+                                    }
+                                    return true;
+                                }
+                            })
+                            .build();
+                }
+                else if (dataSnapshot.hasChild(firebaseAuth.getCurrentUser().getUid()) && firebaseAuth.getCurrentUser().getUid().equals("XHR842kZD3cTZTwz7nM5LWJESW72")){
+
+                    AccountHeader headerResult = new AccountHeaderBuilder()
+                            .withActivity(SecondActivity.this)
+                            .withHeaderBackground(R.drawable.header)
+                            .addProfiles(
+                                    new ProfileDrawerItem().withName(firebaseAuth.getCurrentUser().getDisplayName()).withEmail(firebaseAuth.getCurrentUser().getEmail())
+//                                .withIcon(getResources().getDrawable(R.drawable.profile))
+                            )
+                            .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
+                                @Override
+                                public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
+                                    return false;
+                                }
+                            })
+                            .build();
+
+                    PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName("Profile");
+                    PrimaryDrawerItem item2 = new PrimaryDrawerItem().withIdentifier(2).withName("Inbox");
+                    PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(4).withName("Edit and view posted");
+                    PrimaryDrawerItem item4 = new PrimaryDrawerItem().withIdentifier(3).withName("List of Clubs with search");
+                    PrimaryDrawerItem item5 = new PrimaryDrawerItem().withIdentifier(5).withName("Logout");
+
+
+                    Drawer result = new DrawerBuilder()
+                            .withActivity(SecondActivity.this)
+                            .withAccountHeader(headerResult)
+                            .withToolbar(toolbar)
+                            .addDrawerItems(
+                                    item1,
+                                    item2,
+                                    item3,
+                                    item4,
+                                    new DividerDrawerItem(),
+                                    item5
+                            )
+                            .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                                @Override
+                                public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                                    switch(position){
+                                        case 1:
+                                            startActivity(new Intent(SecondActivity.this, ProfileActivity.class));
+                                            break;
+                                        case 2:
+                                            startActivity(new Intent(SecondActivity.this, Inbox.class));
+                                            break;
+                                        case 3:
+                                            startActivity(new Intent(SecondActivity.this, ActivityPosted.class));
+                                            break;
+                                        case 4:
+                                            startActivity(new Intent(SecondActivity.this, ListOfClubsActivity.class));
+                                            break;
+                                        case 5:
+                                            break;
+                                        case 6:
+                                            Logout();
+                                            break;
+                                    }
+                                    return true;
+                                }
+                            })
+                            .build();
+                }
+                else{
+                    AccountHeader headerResult = new AccountHeaderBuilder()
+                            .withActivity(SecondActivity.this)
+                            .withHeaderBackground(R.drawable.header)
+                            .addProfiles(
+                                    new ProfileDrawerItem().withName(firebaseAuth.getCurrentUser().getDisplayName()).withEmail(firebaseAuth.getCurrentUser().getEmail())
+//                                .withIcon(getResources().getDrawable(R.drawable.profile))
+                            )
+                            .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
+                                @Override
+                                public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
+                                    return false;
+                                }
+                            })
+                            .build();
+
+                    PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName("Profile");
+                    PrimaryDrawerItem item2 = new PrimaryDrawerItem().withIdentifier(2).withName("Inbox");
+                    PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(3).withName("Edit and view posted");
+                    PrimaryDrawerItem item4 = new PrimaryDrawerItem().withIdentifier(4).withName("List of Clubs with search");
+                    PrimaryDrawerItem item5 = new PrimaryDrawerItem().withIdentifier(5).withName("List of pendings for clubs");
+                    PrimaryDrawerItem item6 = new PrimaryDrawerItem().withIdentifier(6).withName("List of successful for clubs");
+                    PrimaryDrawerItem item7 = new PrimaryDrawerItem().withIdentifier(7).withName("Logout");
+
+                    Drawer result = new DrawerBuilder()
+                            .withActivity(SecondActivity.this)
+                            .withAccountHeader(headerResult)
+                            .withToolbar(toolbar)
+                            .addDrawerItems(
+                                    item1,
+                                    item2,
+                                    item3,
+                                    item4,
+                                    item5,
+                                    item6,
+                                    new DividerDrawerItem(),
+                                    item7
+                            )
+                            .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                                @Override
+                                public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                                    switch(position){
+                                        case 1:
+                                            startActivity(new Intent(SecondActivity.this, ClubProfileActivity.class));
+                                            break;
+                                        case 2:
+                                            startActivity(new Intent(SecondActivity.this, Inbox.class));
+                                            break;
+                                        case 3:
+                                            startActivity(new Intent(SecondActivity.this, ActivityPosted.class));
+                                            break;
+                                        case 4:
+                                            startActivity(new Intent(SecondActivity.this, ListOfClubsActivity.class));
+                                            break;
+                                        case 5:
+                                            startActivity(new Intent(SecondActivity.this, List_of_pending.class));
+                                            break;
+                                        case 6:
+                                            startActivity(new Intent(SecondActivity.this, List_of_successful.class));
+                                            break;
+                                        case 7:
+                                            break;
+                                        case 8:
+                                            Logout();
+                                            break;
+                                    }
+                                    return true;
+                                }
+                            })
+                            .build();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+
+
+//        AccountHeader headerResult = new AccountHeaderBuilder()
+//
+//                .withActivity(this)
+//                .withHeaderBackground(R.drawable.header)
+//                .addProfiles(
+//                        new ProfileDrawerItem().withName(firebaseAuth.getCurrentUser().getDisplayName()).withEmail(firebaseAuth.getCurrentUser().getEmail())
+////                                .withIcon(getResources().getDrawable(R.drawable.profile))
+//                )
+//                .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
+//                    @Override
+//                    public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
+//                        return false;
+//                    }
+//                })
+//                .build();
+//
+//        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName("Profile");
+//        PrimaryDrawerItem item2 = new PrimaryDrawerItem().withIdentifier(2).withName("Inbox");
+//        PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(3).withName("List of Clubs with search");
+//        PrimaryDrawerItem item4 = new PrimaryDrawerItem().withIdentifier(4).withName("Logout");
+//        PrimaryDrawerItem item5 = new PrimaryDrawerItem().withIdentifier(5).withName("Edit and view posted");
+//        PrimaryDrawerItem item6 = new PrimaryDrawerItem().withIdentifier(6).withName("List of users");
+//        PrimaryDrawerItem item7 = new PrimaryDrawerItem().withIdentifier(7).withName("List of pendings for clubs");
+//        PrimaryDrawerItem item8 = new PrimaryDrawerItem().withIdentifier(8).withName("List of successful for clubs");
+//        PrimaryDrawerItem item9 = new PrimaryDrawerItem().withIdentifier(9).withName("List of joined for students");
+//
+//        Drawer result = new DrawerBuilder()
+//                .withActivity(this)
+//                .withAccountHeader(headerResult)
+//                .withToolbar(toolbar)
+//                .addDrawerItems(
+//                        item1,
+//                        item2,
+//                        item3,
+//                        item4,
+//                        new DividerDrawerItem(),
+//                        item5,
+//                        item6,
+//                        item7,
+//                        item8,
+//                        item9
+//                )
+//                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+//                    @Override
+//                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+//                        switch(position){
+//                            case 1:
+//                                mDataRef3.addListenerForSingleValueEvent(new ValueEventListener() {
+//                                    @Override
+//                                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                                        if (dataSnapshot.hasChild(firebaseAuth.getCurrentUser().getUid())){
+//                                            if (!firebaseAuth.getCurrentUser().getUid().equals("XHR842kZD3cTZTwz7nM5LWJESW72")) {
+//                                                startActivity(new Intent(SecondActivity.this, ProfileActivity.class));
+//                                            }
+//                                        }else{
+//                                            startActivity(new Intent(SecondActivity.this, ClubProfileActivity.class));
+//                                        }
+//                                    }
+//
+//                                    @Override
+//                                    public void onCancelled(DatabaseError databaseError) {
+//
+//                                    }
+//                                });
+//                                break;
+//                            case 2:
+//                                startActivity(new Intent(SecondActivity.this, Inbox.class));
+//                                break;
+//                            case 3:
+//                                startActivity(new Intent(SecondActivity.this, ListOfClubsActivity.class));
+//                                break;
+//                            case 4:
+//                                Logout();
+//                                break;
+//                            case 5:
+//                                break;
+//                            case 6:
+//                                startActivity(new Intent(SecondActivity.this, ActivityPosted.class));
+//                                break;
+//                            case 7:
+//                                startActivity(new Intent(SecondActivity.this, Users.class));
+//                                break;
+//                            case 8:
+//                                startActivity(new Intent(SecondActivity.this, List_of_pending.class));
+//                                break;
+//                            case 9:
+//                                startActivity(new Intent(SecondActivity.this, List_of_successful.class));
+//                                break;
+//                            case 10:
+//                                startActivity(new Intent(SecondActivity.this, List_of_joined.class));
+//                                break;
+//                        }
+//                        return true;
+//                    }
+//                })
+//                .build();
+
+//        progDialog=ProgressDialog.show(this,null,"Wait.....");
+//        progDialog.setContentView(new ProgressBar(this));
         mDataRef3.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
