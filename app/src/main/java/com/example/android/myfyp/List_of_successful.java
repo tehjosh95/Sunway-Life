@@ -82,9 +82,9 @@ public class List_of_successful extends AppCompatActivity {
             public void onClick(View view) {
                 String searchText = mSearchField.getText().toString();
 
-                if(searchText.length() > 0) {
+                if (searchText.length() > 0) {
                     firebaseUserSearch(searchText);
-                }else{
+                } else {
                     AllClubsList.clear();
                     mUserDatabase.addListenerForSingleValueEvent(valueEventListener);
                 }
@@ -98,6 +98,7 @@ public class List_of_successful extends AppCompatActivity {
         Query firebaseSearchQuery = mUserDatabase.orderByChild("myname").startAt(searchText).endAt(searchText + "\uf8ff");
         firebaseSearchQuery.addListenerForSingleValueEvent(valueEventListener);
     }
+
     ValueEventListener valueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -124,8 +125,8 @@ public class List_of_successful extends AppCompatActivity {
                             Intent intent = new Intent(List_of_successful.this, ProfileActivity.class);
                             intent.putExtra("isname", userProfile.getUserName());
                             intent.putExtra("isage", userProfile.getUserAge());
-                            intent.putExtra("isemail",userProfile.getUserEmail());
-                            intent.putExtra("istype",userProfile.getUserType());
+                            intent.putExtra("isemail", userProfile.getUserEmail());
+                            intent.putExtra("istype", userProfile.getUserType());
                             startActivity(intent);
                         }
 

@@ -25,7 +25,6 @@ import java.util.List;
 public class ListOfClubsView extends AppCompatActivity{
     public interface MyCallback {
          void onCallback(String value);
-
     }
 
     private ImageView profilePic;
@@ -157,7 +156,6 @@ public class ListOfClubsView extends AppCompatActivity{
                 Log.d("***method", "" + nameofclub);
                 Log.d("***methoddown", "" + Myuid);
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 

@@ -285,7 +285,6 @@ public class SecondActivity extends AppCompatActivity {
 
         progDialog=ProgressDialog.show(this,null,"Wait.....");
         progDialog.setContentView(new ProgressBar(this));
-
         mDataRef3.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
