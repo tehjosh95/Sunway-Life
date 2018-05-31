@@ -1,9 +1,11 @@
 package com.example.android.myfyp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Image;
 import android.renderscript.Sampler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -40,7 +42,7 @@ public class List_of_pending extends AppCompatActivity {
     private EditText mSearchField;
     private ImageButton mSearchBtn;
     private PendingListAdapter adapter;
-    private DatabaseReference mUserDatabase;
+    private DatabaseReference mUserDatabase, mUserDatabase2;
     private FirebaseAuth firebaseAuth;
     private int count;
 
@@ -52,7 +54,7 @@ public class List_of_pending extends AppCompatActivity {
         AllClubsList = new ArrayList<>();
         keys = new ArrayList<>();
         mUserDatabase = FirebaseDatabase.getInstance().getReference("join_list").child(firebaseAuth.getCurrentUser().getUid());
-
+        mUserDatabase2 = FirebaseDatabase.getInstance().getReference("Users");
 
         mSearchField = (EditText) findViewById(R.id.search_field);
         mSearchBtn = (ImageButton) findViewById(R.id.search_btn);
@@ -112,25 +114,55 @@ public class List_of_pending extends AppCompatActivity {
                 if (joinList.getStatus().equals("pending")) {
                     AllClubsList.add(joinList);
                     keys.add(postsnapshot.getKey().toString());
-                    adapter = new PendingListAdapter(List_of_pending.this, AllClubsList);
-                    recyclerView.setAdapter(adapter);
-                    adapter.notifyDataSetChanged();
+                }
+            }
+            adapter = new PendingListAdapter(List_of_pending.this, AllClubsList);
+            recyclerView.setAdapter(adapter);
 
-                    recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(List_of_pending.this, new RecyclerItemClickListener.OnItemClickListener() {
+            recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(List_of_pending.this, new RecyclerItemClickListener.OnItemClickListener() {
+                @Override
+                public void onItemClick(View childView, int position) {
+                    mUserDatabase2 = mUserDatabase2.child(keys.get(position));
+                    mUserDatabase2.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public void onItemClick(View childView, int position) {
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
+                            Intent intent = new Intent(List_of_pending.this, ProfileActivity.class);
+                            intent.putExtra("isname", userProfile.getUserName());
+                            intent.putExtra("isage", userProfile.getUserAge());
+                            intent.putExtra("isemail",userProfile.getUserEmail());
+                            intent.putExtra("istype",userProfile.getUserType());
+                            startActivity(intent);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onItemLongPress(View childView, final int position) {
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(List_of_pending.this);
+                    alertDialog.setTitle("Approve?");
+
+                    alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
                             join_list joinList1 = AllClubsList.get(position);
                             mUserDatabase.child(keys.get(position)).child("status").setValue("successful");
                             mSearchBtn.performClick();
                         }
-
-                        @Override
-                        public void onItemLongPress(View childView, int position) {
-
-                        }
-                    }));
+                    });
+                    alertDialog.show();
                 }
-            }
+            }));
         }
 
         @Override

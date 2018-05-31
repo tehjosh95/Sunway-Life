@@ -36,11 +36,13 @@ import java.util.List;
 public class List_of_joined extends AppCompatActivity {
     RecyclerView recyclerView;
     ArrayList<join_list> AllClubsList;
+    ArrayList<ListOfClubs> AllClubsList2;
     ArrayList<String> keys;
+    ArrayList<String> Parentkeys;
     private EditText mSearchField;
     private ImageButton mSearchBtn;
     private ListOfJoinedAdapter adapter;
-    private DatabaseReference mUserDatabase;
+    private DatabaseReference mUserDatabase, mUserDatabase2;
     private FirebaseAuth firebaseAuth;
     private int count;
 
@@ -50,8 +52,11 @@ public class List_of_joined extends AppCompatActivity {
         setContentView(R.layout.activity_list_of_pending);
         firebaseAuth = FirebaseAuth.getInstance();
         AllClubsList = new ArrayList<>();
+        AllClubsList2 = new ArrayList<>();
         keys = new ArrayList<>();
+        Parentkeys = new ArrayList<>();
         mUserDatabase = FirebaseDatabase.getInstance().getReference("join_list");
+        mUserDatabase2 = FirebaseDatabase.getInstance().getReference("Clubs");
 
 
         mSearchField = (EditText) findViewById(R.id.search_field);
@@ -115,15 +120,48 @@ public class List_of_joined extends AppCompatActivity {
                             if(nextsnap.getKey().equals(firebaseAuth.getCurrentUser().getUid())) {
                                 AllClubsList.add(joinList);
                                 keys.add(nextsnap.getKey().toString());
-                                adapter = new ListOfJoinedAdapter(List_of_joined.this, AllClubsList);
-                                Log.d("****clubsize", "" + AllClubsList.size());
-                                recyclerView.setAdapter(adapter);
-                                adapter.notifyDataSetChanged();
+                                Parentkeys.add(postsnapshot.getKey());
                             }
                         }
 
                     }
                 }
+            adapter = new ListOfJoinedAdapter(List_of_joined.this, AllClubsList);
+            Log.d("****clubsize", "" + AllClubsList.size());
+            recyclerView.setAdapter(adapter);
+
+            recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(List_of_joined.this, new RecyclerItemClickListener.OnItemClickListener() {
+                @Override
+                public void onItemClick(View childView, int position) {
+                    mUserDatabase2 = mUserDatabase2.child(Parentkeys.get(position));
+                    Log.d("^^^^^^^keys", "" + keys.get(position));
+                    mUserDatabase2.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            ListOfClubs listOfClubs = dataSnapshot.getValue(ListOfClubs.class);
+                            Log.d("^^^^^^^listclubs", "" + listOfClubs);
+                            Intent intent = new Intent(List_of_joined.this, ListOfClubsView.class);
+                            intent.putExtra("isname", listOfClubs.getName());
+                            intent.putExtra("iscont", listOfClubs.getContact());
+                            intent.putExtra("isdesc",listOfClubs.getDesc());
+                            intent.putExtra("isimg",listOfClubs.getImage());
+                            intent.putExtra("isuid", listOfClubs.getMyUid());
+                            Log.d("^^^^^^^", "" + listOfClubs.getMyUid());
+                            startActivity(intent);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onItemLongPress(View childView, int position) {
+
+                }
+            }));
         }
 
         @Override

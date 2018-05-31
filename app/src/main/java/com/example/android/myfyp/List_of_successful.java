@@ -40,7 +40,7 @@ public class List_of_successful extends AppCompatActivity {
     private EditText mSearchField;
     private ImageButton mSearchBtn;
     private PendingListAdapter adapter;
-    private DatabaseReference mUserDatabase;
+    private DatabaseReference mUserDatabase, mUserDatabase2;
     private FirebaseAuth firebaseAuth;
     private int count;
 
@@ -52,6 +52,7 @@ public class List_of_successful extends AppCompatActivity {
         AllClubsList = new ArrayList<>();
         keys = new ArrayList<>();
         mUserDatabase = FirebaseDatabase.getInstance().getReference("join_list").child(firebaseAuth.getCurrentUser().getUid());
+        mUserDatabase2 = FirebaseDatabase.getInstance().getReference("Users");
 
 
         mSearchField = (EditText) findViewById(R.id.search_field);
@@ -107,25 +108,39 @@ public class List_of_successful extends AppCompatActivity {
                 if (joinList.getStatus().equals("successful")) {
                     AllClubsList.add(joinList);
                     keys.add(postsnapshot.getKey().toString());
-                    adapter = new PendingListAdapter(List_of_successful.this, AllClubsList);
-                    recyclerView.setAdapter(adapter);
-                    adapter.notifyDataSetChanged();
-
-                    recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(List_of_successful.this, new RecyclerItemClickListener.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(View childView, int position) {
-//                            join_list joinList1 = AllClubsList.get(position);
-//                            mUserDatabase.child(keys.get(position)).child("status").setValue("successful");
-//                            mSearchBtn.performClick();
-                        }
-
-                        @Override
-                        public void onItemLongPress(View childView, int position) {
-
-                        }
-                    }));
                 }
             }
+            adapter = new PendingListAdapter(List_of_successful.this, AllClubsList);
+            recyclerView.setAdapter(adapter);
+
+            recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(List_of_successful.this, new RecyclerItemClickListener.OnItemClickListener() {
+                @Override
+                public void onItemClick(View childView, int position) {
+                    mUserDatabase2 = mUserDatabase2.child(keys.get(position));
+                    mUserDatabase2.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
+                            Intent intent = new Intent(List_of_successful.this, ProfileActivity.class);
+                            intent.putExtra("isname", userProfile.getUserName());
+                            intent.putExtra("isage", userProfile.getUserAge());
+                            intent.putExtra("isemail",userProfile.getUserEmail());
+                            intent.putExtra("istype",userProfile.getUserType());
+                            startActivity(intent);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onItemLongPress(View childView, int position) {
+
+                }
+            }));
         }
 
         @Override

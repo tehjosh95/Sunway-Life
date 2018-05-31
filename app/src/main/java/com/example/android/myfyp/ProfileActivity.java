@@ -50,21 +50,38 @@ public class ProfileActivity extends AppCompatActivity {
         mDataRef = firebaseDatabase.getReference();
         mDataRef = mDataRef.child("Users").child(firebaseAuth.getCurrentUser().getUid());
 
-        mDataRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
-                profileName.setText("Name: " + userProfile.getUserName());
-                profileAge.setText("Age: " + userProfile.getUserAge());
-                profileEmail.setText("Email: " + userProfile.getUserEmail());
-                profileType.setText("User Type: " + userProfile.getUserType());
-            }
+        Intent startingIntent = getIntent();
+        Bundle extras = startingIntent.getExtras();
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(ProfileActivity.this, databaseError.getCode(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        if(extras == null) {
+            mDataRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
+                    profileName.setText("Name: " + userProfile.getUserName());
+                    profileAge.setText("Age: " + userProfile.getUserAge());
+                    profileEmail.setText("Email: " + userProfile.getUserEmail());
+                    profileType.setText("User Type: " + userProfile.getUserType());
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Toast.makeText(ProfileActivity.this, databaseError.getCode(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }else{
+            final String name = startingIntent.getStringExtra("isname");
+            final String age = startingIntent.getStringExtra("isage");
+            final String email = startingIntent.getStringExtra("isemail");
+            final String type = startingIntent.getStringExtra("istype");
+            profileUpdate.setVisibility(View.GONE);
+            changePassword.setVisibility(View.GONE);
+
+            profileName.setText("Name: " + name);
+            profileAge.setText("Age: " + age);
+            profileEmail.setText("Email: " + email);
+            profileType.setText("User Type: " + type);
+        }
 
         profileUpdate.setOnClickListener(new View.OnClickListener() {
             @Override

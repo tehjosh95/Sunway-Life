@@ -74,7 +74,6 @@ public class ListOfClubsActivity extends AppCompatActivity {
         mSearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 String searchText = mSearchField.getText().toString();
 
                 if(searchText.length() > 0) {
