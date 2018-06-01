@@ -69,8 +69,6 @@ public class ListOfJoinedAdapter extends RecyclerView.Adapter<ListOfJoinedAdapte
         }
         @Override
         public void onClick(View v) {
-            Intent open = new Intent(mContext,ListOfClubsActivity.class);
-            mContext.startActivity(open);
         }
     }
 }

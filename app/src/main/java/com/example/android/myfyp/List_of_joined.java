@@ -73,6 +73,7 @@ public class List_of_joined extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mUserDatabase.removeEventListener(valueEventListener);
                 mSearchBtn.performClick();
             }
 
@@ -99,13 +100,8 @@ public class List_of_joined extends AppCompatActivity {
     private void firebaseUserSearch(String searchText) {
 //        Toast.makeText(ListOfClubsActivity.this, "Started Search", Toast.LENGTH_LONG).show();
         AllClubsList.clear();
-        if(!searchText.equals("")) {
-            Query firebaseSearchQuery = mUserDatabase.orderByChild("myname").startAt(searchText).endAt(searchText + "\uf8ff");
-            firebaseSearchQuery.addListenerForSingleValueEvent(valueEventListener);
-        }else{
-            Query firebaseSearchQuery = mUserDatabase;
-            firebaseSearchQuery.addListenerForSingleValueEvent(valueEventListener);
-        }
+        Query firebaseSearchQuery = mUserDatabase.orderByChild("myname").startAt(searchText).endAt(searchText + "\uf8ff");
+        firebaseSearchQuery.addListenerForSingleValueEvent(valueEventListener);
     }
 
     ValueEventListener valueEventListener = new ValueEventListener() {
@@ -113,7 +109,9 @@ public class List_of_joined extends AppCompatActivity {
         public void onDataChange(DataSnapshot dataSnapshot) {
             count = 0;
             keys.clear();
-                for (DataSnapshot postsnapshot : dataSnapshot.getChildren()) {
+            Parentkeys.clear();
+            AllClubsList.clear();
+            for (DataSnapshot postsnapshot : dataSnapshot.getChildren()) {
                     if (postsnapshot.hasChild(firebaseAuth.getCurrentUser().getUid())) {
                         for (DataSnapshot nextsnap : postsnapshot.getChildren()) {
                             final join_list joinList = nextsnap.getValue(join_list.class);
@@ -123,7 +121,6 @@ public class List_of_joined extends AppCompatActivity {
                                 Parentkeys.add(postsnapshot.getKey());
                             }
                         }
-
                     }
                 }
             adapter = new ListOfJoinedAdapter(List_of_joined.this, AllClubsList);
@@ -134,8 +131,10 @@ public class List_of_joined extends AppCompatActivity {
                 @Override
                 public void onItemClick(View childView, int position) {
                     mUserDatabase2 = mUserDatabase2.child(Parentkeys.get(position));
+                    Log.d("^^^^^^^Parentkeys", "" + Parentkeys.get(position));
                     Log.d("^^^^^^^keys", "" + keys.get(position));
-                    mUserDatabase2.addListenerForSingleValueEvent(new ValueEventListener() {
+                    Log.d("^^^^^^^position", "" + position);
+                    mUserDatabase2.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             ListOfClubs listOfClubs = dataSnapshot.getValue(ListOfClubs.class);

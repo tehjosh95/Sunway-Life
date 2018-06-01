@@ -109,6 +109,7 @@ public class List_of_pending extends AppCompatActivity {
         public void onDataChange(DataSnapshot dataSnapshot) {
             count = 0;
             keys.clear();
+            AllClubsList.clear();
             for (DataSnapshot postsnapshot : dataSnapshot.getChildren()) {
                 final join_list joinList = postsnapshot.getValue(join_list.class);
                 if (joinList.getStatus().equals("pending")) {

@@ -56,22 +56,17 @@ import java.util.Scanner;
 import static com.bumptech.glide.load.engine.DiskCacheStrategy.ALL;
 import static com.bumptech.glide.load.engine.DiskCacheStrategy.NONE;
 
-
 public class Chat extends AppCompatActivity {
 
     private static final int REQUEST_CAMERA = 2;
-
-
     private FirebaseStorage mStorage;
     private StorageReference mStorRef;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mDataRef;
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference storageRef;
-    private DatabaseReference mUserRef;
     private String imgUrl;
     private String imgIdentity = "";
-    private Camera camera;
     LinearLayout layout;
     RelativeLayout layout_2;
     ImageView sendButton, upload, ivimage;
@@ -108,6 +103,7 @@ public class Chat extends AppCompatActivity {
 
         mDataRef = firebaseDatabase.getReference().child("messages");
         chatname.setText(UserDetails.name);
+
         Intent startingIntent = getIntent();
         String recipient = startingIntent.getStringExtra("recipient");
         String sender = startingIntent.getStringExtra("sender");
@@ -139,13 +135,6 @@ public class Chat extends AppCompatActivity {
                     reference1.push().setValue(chatModel);
                     reference2.push().setValue(chatModel);
 
-//                    Map<String, String> map = new HashMap<>();
-//                    map.put("message", messageText);
-//                    map.put("user", UserDetails.username);
-//                    String one = reference1.push().getKey();
-//                    String two = reference2.push().getKey();
-//                    reference1.child(one).setValue(map);
-//                    reference2.child(two).setValue(map);
                     Map lastTime = new HashMap();
                     lastTime.put("lasttime", ServerValue.TIMESTAMP);
                     mDataRef.child(UserDetails.chatWith + "_" + UserDetails.username).updateChildren(lastTime);
@@ -183,7 +172,6 @@ public class Chat extends AppCompatActivity {
                 Log.d("***time", "" + sfd.format(netDate));
                 if(userName.equals(UserDetails.username) && !chatModel.getMessage().equals("")){
                     addMessageBox("" + sfd.format(netDate) +":-\n" +  message, 1);
-//                    addMessageBox("Me:-\n" + message, 1);
                 }
                 else if(!userName.equals(UserDetails.username) && !chatModel.getMessage().equals("")){
                     addMessageBox("" + sfd.format(netDate) +":-\n" + message, 2);
@@ -224,10 +212,7 @@ public class Chat extends AppCompatActivity {
     }
 
     public void handleCameraImage(View view){
-//        if ( ContextCompat.checkSelfPermission( this, Manifest.permission.CAMERA ) != PackageManager.PERMISSION_GRANTED ) {
-//        }
-        if ( Build.VERSION.SDK_INT >= 23 &&
-                ContextCompat.checkSelfPermission( this, android.Manifest.permission.CAMERA ) != PackageManager.PERMISSION_GRANTED) {
+        if ( Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission( this, android.Manifest.permission.CAMERA ) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions( this, new String[] {  Manifest.permission.CAMERA  },
                     REQUEST_CAMERA );
         }else{
@@ -338,7 +323,6 @@ public class Chat extends AppCompatActivity {
 
     public void addMessageBox2(String url, int type){
         ImageView imageView = new ImageView(Chat.this);
-
         LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams((int) getResources().getDimension(R.dimen.imageview_width), (int) getResources().getDimension(R.dimen.imageview_height));
         imageView.setLayoutParams(lp2);
         Glide.with(Chat.this).load(url).dontAnimate().diskCacheStrategy(NONE).into(imageView);

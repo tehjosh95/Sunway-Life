@@ -59,15 +59,19 @@ public class ListOfClubsActivity extends AppCompatActivity {
         mSearchField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                Log.d("***beforeTextChanged", "beforeTextChanged");
             }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mUserDatabase.removeEventListener(childEventListener);
                 mSearchBtn.performClick();
+                Log.d("***onTextChanged", "onTextChanged");
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
+                Log.d("***afterTextChanged", "afterTextChanged");
             }
         });
 

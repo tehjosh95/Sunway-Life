@@ -214,7 +214,6 @@ public class SecondActivity extends AppCompatActivity {
                     PrimaryDrawerItem item4 = new PrimaryDrawerItem().withIdentifier(4).withName("List of joined for students");
                     PrimaryDrawerItem item5 = new PrimaryDrawerItem().withIdentifier(5).withName("Logout");
 
-
                     Drawer result = new DrawerBuilder()
                             .withActivity(SecondActivity.this)
                             .withAccountHeader(headerResult)
@@ -276,7 +275,6 @@ public class SecondActivity extends AppCompatActivity {
                     PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(4).withName("Edit and view posted");
                     PrimaryDrawerItem item4 = new PrimaryDrawerItem().withIdentifier(3).withName("List of Clubs with search");
                     PrimaryDrawerItem item5 = new PrimaryDrawerItem().withIdentifier(5).withName("Logout");
-
 
                     Drawer result = new DrawerBuilder()
                             .withActivity(SecondActivity.this)
@@ -395,7 +393,7 @@ public class SecondActivity extends AppCompatActivity {
 
             }
         });
-        
+
         mDataRef3.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
