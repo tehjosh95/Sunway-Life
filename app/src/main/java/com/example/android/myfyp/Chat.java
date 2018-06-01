@@ -57,6 +57,9 @@ import static com.bumptech.glide.load.engine.DiskCacheStrategy.ALL;
 import static com.bumptech.glide.load.engine.DiskCacheStrategy.NONE;
 
 public class Chat extends AppCompatActivity {
+    static final String STATE_USERNAME = "sender";
+    static final String STATE_CHATWITH = "recipient";
+    static final String STATE_NAME = "name";
 
     private static final int REQUEST_CAMERA = 2;
     private FirebaseStorage mStorage;
@@ -78,15 +81,34 @@ public class Chat extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase;
     private String imageFileName;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("***helloooo", "oncreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        chatname = (TextView)findViewById(R.id.chatname);
+
+
+        if(savedInstanceState != null) {
+            UserDetails.username = savedInstanceState.getString(STATE_USERNAME);
+            UserDetails.chatWith = savedInstanceState.getString(STATE_CHATWITH);
+            UserDetails.name = savedInstanceState.getString(STATE_NAME);
+        }else{
+            Intent startingIntent = getIntent();
+            String recipient = startingIntent.getStringExtra("recipient");
+            String sender = startingIntent.getStringExtra("sender");
+            String name = startingIntent.getStringExtra("name");
+
+            if ((UserDetails.username.equals("")) && (UserDetails.chatWith.equals(""))) {
+                UserDetails.username = sender;
+                UserDetails.chatWith = recipient;
+                UserDetails.name = name;
+                chatname.setText(name);
+            }
+        }
 
         layout = (LinearLayout) findViewById(R.id.layout1);
         layout_2 = (RelativeLayout)findViewById(R.id.layout2);
-        chatname = (TextView)findViewById(R.id.chatname);
         sendButton = (ImageView)findViewById(R.id.sendButton);
         upload = (ImageView) findViewById(R.id.upload);
         messageArea = (EditText)findViewById(R.id.messageArea);
@@ -104,22 +126,12 @@ public class Chat extends AppCompatActivity {
         mDataRef = firebaseDatabase.getReference().child("messages");
         chatname.setText(UserDetails.name);
 
-        Intent startingIntent = getIntent();
-        String recipient = startingIntent.getStringExtra("recipient");
-        String sender = startingIntent.getStringExtra("sender");
-        String name = startingIntent.getStringExtra("name");
-
-        if ((UserDetails.username.equals("")) && (UserDetails.chatWith.equals("")) ){
-            UserDetails.username = sender;
-            UserDetails.chatWith = recipient;
-            UserDetails.name = name;
-            chatname.setText(name);
-        }
-
         Firebase.setAndroidContext(this);
         reference1 = new Firebase("https://myfyp-25f5d.firebaseio.com/messages/" + UserDetails.username + "_" + UserDetails.chatWith + "/chat");
         reference2 = new Firebase("https://myfyp-25f5d.firebaseio.com/messages/" + UserDetails.chatWith + "_" + UserDetails.username + "/chat");
         Log.d("****userD, username5","" + UserDetails.username);
+        Log.d("****userD, chatwith","" + UserDetails.chatWith);
+        Log.d("****userD, chatwith","" + UserDetails.name);
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -219,6 +231,14 @@ public class Chat extends AppCompatActivity {
             Intent photoCaptureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(photoCaptureIntent, 2);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        outState.putString(STATE_USERNAME, UserDetails.username);
+        outState.putString(STATE_CHATWITH, UserDetails.chatWith);
+        outState.putString(STATE_NAME, UserDetails.name);
+        super.onSaveInstanceState(outState);
     }
 
     @Override

@@ -81,9 +81,7 @@ public class clubAdapter extends RecyclerView.Adapter<clubAdapter.ViewHolder>{
 
         }
         @Override
-        public void onClick(View v) {
-            Intent open = new Intent(mContext,ProfileActivity.class);
-            mContext.startActivity(open);
+        public void onClick(View v) { ;
         }
     }
 }

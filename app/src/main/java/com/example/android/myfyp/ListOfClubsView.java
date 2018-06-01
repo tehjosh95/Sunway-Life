@@ -25,6 +25,7 @@ import java.util.List;
 public class ListOfClubsView extends AppCompatActivity{
     public interface MyCallback {
          void onCallback(String value);
+
     }
 
     private ImageView profilePic;

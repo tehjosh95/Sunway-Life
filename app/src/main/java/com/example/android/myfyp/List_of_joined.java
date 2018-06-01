@@ -34,6 +34,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class List_of_joined extends AppCompatActivity {
+    public interface MyCallback {
+        void onCallback(ArrayList<join_list> value);
+    }
     RecyclerView recyclerView;
     ArrayList<join_list> AllClubsList;
     ArrayList<ListOfClubs> AllClubsList2;
@@ -45,6 +48,7 @@ public class List_of_joined extends AppCompatActivity {
     private DatabaseReference mUserDatabase, mUserDatabase2;
     private FirebaseAuth firebaseAuth;
     private int count;
+    int x;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +123,7 @@ public class List_of_joined extends AppCompatActivity {
                                 AllClubsList.add(joinList);
                                 keys.add(nextsnap.getKey().toString());
                                 Parentkeys.add(postsnapshot.getKey());
+                                Log.d("^^^^^^^Call1", "" + "call1");
                             }
                         }
                     }
@@ -127,17 +132,28 @@ public class List_of_joined extends AppCompatActivity {
             Log.d("****clubsize", "" + AllClubsList.size());
             recyclerView.setAdapter(adapter);
 
+            mUserDatabase2.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for(int x = 0;x < Parentkeys.size();x++){
+                        if(dataSnapshot.hasChild(Parentkeys.get(x))){
+                            ListOfClubs listOfClubs = dataSnapshot.child(Parentkeys.get(x)).getValue(ListOfClubs.class);
+                            AllClubsList2.add(listOfClubs);
+                            Log.d("^^^^^^^listclubs2size", "" + AllClubsList2.size());
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
             recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(List_of_joined.this, new RecyclerItemClickListener.OnItemClickListener() {
                 @Override
                 public void onItemClick(View childView, int position) {
-                    mUserDatabase2 = mUserDatabase2.child(Parentkeys.get(position));
-                    Log.d("^^^^^^^Parentkeys", "" + Parentkeys.get(position));
-                    Log.d("^^^^^^^keys", "" + keys.get(position));
-                    Log.d("^^^^^^^position", "" + position);
-                    mUserDatabase2.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            ListOfClubs listOfClubs = dataSnapshot.getValue(ListOfClubs.class);
+                            ListOfClubs listOfClubs = AllClubsList2.get(position);
                             Log.d("^^^^^^^listclubs", "" + listOfClubs);
                             Intent intent = new Intent(List_of_joined.this, ListOfClubsView.class);
                             intent.putExtra("isname", listOfClubs.getName());
@@ -147,13 +163,6 @@ public class List_of_joined extends AppCompatActivity {
                             intent.putExtra("isuid", listOfClubs.getMyUid());
                             Log.d("^^^^^^^", "" + listOfClubs.getMyUid());
                             startActivity(intent);
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
                 }
 
                 @Override

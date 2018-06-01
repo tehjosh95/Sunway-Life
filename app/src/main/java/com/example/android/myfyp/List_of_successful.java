@@ -37,6 +37,7 @@ public class List_of_successful extends AppCompatActivity {
     RecyclerView recyclerView;
     ArrayList<join_list> AllClubsList;
     ArrayList<String> keys;
+    ArrayList<UserProfile> AllUsers;
     private EditText mSearchField;
     private ImageButton mSearchBtn;
     private PendingListAdapter adapter;
@@ -51,9 +52,9 @@ public class List_of_successful extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         AllClubsList = new ArrayList<>();
         keys = new ArrayList<>();
+        AllUsers = new ArrayList<>();
         mUserDatabase = FirebaseDatabase.getInstance().getReference("join_list").child(firebaseAuth.getCurrentUser().getUid());
         mUserDatabase2 = FirebaseDatabase.getInstance().getReference("Users");
-
 
         mSearchField = (EditText) findViewById(R.id.search_field);
         mSearchBtn = (ImageButton) findViewById(R.id.search_btn);
@@ -115,29 +116,35 @@ public class List_of_successful extends AppCompatActivity {
             adapter = new PendingListAdapter(List_of_successful.this, AllClubsList);
             recyclerView.setAdapter(adapter);
 
+            mUserDatabase2.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for(int x = 0;x < keys.size();x++){
+                        if(dataSnapshot.hasChild(keys.get(x))){
+                            UserProfile listOfClubs = dataSnapshot.child(keys.get(x)).getValue(UserProfile.class);
+                            AllUsers.add(listOfClubs);
+                            Log.d("^^^^^^^listclubs2size", "" + AllUsers.size());
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
             recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(List_of_successful.this, new RecyclerItemClickListener.OnItemClickListener() {
                 @Override
                 public void onItemClick(View childView, int position) {
-                    mUserDatabase2 = mUserDatabase2.child(keys.get(position));
-                    mUserDatabase2.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
+                            UserProfile userProfile = AllUsers.get(position);
                             Intent intent = new Intent(List_of_successful.this, ProfileActivity.class);
                             intent.putExtra("isname", userProfile.getUserName());
                             intent.putExtra("isage", userProfile.getUserAge());
                             intent.putExtra("isemail", userProfile.getUserEmail());
                             intent.putExtra("istype", userProfile.getUserType());
                             startActivity(intent);
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-
-                        }
-                    });
                 }
-
                 @Override
                 public void onItemLongPress(View childView, int position) {
 
