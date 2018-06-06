@@ -75,10 +75,10 @@ public class Inbox extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance();
         mDataRef = mDatabase.getReference();
         firebaseAuth = FirebaseAuth.getInstance();
-        toolbar = (Toolbar)findViewById(R.id.toolbarMain);
+        toolbar = (Toolbar) findViewById(R.id.toolbarMain);
         toolbar.setTitle("Long Press to Delete");
-        usersList = (ListView)findViewById(R.id.usersList);
-        noUsersText = (TextView)findViewById(R.id.noUsersText);
+        usersList = (ListView) findViewById(R.id.usersList);
+        noUsersText = (TextView) findViewById(R.id.noUsersText);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
 
@@ -95,17 +95,17 @@ public class Inbox extends AppCompatActivity {
                 al6.clear();
                 String currentuser = firebaseAuth.getCurrentUser().getUid();
                 int x = 0;
-                for (DataSnapshot child: snapshot.getChildren()) {
+                for (DataSnapshot child : snapshot.getChildren()) {
                     String key = child.getKey();
                     int index = key.indexOf("_");
-                    String key1 = decodeUserEmail(key.substring(0,index));
+                    String key1 = decodeUserEmail(key.substring(0, index));
                     final String key2 = decodeUserEmail(key.substring(index + 1));
                     long timing = child.child("lasttime").getValue(Long.class);
                     Log.d("*****key2", "" + key2);
                     String theirname = child.child("others").getValue(String.class);
-                    if(key1.equals(currentuser)){
-                        Log.d("***orderby","" + child.getKey());
-                        Log.d("***timing","" + timing);
+                    if (key1.equals(currentuser)) {
+                        Log.d("***orderby", "" + child.getKey());
+                        Log.d("***timing", "" + timing);
                         al.add(timing);
                         al2.add(timing);
                         al3.add(key2);
@@ -134,21 +134,22 @@ public class Inbox extends AppCompatActivity {
                                     }
                                 }
                                 if (al6.size() < 1) {
-                                   Log.d("***totalusers1", "" + totalUsers);
+                                    Log.d("***totalusers1", "" + totalUsers);
                                     noUsersText.setVisibility(View.VISIBLE);
                                     usersList.setVisibility(View.GONE);
-                                    } else {
+                                } else {
                                     noUsersText.setVisibility(View.GONE);
                                     usersList.setVisibility(View.VISIBLE);
                                     Log.d("*****list8", "" + al6.size());
                                     myAdapter = new ArrayAdapter<String>(Inbox.this, android.R.layout.simple_list_item_1, al6);
                                     usersList.setAdapter(myAdapter);
-                                    }
-                                    }
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
                                 }
-                                });
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                            }
+                        });
                         Log.d("*****al5size", "" + al5.size());
 //                        al5.add(Chatname);
                         x += 1;
@@ -156,6 +157,7 @@ public class Inbox extends AppCompatActivity {
                     }
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 System.out.println("The read failed: " + databaseError.getMessage());
@@ -169,8 +171,8 @@ public class Inbox extends AppCompatActivity {
                 UserDetails.username = encodeUserEmail(user.getUid());
                 UserDetails.chatWith = encodeUserEmail(al4.get(position));
                 UserDetails.name = al6.get(position);
-                Log.d("****chatwith1","****chatwith" + UserDetails.chatWith);
-                Log.d("****username2","****username" + UserDetails.username);
+                Log.d("****chatwith1", "****chatwith" + UserDetails.chatWith);
+                Log.d("****username2", "****username" + UserDetails.username);
                 finish();
                 startActivity(new Intent(com.example.android.myfyp.Inbox.this, Chat.class));
             }
@@ -185,7 +187,7 @@ public class Inbox extends AppCompatActivity {
                 // Setting Dialog Title
                 alertDialog.setTitle("Delete?");
                 alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int which) {
+                    public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 });
@@ -197,7 +199,7 @@ public class Inbox extends AppCompatActivity {
                         UserDetails.chatWith = encodeUserEmail(al4.get(position));
                         String delete = UserDetails.username + "_" + UserDetails.chatWith;
                         String delete2 = UserDetails.chatWith + "_" + UserDetails.username;
-                        Log.d("****delete" , "" + delete);
+                        Log.d("****delete", "" + delete);
                         mDataRef.child(delete).removeValue();
                         mDataRef.child(delete2).removeValue();
                     }

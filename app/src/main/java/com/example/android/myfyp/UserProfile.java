@@ -7,7 +7,7 @@ public class UserProfile {
 
     public String userType;
 
-    public UserProfile(){
+    public UserProfile() {
     }
 
     public UserProfile(String userAge, String userEmail, String userName, String userType) {
@@ -41,7 +41,11 @@ public class UserProfile {
         this.userName = userName;
     }
 
-    public String getUserType() { return userType; }
+    public String getUserType() {
+        return userType;
+    }
 
-    public void setUserType(String userType) { this.userType = userType; }
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
 }

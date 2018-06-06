@@ -119,8 +119,8 @@ public class List_of_successful extends AppCompatActivity {
             mUserDatabase2.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    for(int x = 0;x < keys.size();x++){
-                        if(dataSnapshot.hasChild(keys.get(x))){
+                    for (int x = 0; x < keys.size(); x++) {
+                        if (dataSnapshot.hasChild(keys.get(x))) {
                             UserProfile listOfClubs = dataSnapshot.child(keys.get(x)).getValue(UserProfile.class);
                             AllUsers.add(listOfClubs);
                             Log.d("^^^^^^^listclubs2size", "" + AllUsers.size());
@@ -137,14 +137,15 @@ public class List_of_successful extends AppCompatActivity {
             recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(List_of_successful.this, new RecyclerItemClickListener.OnItemClickListener() {
                 @Override
                 public void onItemClick(View childView, int position) {
-                            UserProfile userProfile = AllUsers.get(position);
-                            Intent intent = new Intent(List_of_successful.this, ProfileActivity.class);
-                            intent.putExtra("isname", userProfile.getUserName());
-                            intent.putExtra("isage", userProfile.getUserAge());
-                            intent.putExtra("isemail", userProfile.getUserEmail());
-                            intent.putExtra("istype", userProfile.getUserType());
-                            startActivity(intent);
+                    UserProfile userProfile = AllUsers.get(position);
+                    Intent intent = new Intent(List_of_successful.this, ProfileActivity.class);
+                    intent.putExtra("isname", userProfile.getUserName());
+                    intent.putExtra("isage", userProfile.getUserAge());
+                    intent.putExtra("isemail", userProfile.getUserEmail());
+                    intent.putExtra("istype", userProfile.getUserType());
+                    startActivity(intent);
                 }
+
                 @Override
                 public void onItemLongPress(View childView, int position) {
 

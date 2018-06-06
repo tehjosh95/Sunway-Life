@@ -63,7 +63,7 @@ public class SecondActivity extends AppCompatActivity {
     FloatingActionButton fab, fab1, fab2;
     LinearLayout fabLayout1, fabLayout2;
     View fabBGLayout;
-    boolean isFABOpen=false;
+    boolean isFABOpen = false;
 
     private ProgressDialog progDialog;
     private FirebaseAuth firebaseAuth;
@@ -71,7 +71,7 @@ public class SecondActivity extends AppCompatActivity {
     private FirebaseDatabase mDatabase;
     private Button logout;
     private String key;
-    private String [] arrayDelete;
+    private String[] arrayDelete;
     private FirebaseDatabase firebaseDatabase;
     private clubAdapter adapter;
     private String uId = FirebaseAuth.getInstance().getCurrentUser().toString();
@@ -79,31 +79,33 @@ public class SecondActivity extends AppCompatActivity {
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference storageRef;
 
-    clubModel [] arrayName ;
-    String username, email, age;;
+    clubModel[] arrayName;
+    String username, email, age;
+    ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
 
-        fab = (FloatingActionButton)findViewById(R.id.fab);
-        fabLayout1= (LinearLayout) findViewById(R.id.fabLayout1);
-        fabLayout2= (LinearLayout) findViewById(R.id.fabLayout2);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fabLayout1 = (LinearLayout) findViewById(R.id.fabLayout1);
+        fabLayout2 = (LinearLayout) findViewById(R.id.fabLayout2);
         fab1 = (FloatingActionButton) findViewById(R.id.fab1);
-        fab2= (FloatingActionButton) findViewById(R.id.fab2);
-        fabBGLayout=findViewById(R.id.fabBGLayout);
+        fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+        fabBGLayout = findViewById(R.id.fabBGLayout);
         FirebaseApp.initializeApp(this);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
 
-        OneSignal.sendTag("User_ID",firebaseAuth.getCurrentUser().getUid());
+        OneSignal.sendTag("User_ID", firebaseAuth.getCurrentUser().getUid());
 
         mDataRef = firebaseDatabase.getReference().child("Item Information");
         mDataRef2 = firebaseDatabase.getReference().child("Clubs");
         mDataRef3 = firebaseDatabase.getReference().child("Users");
 
         recyclerView = findViewById(R.id.rvv);
-        toolbar = (Toolbar)findViewById(R.id.toolbarMain);
+        toolbar = (Toolbar) findViewById(R.id.toolbarMain);
         toolbar.setTitle("Club and Societies");
 
         clubModelList = new ArrayList<>();
@@ -111,7 +113,7 @@ public class SecondActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 clubModelList.clear();
-                for (DataSnapshot child: snapshot.getChildren()) {
+                for (DataSnapshot child : snapshot.getChildren()) {
                     clubModel ClubModel = child.getValue(clubModel.class);
                     clubModelList.add(ClubModel);
                 }
@@ -121,6 +123,7 @@ public class SecondActivity extends AppCompatActivity {
                 recyclerView.setAdapter(adapter);
                 progDialog.dismiss();
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 System.out.println("The read failed: " + databaseError.getMessage());
@@ -133,25 +136,26 @@ public class SecondActivity extends AppCompatActivity {
 
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(SecondActivity.this, new RecyclerItemClickListener.OnItemClickListener() {
-                    public void onItemClick(View view,  int position) {
+                    public void onItemClick(View view, int position) {
                         clubModel ClubModel1 = clubModelList.get(position);
                         Intent intent = new Intent(SecondActivity.this, ViewActivity.class);
                         intent.putExtra("myname", ClubModel1.getItem_name());
                         intent.putExtra("myplace", ClubModel1.getItem_place());
-                        intent.putExtra("myprice",ClubModel1.getItem_price());
-                        intent.putExtra("myurl",ClubModel1.getImageLink());
-                        intent.putExtra("mykey",mDataRef.getKey().toString());
+                        intent.putExtra("myprice", ClubModel1.getItem_price());
+                        intent.putExtra("myurl", ClubModel1.getImageLink());
+                        intent.putExtra("mykey", mDataRef.getKey().toString());
 
                         startActivity(intent);
                     }
+
                     public void onItemLongPress(View childView, final int position) {
-                        if(firebaseAuth.getCurrentUser().getUid().equals("XHR842kZD3cTZTwz7nM5LWJESW72")){
+                        if (firebaseAuth.getCurrentUser().getUid().equals("XHR842kZD3cTZTwz7nM5LWJESW72")) {
                             final clubModel ClubModel1 = clubModelList.get(position);
                             AlertDialog.Builder alertDialog = new AlertDialog.Builder(SecondActivity.this);
                             alertDialog.setTitle("Delete?");
 
                             alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog,int which) {
+                                public void onClick(DialogInterface dialog, int which) {
                                     dialog.cancel();
                                 }
                             });
@@ -187,7 +191,7 @@ public class SecondActivity extends AppCompatActivity {
                 })
         );
 
-        progDialog=ProgressDialog.show(this,null,"Wait.....");
+        progDialog = ProgressDialog.show(this, null, "Wait.....");
         progDialog.setContentView(new ProgressBar(this));
         mDataRef3.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -229,7 +233,7 @@ public class SecondActivity extends AppCompatActivity {
                             .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                                 @Override
                                 public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                                    switch(position){
+                                    switch (position) {
                                         case 1:
                                             startActivity(new Intent(SecondActivity.this, ProfileActivity.class));
                                             break;
@@ -252,8 +256,7 @@ public class SecondActivity extends AppCompatActivity {
                                 }
                             })
                             .build();
-                }
-                else if (dataSnapshot.hasChild(firebaseAuth.getCurrentUser().getUid()) && firebaseAuth.getCurrentUser().getUid().equals("XHR842kZD3cTZTwz7nM5LWJESW72")){
+                } else if (dataSnapshot.hasChild(firebaseAuth.getCurrentUser().getUid()) && firebaseAuth.getCurrentUser().getUid().equals("XHR842kZD3cTZTwz7nM5LWJESW72")) {
 
                     AccountHeader headerResult = new AccountHeaderBuilder()
                             .withActivity(SecondActivity.this)
@@ -291,7 +294,7 @@ public class SecondActivity extends AppCompatActivity {
                             .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                                 @Override
                                 public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                                    switch(position){
+                                    switch (position) {
                                         case 1:
                                             startActivity(new Intent(SecondActivity.this, ProfileActivity.class));
                                             break;
@@ -314,8 +317,7 @@ public class SecondActivity extends AppCompatActivity {
                                 }
                             })
                             .build();
-                }
-                else{
+                } else {
                     AccountHeader headerResult = new AccountHeaderBuilder()
                             .withActivity(SecondActivity.this)
                             .withHeaderBackground(R.drawable.header)
@@ -356,7 +358,7 @@ public class SecondActivity extends AppCompatActivity {
                             .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                                 @Override
                                 public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                                    switch(position){
+                                    switch (position) {
                                         case 1:
                                             startActivity(new Intent(SecondActivity.this, ClubProfileActivity.class));
                                             break;
@@ -397,14 +399,14 @@ public class SecondActivity extends AppCompatActivity {
         mDataRef3.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild(firebaseAuth.getCurrentUser().getUid())){
+                if (dataSnapshot.hasChild(firebaseAuth.getCurrentUser().getUid())) {
                     if (!firebaseAuth.getCurrentUser().getUid().equals("XHR842kZD3cTZTwz7nM5LWJESW72")) {
                         fab.setVisibility(View.GONE);
-                    }else{
+                    } else {
                         fab.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                if(!isFABOpen){
+                                if (!isFABOpen) {
                                     showFABMenu();
                                     fab1.setOnClickListener(new View.OnClickListener() {
                                         @Override
@@ -418,13 +420,13 @@ public class SecondActivity extends AppCompatActivity {
                                             startActivity(new Intent(SecondActivity.this, AddActivity.class));
                                         }
                                     });
-                                }else{
+                                } else {
                                     closeFABMenu();
                                 }
                             }
                         });
                     }
-                }else{
+                } else {
                     fab.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -433,20 +435,21 @@ public class SecondActivity extends AppCompatActivity {
                     });
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
         });
     }
 
-    private void Logout(){
+    private void Logout() {
         firebaseAuth.signOut();
         finish();
         startActivity(new Intent(SecondActivity.this, MainActivity.class));
     }
 
-    private void showFABMenu(){
-        isFABOpen=true;
+    private void showFABMenu() {
+        isFABOpen = true;
         fabLayout1.setVisibility(View.VISIBLE);
         fabLayout2.setVisibility(View.VISIBLE);
         fabBGLayout.setVisibility(View.VISIBLE);
@@ -456,8 +459,8 @@ public class SecondActivity extends AppCompatActivity {
         fabLayout2.animate().translationY(-getResources().getDimension(R.dimen.standard_100));
     }
 
-    private void closeFABMenu(){
-        isFABOpen=false;
+    private void closeFABMenu() {
+        isFABOpen = false;
         fabBGLayout.setVisibility(View.GONE);
         fab.animate().rotationBy(-180);
         fabLayout1.animate().translationY(0);
@@ -468,7 +471,7 @@ public class SecondActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animator animator) {
-                if(!isFABOpen){
+                if (!isFABOpen) {
                     fabLayout1.setVisibility(View.GONE);
                     fabLayout2.setVisibility(View.GONE);
                 }
@@ -486,9 +489,9 @@ public class SecondActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(isFABOpen){
+        if (isFABOpen) {
             closeFABMenu();
-        }else{
+        } else {
             super.onBackPressed();
         }
     }

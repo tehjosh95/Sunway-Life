@@ -15,8 +15,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class welecomeActivity extends AppCompatActivity {
-    LinearLayout l1,l2;
-    Animation uptodown,downtoup;
+    LinearLayout l1, l2;
+    Animation uptodown, downtoup;
     private int timerDelay = 1500;
     private TimerTask timerTask;
 
@@ -27,8 +27,8 @@ public class welecomeActivity extends AppCompatActivity {
 
         l1 = (LinearLayout) findViewById(R.id.l1);
         l2 = (LinearLayout) findViewById(R.id.l2);
-        uptodown = AnimationUtils.loadAnimation(this,R.anim.uptodown);
-        downtoup = AnimationUtils.loadAnimation(this,R.anim.downtoup);
+        uptodown = AnimationUtils.loadAnimation(this, R.anim.uptodown);
+        downtoup = AnimationUtils.loadAnimation(this, R.anim.downtoup);
         l1.setAnimation(uptodown);
         l2.setAnimation(downtoup);
 
@@ -39,6 +39,6 @@ public class welecomeActivity extends AppCompatActivity {
                 finish();
             }
         };
-        new Timer().schedule(timerTask,timerDelay);
+        new Timer().schedule(timerTask, timerDelay);
     }
 }

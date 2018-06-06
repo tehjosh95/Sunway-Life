@@ -13,16 +13,17 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
-public class PendingListAdapter extends RecyclerView.Adapter<PendingListAdapter.ViewHolder>{
+public class PendingListAdapter extends RecyclerView.Adapter<PendingListAdapter.ViewHolder> {
 
     private Context mContext;
     private ArrayList<join_list> mList;
-    public PendingListAdapter(Context context, ArrayList<join_list> list){
+
+    public PendingListAdapter(Context context, ArrayList<join_list> list) {
         mContext = context;
         mList = list;
     }
 
-    public PendingListAdapter(){
+    public PendingListAdapter() {
     }
 
     @Override
@@ -40,7 +41,7 @@ public class PendingListAdapter extends RecyclerView.Adapter<PendingListAdapter.
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position)  {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         join_list contact = mList.get(position);
 
         TextView name = holder.name;
@@ -67,9 +68,10 @@ public class PendingListAdapter extends RecyclerView.Adapter<PendingListAdapter.
             status = itemView.findViewById(R.id.status_text);
 
         }
+
         @Override
         public void onClick(View v) {
-            Intent open = new Intent(mContext,ListOfClubsActivity.class);
+            Intent open = new Intent(mContext, ListOfClubsActivity.class);
             mContext.startActivity(open);
         }
     }

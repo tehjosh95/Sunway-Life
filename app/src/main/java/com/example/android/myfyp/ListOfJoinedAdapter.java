@@ -13,16 +13,17 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
-public class ListOfJoinedAdapter extends RecyclerView.Adapter<ListOfJoinedAdapter.ViewHolder>{
+public class ListOfJoinedAdapter extends RecyclerView.Adapter<ListOfJoinedAdapter.ViewHolder> {
 
     private Context mContext;
     private ArrayList<join_list> mList;
-    public ListOfJoinedAdapter(Context context, ArrayList<join_list> list){
+
+    public ListOfJoinedAdapter(Context context, ArrayList<join_list> list) {
         mContext = context;
         mList = list;
     }
 
-    public ListOfJoinedAdapter(){
+    public ListOfJoinedAdapter() {
     }
 
     @Override
@@ -40,7 +41,7 @@ public class ListOfJoinedAdapter extends RecyclerView.Adapter<ListOfJoinedAdapte
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position)  {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         join_list contact = mList.get(position);
 
         TextView name = holder.name;
@@ -67,6 +68,7 @@ public class ListOfJoinedAdapter extends RecyclerView.Adapter<ListOfJoinedAdapte
             status = itemView.findViewById(R.id.status_text);
 
         }
+
         @Override
         public void onClick(View v) {
         }

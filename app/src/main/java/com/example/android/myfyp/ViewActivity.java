@@ -33,7 +33,7 @@ public class ViewActivity extends AppCompatActivity {
         profilePlace = findViewById(R.id.tvcont);
         profilePrice = findViewById(R.id.tvdesc);
         EditButton = findViewById(R.id.btnEdit);
-        fabbb = (FloatingActionButton)findViewById(R.id.fabbb);
+        fabbb = (FloatingActionButton) findViewById(R.id.fabbb);
 
         Intent startingIntent = getIntent();
         final String myurl = startingIntent.getStringExtra("myurl");
@@ -48,14 +48,14 @@ public class ViewActivity extends AppCompatActivity {
         profilePlace.setText(Place);
         profilePrice.setText(Price);
 
-        if (!firebaseAuth.getCurrentUser().getUid().equals(Owner)){
+        if (!firebaseAuth.getCurrentUser().getUid().equals(Owner)) {
             EditButton.setVisibility(View.GONE);
         }
 
 
-        Log.d("****itemname","" + Name);
-        Log.d("****itemplace","" + Place);
-        Log.d("****itemprice","" + Price);
+        Log.d("****itemname", "" + Name);
+        Log.d("****itemplace", "" + Place);
+        Log.d("****itemprice", "" + Price);
 
         fabbb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,7 +70,7 @@ public class ViewActivity extends AppCompatActivity {
                 Intent intent = new Intent(ViewActivity.this, EditActivity.class);
                 intent.putExtra("thename", Name);
                 intent.putExtra("theplace", Place);
-                intent.putExtra("theprice",Price);
+                intent.putExtra("theprice", Price);
                 intent.putExtra("theurl", myurl);
                 intent.putExtra("theowner", Owner);
                 intent.putExtra("thekey", myKey);

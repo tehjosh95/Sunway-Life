@@ -76,7 +76,7 @@ public class AddActivity extends AppCompatActivity {
         itemName = (EditText) findViewById(R.id.item_name);
         itemPlace = (EditText) findViewById(R.id.item_place);
         itemPrice = (EditText) findViewById(R.id.item_price);
-        fab = (FloatingActionButton)findViewById(R.id.fabb);
+        fab = (FloatingActionButton) findViewById(R.id.fabb);
         btnUploadItem = (AppCompatButton) findViewById(R.id.btn_upload);
 
         imageView = (ImageView) findViewById(R.id.image_preview);
@@ -96,6 +96,7 @@ public class AddActivity extends AppCompatActivity {
                 userProfile = dataSnapshot.getValue(UserProfile.class);
                 progDialog.dismiss();
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
@@ -165,6 +166,7 @@ public class AddActivity extends AppCompatActivity {
         }
         return true;
     }
+
     private void updateView(clubModel ClubModel) {
         if (ClubModel != null) {
 
@@ -190,11 +192,11 @@ public class AddActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
         switch (requestCode) {
             case 0:
-                if(requestCode == RESULT_OK) {
+                if (requestCode == RESULT_OK) {
                 }
                 break;
             case 1:
-                if(resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK) {
                     Uri selectedImage = imageReturnedIntent.getData();
                     this.imageView.setImageURI(selectedImage);
                 }
@@ -228,7 +230,7 @@ public class AddActivity extends AppCompatActivity {
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
                 imgUrl = downloadUrl.toString();
-                Log.d("*****url",""+imgUrl);
+                Log.d("*****url", "" + imgUrl);
 
 
                 String name = itemName.getText().toString().trim();
@@ -236,7 +238,7 @@ public class AddActivity extends AppCompatActivity {
                 String price = itemPrice.getText().toString().trim();
                 String owner = mAuth.getCurrentUser().getUid();
                 int position = 0;
-                Log.d("*****url1",""+imgUrl);
+                Log.d("*****url1", "" + imgUrl);
 
 //        if (isInputInvalid(name, place, price)) {
 //            onFailedSave();
@@ -257,9 +259,9 @@ public class AddActivity extends AppCompatActivity {
                 progDialog.setIndeterminate(true);
                 progDialog.setMessage("Uploading....");
                 progDialog.show();
-                final clubModel ClubModel = new clubModel(name, place ,price, owner, position, imgUrl, imageFileName,"");
+                final clubModel ClubModel = new clubModel(name, place, price, owner, position, imgUrl, imageFileName, "");
 
-                Log.d("&&&&&&&uid",""+owner);
+                Log.d("&&&&&&&uid", "" + owner);
                 final Runnable uploadTask = new Runnable() {
                     @Override
                     public void run() {
@@ -269,7 +271,7 @@ public class AddActivity extends AppCompatActivity {
                 };
                 new Thread(uploadTask).start();
                 onSuccessfulSave();
-                Log.d("*****url2",""+imgUrl);
+                Log.d("*****url2", "" + imgUrl);
             }
         });
     }

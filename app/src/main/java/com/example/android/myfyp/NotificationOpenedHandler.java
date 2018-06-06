@@ -19,7 +19,8 @@ class NotificationOpenedHandler implements OneSignal.NotificationOpenedHandler {
     String sender;
     String recipient;
     String name;
-    public NotificationOpenedHandler(Context context){
+
+    public NotificationOpenedHandler(Context context) {
         mContext = context;
     }
 
@@ -36,7 +37,7 @@ class NotificationOpenedHandler implements OneSignal.NotificationOpenedHandler {
                 recipient = data.getString("recipient");
                 name = data.getString("name");
 
-            }catch (JSONException e){
+            } catch (JSONException e) {
 
             }
 

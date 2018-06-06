@@ -64,9 +64,9 @@ public class ActivityPosted extends AppCompatActivity {
     private Button logout;
     private int pos;
     private String key;
-    private int [] arrayPosition;
-    private String [] arrayUrl;
-    private String [] arrayDelete;
+    private int[] arrayPosition;
+    private String[] arrayUrl;
+    private String[] arrayDelete;
     private FloatingActionButton fab = null;
     private FirebaseDatabase firebaseDatabase;
     private clubAdapter adapter;
@@ -74,13 +74,14 @@ public class ActivityPosted extends AppCompatActivity {
 
     private StorageReference storageRef;
 
-    clubModel [] arrayName ;
+    clubModel[] arrayName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_posted);
 
-        fab = (FloatingActionButton)findViewById(R.id.fabbb);
+        fab = (FloatingActionButton) findViewById(R.id.fabbb);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -88,7 +89,7 @@ public class ActivityPosted extends AppCompatActivity {
         mDataRef = firebaseDatabase.getReference().child("Item Information");
 
         recyclerView = findViewById(R.id.rvv);
-        toolbar = (Toolbar)findViewById(R.id.toolbarMain);
+        toolbar = (Toolbar) findViewById(R.id.toolbarMain);
         toolbar.setTitle("Long Press to Delete");
 
         clubModelList = new ArrayList<>();
@@ -96,15 +97,15 @@ public class ActivityPosted extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 clubModelList.clear();
-                arrayPosition = new int[(int)snapshot.getChildrenCount()];
-                arrayUrl = new String[(int)snapshot.getChildrenCount()];
+                arrayPosition = new int[(int) snapshot.getChildrenCount()];
+                arrayUrl = new String[(int) snapshot.getChildrenCount()];
                 pos = 0;
                 int x = 0;
-                for (DataSnapshot child: snapshot.getChildren()) {
+                for (DataSnapshot child : snapshot.getChildren()) {
                     clubModel ClubModel = child.getValue(clubModel.class);
                     String owner = firebaseAuth.getCurrentUser().getUid();
 
-                    if(owner.equals(ClubModel.getItem_owner() )){
+                    if (owner.equals(ClubModel.getItem_owner())) {
                         ClubModel.setItem_position(pos);
                         ClubModel.setParentkey(child.getKey().toString());
                         mDataRef.child(child.getKey()).setValue(ClubModel);
@@ -113,7 +114,7 @@ public class ActivityPosted extends AppCompatActivity {
                         clubModelList.add(ClubModel);
                         x += 1;
                     }
-                    pos +=1;
+                    pos += 1;
                 }
                 arrayName = new clubModel[clubModelList.size()];
                 arrayName = clubModelList.toArray(arrayName);
@@ -121,6 +122,7 @@ public class ActivityPosted extends AppCompatActivity {
                 recyclerView.setAdapter(adapter);
                 progDialog.dismiss();
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 System.out.println("The read failed: " + databaseError.getMessage());
@@ -133,15 +135,15 @@ public class ActivityPosted extends AppCompatActivity {
 
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(ActivityPosted.this, new RecyclerItemClickListener.OnItemClickListener() {
-                     public void onItemClick(View view,  int position) {
+                    public void onItemClick(View view, int position) {
                         clubModel ClubModel1 = clubModelList.get(position);
                         Intent intent = new Intent(ActivityPosted.this, ViewActivity.class);
                         intent.putExtra("myname", ClubModel1.getItem_name());
                         intent.putExtra("myplace", ClubModel1.getItem_place());
-                        intent.putExtra("myprice",ClubModel1.getItem_price());
-                        intent.putExtra("myurl",ClubModel1.getImageLink());
+                        intent.putExtra("myprice", ClubModel1.getItem_price());
+                        intent.putExtra("myurl", ClubModel1.getImageLink());
                         intent.putExtra("myowner", ClubModel1.getItem_owner());
-                        intent.putExtra("mykey",ClubModel1.getParentkey());
+                        intent.putExtra("mykey", ClubModel1.getParentkey());
                         startActivity(intent);
                     }
 
@@ -151,7 +153,7 @@ public class ActivityPosted extends AppCompatActivity {
                         alertDialog.setTitle("Delete?");
 
                         alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int which) {
+                            public void onClick(DialogInterface dialog, int which) {
                                 dialog.cancel();
                             }
                         });
@@ -186,7 +188,7 @@ public class ActivityPosted extends AppCompatActivity {
                 })
         );
 
-        progDialog=ProgressDialog.show(this,null,"Wait.....");
+        progDialog = ProgressDialog.show(this, null, "Wait.....");
         progDialog.setContentView(new ProgressBar(this));
 
         fab.setOnClickListener(new View.OnClickListener() {

@@ -103,7 +103,7 @@ public class UpdateClubProfile extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
         }
@@ -120,7 +120,7 @@ public class UpdateClubProfile extends AppCompatActivity {
         Toast.makeText(UpdateClubProfile.this, "Successfully uploaded item.", Toast.LENGTH_LONG).show();
         save.setEnabled(true);
         finish();
-        startActivity(new Intent(UpdateClubProfile.this,ClubProfileActivity.class));
+        startActivity(new Intent(UpdateClubProfile.this, ClubProfileActivity.class));
     }
 
 
@@ -134,11 +134,11 @@ public class UpdateClubProfile extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
         switch (requestCode) {
             case 0:
-                if(requestCode == RESULT_OK) {
+                if (requestCode == RESULT_OK) {
                 }
                 break;
             case 1:
-                if(resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK) {
                     Uri selectedImage = imageReturnedIntent.getData();
                     this.imgView.setImageURI(selectedImage);
                 }
@@ -171,7 +171,7 @@ public class UpdateClubProfile extends AppCompatActivity {
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
                 imgUrl = downloadUrl.toString();
-                Log.d("*****url",""+imgUrl);
+                Log.d("*****url", "" + imgUrl);
 
 
                 String name = newUserName.getText().toString();
@@ -190,7 +190,7 @@ public class UpdateClubProfile extends AppCompatActivity {
                 progDialog.setIndeterminate(true);
                 progDialog.setMessage("Uploading....");
                 progDialog.show();
-                final ListOfClubs listOfClubs = new ListOfClubs(name, imgUrl ,cont, desc, type, myuid);
+                final ListOfClubs listOfClubs = new ListOfClubs(name, imgUrl, cont, desc, type, myuid);
 
                 final Runnable uploadTask = new Runnable() {
                     @Override

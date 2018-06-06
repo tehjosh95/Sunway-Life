@@ -10,7 +10,7 @@ public class ListOfClubs {
 
     private String userType;
 
-    public ListOfClubs(){
+    public ListOfClubs() {
     }
 
     public String getName() {
@@ -29,21 +29,37 @@ public class ListOfClubs {
         this.image = image;
     }
 
-    public String getDesc() { return desc; }
+    public String getDesc() {
+        return desc;
+    }
 
-    public void setDesc(String desc) { this.desc = desc; }
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
 
-    public String getContact() { return contact; }
+    public String getContact() {
+        return contact;
+    }
 
-    public void setContact(String contact) { this.contact = contact; }
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
 
-    public String getUserType() { return userType; }
+    public String getUserType() {
+        return userType;
+    }
 
-    public void setUserType(String userType) { this.userType = userType; }
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
 
-    public String getMyUid() { return myUid; }
+    public String getMyUid() {
+        return myUid;
+    }
 
-    public void setMyUid(String myUid) { this.myUid = myUid; }
+    public void setMyUid(String myUid) {
+        this.myUid = myUid;
+    }
 
     public ListOfClubs(String name, String image, String contact, String desc, String userType, String myUid) {
         this.name = name;

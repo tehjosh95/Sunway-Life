@@ -21,7 +21,7 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class RegistrationActivity extends AppCompatActivity{
+public class RegistrationActivity extends AppCompatActivity {
 
     private EditText userName, userPassword, userEmail, userAge;
     private Button regButton;
@@ -32,7 +32,6 @@ public class RegistrationActivity extends AppCompatActivity{
     String email, name, age, password, type;
     private DatabaseReference mDataRef;
     private FirebaseDatabase mDatabase;
-
 
 
     @Override
@@ -49,7 +48,7 @@ public class RegistrationActivity extends AppCompatActivity{
         regButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(validate()){
+                if (validate()) {
                     //Upload data to the database
                     String user_email = userEmail.getText().toString().trim();
                     String user_password = userPassword.getText().toString().trim();
@@ -58,14 +57,14 @@ public class RegistrationActivity extends AppCompatActivity{
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
 
-                            if(task.isSuccessful()){
+                            if (task.isSuccessful()) {
                                 //sendEmailVerification();
                                 sendUserData();
                                 firebaseAuth.signOut();
                                 Toast.makeText(RegistrationActivity.this, "Successfully Registered, Upload complete!", Toast.LENGTH_SHORT).show();
                                 finish();
                                 startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
-                            }else{
+                            } else {
                                 Toast.makeText(RegistrationActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
                             }
 
@@ -84,28 +83,28 @@ public class RegistrationActivity extends AppCompatActivity{
 
     }
 
-    private void setupUIViews(){
-        userName = (EditText)findViewById(R.id.etUserName);
-        userPassword = (EditText)findViewById(R.id.etUserPassword);
-        userEmail = (EditText)findViewById(R.id.etUserEmail);
-        regButton = (Button)findViewById(R.id.btnRegister);
-        userLogin = (TextView)findViewById(R.id.tvUserLogin);
-        userAge = (EditText)findViewById(R.id.etAge);
-        userProfilePic = (ImageView)findViewById(R.id.ivProfile);
-        switch1 = (Switch)findViewById(R.id.switch1);
-        referAdmin = (TextView)findViewById(R.id.referAdmin);
+    private void setupUIViews() {
+        userName = (EditText) findViewById(R.id.etUserName);
+        userPassword = (EditText) findViewById(R.id.etUserPassword);
+        userEmail = (EditText) findViewById(R.id.etUserEmail);
+        regButton = (Button) findViewById(R.id.btnRegister);
+        userLogin = (TextView) findViewById(R.id.tvUserLogin);
+        userAge = (EditText) findViewById(R.id.etAge);
+        userProfilePic = (ImageView) findViewById(R.id.ivProfile);
+        switch1 = (Switch) findViewById(R.id.switch1);
+        referAdmin = (TextView) findViewById(R.id.referAdmin);
 
         switch1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (switch1.isChecked()){
+                if (switch1.isChecked()) {
                     userName.setVisibility(View.GONE);
                     userPassword.setVisibility(View.GONE);
                     userEmail.setVisibility(View.GONE);
                     userAge.setVisibility(View.GONE);
                     regButton.setVisibility(View.GONE);
                     referAdmin.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     userName.setVisibility(View.VISIBLE);
                     userPassword.setVisibility(View.VISIBLE);
                     userEmail.setVisibility(View.VISIBLE);
@@ -117,7 +116,7 @@ public class RegistrationActivity extends AppCompatActivity{
         });
     }
 
-    private Boolean validate(){
+    private Boolean validate() {
         Boolean result = false;
 
         name = userName.getText().toString();
@@ -127,9 +126,9 @@ public class RegistrationActivity extends AppCompatActivity{
         type = "student";
 
 
-        if(name.isEmpty() || password.isEmpty() || email.isEmpty() || age.isEmpty()){
+        if (name.isEmpty() || password.isEmpty() || email.isEmpty() || age.isEmpty()) {
             Toast.makeText(this, "Please enter all the details", Toast.LENGTH_SHORT).show();
-        }else{
+        } else {
             result = true;
         }
 
@@ -137,27 +136,27 @@ public class RegistrationActivity extends AppCompatActivity{
     }
 
 
-    private void sendEmailVerification(){
+    private void sendEmailVerification() {
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        if(firebaseUser!=null){
+        if (firebaseUser != null) {
             firebaseUser.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                   if(task.isSuccessful()){
-                       sendUserData();
-                       Toast.makeText(RegistrationActivity.this, "Successfully Registered, Verification mail sent!", Toast.LENGTH_SHORT).show();
-                       firebaseAuth.signOut();
-                       finish();
-                       startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
-                   }else{
-                       Toast.makeText(RegistrationActivity.this, "Verification mail has'nt been sent!", Toast.LENGTH_SHORT).show();
-                   }
+                    if (task.isSuccessful()) {
+                        sendUserData();
+                        Toast.makeText(RegistrationActivity.this, "Successfully Registered, Verification mail sent!", Toast.LENGTH_SHORT).show();
+                        firebaseAuth.signOut();
+                        finish();
+                        startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
+                    } else {
+                        Toast.makeText(RegistrationActivity.this, "Verification mail has'nt been sent!", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }
     }
 
-    private void sendUserData(){
+    private void sendUserData() {
 
         UserProfile userProfile = new UserProfile(age, email, name, type);
 

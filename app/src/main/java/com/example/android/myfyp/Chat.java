@@ -86,14 +86,14 @@ public class Chat extends AppCompatActivity {
         Log.d("***helloooo", "oncreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        chatname = (TextView)findViewById(R.id.chatname);
+        chatname = (TextView) findViewById(R.id.chatname);
 
 
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             UserDetails.username = savedInstanceState.getString(STATE_USERNAME);
             UserDetails.chatWith = savedInstanceState.getString(STATE_CHATWITH);
             UserDetails.name = savedInstanceState.getString(STATE_NAME);
-        }else{
+        } else {
             Intent startingIntent = getIntent();
             String recipient = startingIntent.getStringExtra("recipient");
             String sender = startingIntent.getStringExtra("sender");
@@ -108,12 +108,12 @@ public class Chat extends AppCompatActivity {
         }
 
         layout = (LinearLayout) findViewById(R.id.layout1);
-        layout_2 = (RelativeLayout)findViewById(R.id.layout2);
-        sendButton = (ImageView)findViewById(R.id.sendButton);
+        layout_2 = (RelativeLayout) findViewById(R.id.layout2);
+        sendButton = (ImageView) findViewById(R.id.sendButton);
         upload = (ImageView) findViewById(R.id.upload);
-        messageArea = (EditText)findViewById(R.id.messageArea);
-        scrollView = (ScrollView)findViewById(R.id.scrollView);
-        ivimage = (ImageView)findViewById(R.id.ivimage);
+        messageArea = (EditText) findViewById(R.id.messageArea);
+        scrollView = (ScrollView) findViewById(R.id.scrollView);
+        ivimage = (ImageView) findViewById(R.id.ivimage);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
 
@@ -129,15 +129,15 @@ public class Chat extends AppCompatActivity {
         Firebase.setAndroidContext(this);
         reference1 = new Firebase("https://myfyp-25f5d.firebaseio.com/messages/" + UserDetails.username + "_" + UserDetails.chatWith + "/chat");
         reference2 = new Firebase("https://myfyp-25f5d.firebaseio.com/messages/" + UserDetails.chatWith + "_" + UserDetails.username + "/chat");
-        Log.d("****userD, username5","" + UserDetails.username);
-        Log.d("****userD, chatwith","" + UserDetails.chatWith);
-        Log.d("****userD, chatwith","" + UserDetails.name);
+        Log.d("****userD, username5", "" + UserDetails.username);
+        Log.d("****userD, chatwith", "" + UserDetails.chatWith);
+        Log.d("****userD, chatwith", "" + UserDetails.name);
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String messageText = messageArea.getText().toString();
-                if(!messageText.equals("") && !messageText.equals(imgIdentity)){
+                if (!messageText.equals("") && !messageText.equals(imgIdentity)) {
 
                     ChatModel chatModel = new ChatModel();
                     chatModel.setUser(UserDetails.username);
@@ -162,7 +162,7 @@ public class Chat extends AppCompatActivity {
 
                     messageArea.setText("");
                     sendNotification();
-                }else if(messageText.equals(imgIdentity)){
+                } else if (messageText.equals(imgIdentity)) {
                     imgUpload();
                     messageArea.setText("");
                 }
@@ -176,23 +176,22 @@ public class Chat extends AppCompatActivity {
                 String message = chatModel.getMessage();
                 String userName = chatModel.getUser();
                 String url = chatModel.getImgUrl();
-                Long time = (Long)chatModel.getTimestamp() ;
+                Long time = (Long) chatModel.getTimestamp();
 
                 DateFormat sfd = DateFormat.getDateTimeInstance();
                 Date netDate = (new Date(time));
                 //                sfd.format(new Date(time));
                 Log.d("***time", "" + sfd.format(netDate));
-                if(userName.equals(UserDetails.username) && !chatModel.getMessage().equals("")){
-                    addMessageBox("" + sfd.format(netDate) +":-\n" +  message, 1);
-                }
-                else if(!userName.equals(UserDetails.username) && !chatModel.getMessage().equals("")){
-                    addMessageBox("" + sfd.format(netDate) +":-\n" + message, 2);
+                if (userName.equals(UserDetails.username) && !chatModel.getMessage().equals("")) {
+                    addMessageBox("" + sfd.format(netDate) + ":-\n" + message, 1);
+                } else if (!userName.equals(UserDetails.username) && !chatModel.getMessage().equals("")) {
+                    addMessageBox("" + sfd.format(netDate) + ":-\n" + message, 2);
                 }
 
-                if(chatModel.getMessage().equals("") && userName.equals(UserDetails.username)){
-                    addMessageBox2(url,1);
-                }else if(chatModel.getMessage().equals("") && !userName.equals(UserDetails.username)){
-                    addMessageBox2(url,2);
+                if (chatModel.getMessage().equals("") && userName.equals(UserDetails.username)) {
+                    addMessageBox2(url, 1);
+                } else if (chatModel.getMessage().equals("") && !userName.equals(UserDetails.username)) {
+                    addMessageBox2(url, 2);
                 }
             }
 
@@ -223,18 +222,18 @@ public class Chat extends AppCompatActivity {
         startActivityForResult(pickerPhotoIntent, 1);
     }
 
-    public void handleCameraImage(View view){
-        if ( Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission( this, android.Manifest.permission.CAMERA ) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions( this, new String[] {  Manifest.permission.CAMERA  },
-                    REQUEST_CAMERA );
-        }else{
+    public void handleCameraImage(View view) {
+        if (Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
+                    REQUEST_CAMERA);
+        } else {
             Intent photoCaptureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(photoCaptureIntent, 2);
         }
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState){
+    public void onSaveInstanceState(Bundle outState) {
         outState.putString(STATE_USERNAME, UserDetails.username);
         outState.putString(STATE_CHATWITH, UserDetails.chatWith);
         outState.putString(STATE_NAME, UserDetails.name);
@@ -246,11 +245,11 @@ public class Chat extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
         switch (requestCode) {
             case 0:
-                if(requestCode == RESULT_OK) {
+                if (requestCode == RESULT_OK) {
                 }
                 break;
             case 1:
-                if(resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK) {
                     Uri selectedImage = imageReturnedIntent.getData();
                     this.ivimage.setImageURI(selectedImage);
                     messageArea.setText(selectedImage.toString());
@@ -267,7 +266,7 @@ public class Chat extends AppCompatActivity {
         }
     }
 
-    private void imgUpload(){
+    private void imgUpload() {
         // Get the data from an ImageView as bytes
         this.ivimage.setDrawingCacheEnabled(true);
         this.ivimage.buildDrawingCache();
@@ -292,7 +291,7 @@ public class Chat extends AppCompatActivity {
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
                 imgUrl = downloadUrl.toString();
-                Log.d("*****url","" + imgUrl);
+                Log.d("*****url", "" + imgUrl);
 
                 ChatModel chatModel = new ChatModel();
                 chatModel.setUser(UserDetails.username);
@@ -321,18 +320,17 @@ public class Chat extends AppCompatActivity {
         });
     }
 
-    public void addMessageBox(String message, int type){
+    public void addMessageBox(String message, int type) {
         TextView textView = new TextView(Chat.this);
         textView.setText(message);
 
         LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lp2.weight = 1.0f;
 
-        if(type == 1) {
+        if (type == 1) {
             lp2.gravity = Gravity.RIGHT;
             textView.setBackgroundResource(R.drawable.bubble_in);
-        }
-        else{
+        } else {
             lp2.gravity = Gravity.LEFT;
             textView.setBackgroundResource(R.drawable.bubble_out);
         }
@@ -341,7 +339,7 @@ public class Chat extends AppCompatActivity {
         scrollView.fullScroll(View.FOCUS_DOWN);
     }
 
-    public void addMessageBox2(String url, int type){
+    public void addMessageBox2(String url, int type) {
         ImageView imageView = new ImageView(Chat.this);
         LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams((int) getResources().getDimension(R.dimen.imageview_width), (int) getResources().getDimension(R.dimen.imageview_height));
         imageView.setLayoutParams(lp2);
@@ -349,11 +347,10 @@ public class Chat extends AppCompatActivity {
 
         lp2.weight = 1.0f;
 
-        if(type == 1) {
+        if (type == 1) {
             lp2.gravity = Gravity.RIGHT;
             imageView.setBackgroundResource(R.drawable.bubble_in);
-        }
-        else{
+        } else {
             lp2.gravity = Gravity.LEFT;
             imageView.setBackgroundResource(R.drawable.bubble_out);
         }
@@ -362,8 +359,7 @@ public class Chat extends AppCompatActivity {
         scrollView.fullScroll(View.FOCUS_DOWN);
     }
 
-    private void sendNotification()
-    {
+    private void sendNotification() {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
@@ -377,7 +373,7 @@ public class Chat extends AppCompatActivity {
                     String sender = startingIntent.getStringExtra("sender");
                     String name = startingIntent.getStringExtra("name");
 
-                    if ((UserDetails.username.equals("")) && (UserDetails.chatWith.equals("")) ){
+                    if ((UserDetails.username.equals("")) && (UserDetails.chatWith.equals(""))) {
                         UserDetails.username = sender;
                         UserDetails.chatWith = recipient;
                         UserDetails.name = name;
@@ -385,8 +381,8 @@ public class Chat extends AppCompatActivity {
                     String send_email;
 
                     //This is a Simple Logic to Send Notification different Device Programmatically....
-                        send_email = UserDetails.chatWith;
-                        Log.d("******************", "" + send_email);
+                    send_email = UserDetails.chatWith;
+                    Log.d("******************", "" + send_email);
                     try {
 
                         String jsonResponse;

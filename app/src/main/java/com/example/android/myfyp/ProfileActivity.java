@@ -40,7 +40,7 @@ public class ProfileActivity extends AppCompatActivity {
         profileUpdate = findViewById(R.id.btnProfileUpdate);
         changePassword = findViewById(R.id.btnChangePassword);
         profileType = findViewById(R.id.tvProfileType);
-        fab = (FloatingActionButton)findViewById(R.id.fabb);
+        fab = (FloatingActionButton) findViewById(R.id.fabb);
 
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -53,7 +53,7 @@ public class ProfileActivity extends AppCompatActivity {
         Intent startingIntent = getIntent();
         Bundle extras = startingIntent.getExtras();
 
-        if(extras == null) {
+        if (extras == null) {
             mDataRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -69,7 +69,7 @@ public class ProfileActivity extends AppCompatActivity {
                     Toast.makeText(ProfileActivity.this, databaseError.getCode(), Toast.LENGTH_SHORT).show();
                 }
             });
-        }else{
+        } else {
             final String name = startingIntent.getStringExtra("isname");
             final String age = startingIntent.getStringExtra("isage");
             final String email = startingIntent.getStringExtra("isemail");
@@ -108,7 +108,7 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
         }

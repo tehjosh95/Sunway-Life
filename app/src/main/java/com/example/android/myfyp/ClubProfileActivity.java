@@ -41,7 +41,7 @@ public class ClubProfileActivity extends AppCompatActivity {
         profileUpdate = findViewById(R.id.btnProfileUpdate);
         changePassword = findViewById(R.id.btnChangePassword);
         profileType = findViewById(R.id.tvProfileType);
-        fab = (FloatingActionButton)findViewById(R.id.fabb);
+        fab = (FloatingActionButton) findViewById(R.id.fabb);
 
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -93,7 +93,7 @@ public class ClubProfileActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
         }

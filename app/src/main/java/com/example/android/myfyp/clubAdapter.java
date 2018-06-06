@@ -13,17 +13,18 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
-public class clubAdapter extends RecyclerView.Adapter<clubAdapter.ViewHolder>{
+public class clubAdapter extends RecyclerView.Adapter<clubAdapter.ViewHolder> {
 
 
     private Context mContext;
     private ArrayList<clubModel> mList;
-    public clubAdapter(Context context, ArrayList<clubModel> list){
+
+    public clubAdapter(Context context, ArrayList<clubModel> list) {
         mContext = context;
         mList = list;
     }
 
-    public clubAdapter(){
+    public clubAdapter() {
     }
 
     @Override
@@ -42,7 +43,7 @@ public class clubAdapter extends RecyclerView.Adapter<clubAdapter.ViewHolder>{
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position)  {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         clubModel contact = mList.get(position);
 
         TextView item_name = holder.item_name;
@@ -66,7 +67,7 @@ public class clubAdapter extends RecyclerView.Adapter<clubAdapter.ViewHolder>{
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public ImageView item_image;
-        public TextView item_name,item_place,item_price;
+        public TextView item_name, item_place, item_price;
         View view;
 
 
@@ -80,8 +81,10 @@ public class clubAdapter extends RecyclerView.Adapter<clubAdapter.ViewHolder>{
 
 
         }
+
         @Override
-        public void onClick(View v) { ;
+        public void onClick(View v) {
+            ;
         }
     }
 }

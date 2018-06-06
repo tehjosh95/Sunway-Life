@@ -13,17 +13,18 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
-public class ClubListAdapter extends RecyclerView.Adapter<ClubListAdapter.ViewHolder>{
+public class ClubListAdapter extends RecyclerView.Adapter<ClubListAdapter.ViewHolder> {
 
 
     private Context mContext;
     private ArrayList<ListOfClubs> mList;
-    public ClubListAdapter(Context context, ArrayList<ListOfClubs> list){
+
+    public ClubListAdapter(Context context, ArrayList<ListOfClubs> list) {
         mContext = context;
         mList = list;
     }
 
-    public ClubListAdapter(){
+    public ClubListAdapter() {
     }
 
     @Override
@@ -42,7 +43,7 @@ public class ClubListAdapter extends RecyclerView.Adapter<ClubListAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position)  {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         ListOfClubs contact = mList.get(position);
 
         TextView name = holder.name;
@@ -76,9 +77,10 @@ public class ClubListAdapter extends RecyclerView.Adapter<ClubListAdapter.ViewHo
 
 
         }
+
         @Override
         public void onClick(View v) {
-            Intent open = new Intent(mContext,ListOfClubsActivity.class);
+            Intent open = new Intent(mContext, ListOfClubsActivity.class);
             mContext.startActivity(open);
         }
     }

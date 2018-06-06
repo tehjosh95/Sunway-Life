@@ -80,9 +80,9 @@ public class ListOfClubsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String searchText = mSearchField.getText().toString();
 
-                if(searchText.length() > 0) {
+                if (searchText.length() > 0) {
                     firebaseUserSearch(searchText);
-                }else{
+                } else {
                     AllClubsList.clear();
                     mUserDatabase.addChildEventListener(childEventListener);
                 }
@@ -93,9 +93,9 @@ public class ListOfClubsActivity extends AppCompatActivity {
     private void firebaseUserSearch(String searchText) {
 
 //        Toast.makeText(ListOfClubsActivity.this, "Started Search", Toast.LENGTH_LONG).show();
-            AllClubsList.clear();
-            Query firebaseSearchQuery = mUserDatabase.orderByChild("name").startAt(searchText).endAt(searchText + "\uf8ff");
-            firebaseSearchQuery.addChildEventListener(childEventListener);
+        AllClubsList.clear();
+        Query firebaseSearchQuery = mUserDatabase.orderByChild("name").startAt(searchText).endAt(searchText + "\uf8ff");
+        firebaseSearchQuery.addChildEventListener(childEventListener);
     }
 
     ChildEventListener childEventListener = new ChildEventListener() {
@@ -115,8 +115,8 @@ public class ListOfClubsActivity extends AppCompatActivity {
                     Intent intent = new Intent(ListOfClubsActivity.this, ListOfClubsView.class);
                     intent.putExtra("isname", listOfClubs.getName());
                     intent.putExtra("iscont", listOfClubs.getContact());
-                    intent.putExtra("isdesc",listOfClubs.getDesc());
-                    intent.putExtra("isimg",listOfClubs.getImage());
+                    intent.putExtra("isdesc", listOfClubs.getDesc());
+                    intent.putExtra("isimg", listOfClubs.getImage());
                     intent.putExtra("isuid", listOfClubs.getMyUid());
                     Log.d("^^^^^^^", "" + listOfClubs.getMyUid());
                     startActivity(intent);
@@ -137,6 +137,7 @@ public class ListOfClubsActivity extends AppCompatActivity {
 
         public void onChildMoved(DataSnapshot snapshot, String previousChild) {
         }
+
         @Override
         public void onCancelled(DatabaseError databaseError) {
             System.out.println("The read failed: " + databaseError.getMessage());

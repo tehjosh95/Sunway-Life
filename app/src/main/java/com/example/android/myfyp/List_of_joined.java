@@ -37,6 +37,7 @@ public class List_of_joined extends AppCompatActivity {
     public interface MyCallback {
         void onCallback(ArrayList<join_list> value);
     }
+
     RecyclerView recyclerView;
     ArrayList<join_list> AllClubsList;
     ArrayList<ListOfClubs> AllClubsList2;
@@ -91,9 +92,9 @@ public class List_of_joined extends AppCompatActivity {
             public void onClick(View view) {
                 String searchText = mSearchField.getText().toString();
 
-                if(searchText.length() > 0) {
+                if (searchText.length() > 0) {
                     firebaseUserSearch(searchText);
-                }else{
+                } else {
                     AllClubsList.clear();
                     mUserDatabase.addListenerForSingleValueEvent(valueEventListener);
                 }
@@ -118,18 +119,18 @@ public class List_of_joined extends AppCompatActivity {
             Parentkeys.clear();
             AllClubsList.clear();
             for (DataSnapshot postsnapshot : dataSnapshot.getChildren()) {
-                    if (postsnapshot.hasChild(firebaseAuth.getCurrentUser().getUid())) {
-                        for (DataSnapshot nextsnap : postsnapshot.getChildren()) {
-                            final join_list joinList = nextsnap.getValue(join_list.class);
-                            if(nextsnap.getKey().equals(firebaseAuth.getCurrentUser().getUid())) {
-                                AllClubsList.add(joinList);
-                                keys.add(nextsnap.getKey().toString());
-                                Parentkeys.add(postsnapshot.getKey());
-                                Log.d("^^^^^^^Call1", "" + "call1");
-                            }
+                if (postsnapshot.hasChild(firebaseAuth.getCurrentUser().getUid())) {
+                    for (DataSnapshot nextsnap : postsnapshot.getChildren()) {
+                        final join_list joinList = nextsnap.getValue(join_list.class);
+                        if (nextsnap.getKey().equals(firebaseAuth.getCurrentUser().getUid())) {
+                            AllClubsList.add(joinList);
+                            keys.add(nextsnap.getKey().toString());
+                            Parentkeys.add(postsnapshot.getKey());
+                            Log.d("^^^^^^^Call1", "" + "call1");
                         }
                     }
                 }
+            }
             adapter = new ListOfJoinedAdapter(List_of_joined.this, AllClubsList);
             Log.d("****clubsize", "" + AllClubsList.size());
             recyclerView.setAdapter(adapter);
@@ -137,8 +138,8 @@ public class List_of_joined extends AppCompatActivity {
             mUserDatabase2.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    for(int x = 0;x < Parentkeys.size();x++){
-                        if(dataSnapshot.hasChild(Parentkeys.get(x))){
+                    for (int x = 0; x < Parentkeys.size(); x++) {
+                        if (dataSnapshot.hasChild(Parentkeys.get(x))) {
                             ListOfClubs listOfClubs = dataSnapshot.child(Parentkeys.get(x)).getValue(ListOfClubs.class);
                             AllClubsList2.add(listOfClubs);
                             Log.d("^^^^^^^listclubs2size", "" + AllClubsList2.size());
@@ -155,16 +156,16 @@ public class List_of_joined extends AppCompatActivity {
             recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(List_of_joined.this, new RecyclerItemClickListener.OnItemClickListener() {
                 @Override
                 public void onItemClick(View childView, int position) {
-                            ListOfClubs listOfClubs = AllClubsList2.get(position);
-                            Log.d("^^^^^^^listclubs", "" + listOfClubs);
-                            Intent intent = new Intent(List_of_joined.this, ListOfClubsView.class);
-                            intent.putExtra("isname", listOfClubs.getName());
-                            intent.putExtra("iscont", listOfClubs.getContact());
-                            intent.putExtra("isdesc",listOfClubs.getDesc());
-                            intent.putExtra("isimg",listOfClubs.getImage());
-                            intent.putExtra("isuid", listOfClubs.getMyUid());
-                            Log.d("^^^^^^^", "" + listOfClubs.getMyUid());
-                            startActivity(intent);
+                    ListOfClubs listOfClubs = AllClubsList2.get(position);
+                    Log.d("^^^^^^^listclubs", "" + listOfClubs);
+                    Intent intent = new Intent(List_of_joined.this, ListOfClubsView.class);
+                    intent.putExtra("isname", listOfClubs.getName());
+                    intent.putExtra("iscont", listOfClubs.getContact());
+                    intent.putExtra("isdesc", listOfClubs.getDesc());
+                    intent.putExtra("isimg", listOfClubs.getImage());
+                    intent.putExtra("isuid", listOfClubs.getMyUid());
+                    Log.d("^^^^^^^", "" + listOfClubs.getMyUid());
+                    startActivity(intent);
                 }
 
                 @Override

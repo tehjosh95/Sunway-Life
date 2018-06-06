@@ -24,14 +24,14 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
-public class ListOfClubsView extends AppCompatActivity{
+public class ListOfClubsView extends AppCompatActivity {
     public interface MyCallback {
-         void onCallback(String value);
+        void onCallback(String value);
     }
 
     private ImageView profilePic;
     private TextView profileName, profileCont, profileDesc, averagetext;
-    private Button EditButton, btnJoin , rate;
+    private Button EditButton, btnJoin, rate;
     private FloatingActionButton fabbb;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
@@ -59,7 +59,7 @@ public class ListOfClubsView extends AppCompatActivity{
         EditButton = findViewById(R.id.btnEdit);
         rate = findViewById(R.id.rate);
         btnJoin = findViewById(R.id.btnJoin);
-        fabbb = (FloatingActionButton)findViewById(R.id.fabbb);
+        fabbb = (FloatingActionButton) findViewById(R.id.fabbb);
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         mDatabase = FirebaseDatabase.getInstance();
@@ -95,10 +95,10 @@ public class ListOfClubsView extends AppCompatActivity{
         mDataRef4.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot postsnapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot postsnapshot : dataSnapshot.getChildren()) {
                     total = 0;
                     totalperson = 0;
-                    for (DataSnapshot nextsnap : postsnapshot.getChildren()){
+                    for (DataSnapshot nextsnap : postsnapshot.getChildren()) {
                         final join_list joinList = nextsnap.getValue(join_list.class);
                         total += joinList.getRating();
                         totalperson += 1;
@@ -117,54 +117,54 @@ public class ListOfClubsView extends AppCompatActivity{
         mDataRef3.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(Myuid).hasChild(firebaseAuth.getCurrentUser().getUid())){
+                if (dataSnapshot.child(Myuid).hasChild(firebaseAuth.getCurrentUser().getUid())) {
                     mDataRef3.removeEventListener(this);
                     mDataRef3 = mDataRef3.child(Myuid).child(firebaseAuth.getCurrentUser().getUid());
-                        mDataRef3.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                final join_list joinList = dataSnapshot.getValue(join_list.class);
-                                if(dataSnapshot.getKey().equals(firebaseAuth.getCurrentUser().getUid())){
-                                    status = joinList.getStatus();
-                                    count = joinList.getRating();
-                                }
-                                rate.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        if(status.equals("successful")){
-                                            rankDialog = new Dialog(ListOfClubsView.this, R.style.FullHeightDialog);
-                                            rankDialog.setContentView(R.layout.rank_dialog);
-                                            rankDialog.setCancelable(true);
-                                            ratingbar2 = (RatingBar)rankDialog.findViewById(R.id.dialog_ratingbar);
-                                            ratingbar2.setRating(count);
+                    mDataRef3.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            final join_list joinList = dataSnapshot.getValue(join_list.class);
+                            if (dataSnapshot.getKey().equals(firebaseAuth.getCurrentUser().getUid())) {
+                                status = joinList.getStatus();
+                                count = joinList.getRating();
+                            }
+                            rate.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    if (status.equals("successful")) {
+                                        rankDialog = new Dialog(ListOfClubsView.this, R.style.FullHeightDialog);
+                                        rankDialog.setContentView(R.layout.rank_dialog);
+                                        rankDialog.setCancelable(true);
+                                        ratingbar2 = (RatingBar) rankDialog.findViewById(R.id.dialog_ratingbar);
+                                        ratingbar2.setRating(count);
 
-                                            TextView text = (TextView) rankDialog.findViewById(R.id.rank_dialog_text1);
+                                        TextView text = (TextView) rankDialog.findViewById(R.id.rank_dialog_text1);
 //                                      text.setText(name);
 
-                                            Button updateButton = (Button) rankDialog.findViewById(R.id.rank_dialog_button);
-                                            updateButton.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                    mDataRef.child(Myuid).child(firebaseAuth.getCurrentUser().getUid()).child("rating").setValue(ratingbar2.getRating());
-                                                    rankDialog.dismiss();
-                                                }
-                                            });
-                                            rankDialog.show();
-                                        }else if(status.equals("pending")){
-                                            Toast.makeText(ListOfClubsView.this, "Can't rate yet", Toast.LENGTH_SHORT).show();
-                                        }else{
-                                            Toast.makeText(ListOfClubsView.this, "GG", Toast.LENGTH_SHORT).show();
-                                        }
+                                        Button updateButton = (Button) rankDialog.findViewById(R.id.rank_dialog_button);
+                                        updateButton.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                mDataRef.child(Myuid).child(firebaseAuth.getCurrentUser().getUid()).child("rating").setValue(ratingbar2.getRating());
+                                                rankDialog.dismiss();
+                                            }
+                                        });
+                                        rankDialog.show();
+                                    } else if (status.equals("pending")) {
+                                        Toast.makeText(ListOfClubsView.this, "Can't rate yet", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(ListOfClubsView.this, "GG", Toast.LENGTH_SHORT).show();
                                     }
-                                });
-                            }
+                                }
+                            });
+                        }
 
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                            }
-                        });
-                }else{
+                        }
+                    });
+                } else {
                     rate.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -194,7 +194,7 @@ public class ListOfClubsView extends AppCompatActivity{
         btnJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                readData(new MyCallback(){
+                readData(new MyCallback() {
                     @Override
                     public void onCallback(String value) {
                         nameofclub = value;
@@ -202,13 +202,13 @@ public class ListOfClubsView extends AppCompatActivity{
                         mDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                if (!dataSnapshot.child(Myuid).hasChild(firebaseAuth.getCurrentUser().getUid())){
+                                if (!dataSnapshot.child(Myuid).hasChild(firebaseAuth.getCurrentUser().getUid())) {
                                     String status = "pending";
-                                    join_list joinList = new join_list(status, nameofclub, firebaseAuth.getCurrentUser().getDisplayName(),0);
+                                    join_list joinList = new join_list(status, nameofclub, firebaseAuth.getCurrentUser().getDisplayName(), 0);
                                     mDataRef.child(Myuid).child(firebaseAuth.getCurrentUser().getUid()).setValue(joinList);
                                     Log.d("***method3", "" + nameofclub);
                                     Toast.makeText(ListOfClubsView.this, "On pending list...", Toast.LENGTH_LONG).show();
-                                }else{
+                                } else {
                                     Toast.makeText(ListOfClubsView.this, "Already joined!!", Toast.LENGTH_LONG).show();
                                 }
                             }
@@ -222,7 +222,8 @@ public class ListOfClubsView extends AppCompatActivity{
             }
         });
     }
-    public void readData( final MyCallback myCallback){
+
+    public void readData(final MyCallback myCallback) {
         Intent startingIntent = getIntent();
         final String Myuid = startingIntent.getStringExtra("isuid");
         mDataRef2 = mDataRef2.child("Clubs").child(Myuid);
@@ -235,6 +236,7 @@ public class ListOfClubsView extends AppCompatActivity{
                 Log.d("***method", "" + nameofclub);
                 Log.d("***methoddown", "" + Myuid);
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }

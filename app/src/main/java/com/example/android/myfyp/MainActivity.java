@@ -35,17 +35,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Name = (EditText)findViewById(R.id.etName);
-        Password = (EditText)findViewById(R.id.etPassword);
-        Login = (Button)findViewById(R.id.btnLogin);
-        userRegistration = (TextView)findViewById(R.id.tvRegister);
-        forgotPassword = (TextView)findViewById(R.id.tvForgotPassword);
+        Name = (EditText) findViewById(R.id.etName);
+        Password = (EditText) findViewById(R.id.etPassword);
+        Login = (Button) findViewById(R.id.btnLogin);
+        userRegistration = (TextView) findViewById(R.id.tvRegister);
+        forgotPassword = (TextView) findViewById(R.id.tvForgotPassword);
         FirebaseApp.initializeApp(this);
         firebaseAuth = FirebaseAuth.getInstance();
         progressDialog = new ProgressDialog(this);
         FirebaseUser user = firebaseAuth.getCurrentUser();
 
-        if(user != null){
+        if (user != null) {
             startActivity(new Intent(MainActivity.this, SecondActivity.class));
             finish();
         }
@@ -79,15 +79,15 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth.signInWithEmailAndPassword(userName, userPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     progressDialog.dismiss();
                     //Toast.makeText(MainActivity.this, "Login Successful", Toast.LENGTH_SHORT).show();
                     checkEmailVerification();
-                }else{
+                } else {
                     Toast.makeText(MainActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
                     counter--;
                     progressDialog.dismiss();
-                    if(counter == 0){
+                    if (counter == 0) {
                         Login.setEnabled(false);
                     }
                 }
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void checkEmailVerification(){
+    private void checkEmailVerification() {
         FirebaseUser firebaseUser = firebaseAuth.getInstance().getCurrentUser();
         Boolean emailflag = firebaseUser.isEmailVerified();
 

@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class AddClubs extends AppCompatActivity {
-    private ListOfClubs listofclubs= new ListOfClubs();
+    private ListOfClubs listofclubs = new ListOfClubs();
 
     private String uid;
     private FirebaseStorage mStorage;
@@ -86,7 +86,7 @@ public class AddClubs extends AppCompatActivity {
         clubPass = (EditText) findViewById(R.id.club_password);
         clubContact = (EditText) findViewById(R.id.club_contact);
         clubDesc = (EditText) findViewById(R.id.club_desc);
-        fab = (FloatingActionButton)findViewById(R.id.fabb);
+        fab = (FloatingActionButton) findViewById(R.id.fabb);
         btnUploadItem = (AppCompatButton) findViewById(R.id.btn_upload);
 
         imageView = (ImageView) findViewById(R.id.image_preview);
@@ -102,9 +102,9 @@ public class AddClubs extends AppCompatActivity {
                 .build();
 
         try {
-            FirebaseApp firebaseApp = FirebaseApp.initializeApp(getApplicationContext(),firebaseOptions,"fyp");
+            FirebaseApp firebaseApp = FirebaseApp.initializeApp(getApplicationContext(), firebaseOptions, "fyp");
             firebaseAuth2 = FirebaseAuth.getInstance(firebaseApp);
-        }catch(IllegalStateException e){
+        } catch (IllegalStateException e) {
             firebaseAuth2 = FirebaseAuth.getInstance(FirebaseApp.getInstance("fyp"));
         }
 
@@ -164,11 +164,11 @@ public class AddClubs extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
         switch (requestCode) {
             case 0:
-                if(requestCode == RESULT_OK) {
+                if (requestCode == RESULT_OK) {
                 }
                 break;
             case 1:
-                if(resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK) {
                     Uri selectedImage = imageReturnedIntent.getData();
                     this.imageView.setImageURI(selectedImage);
                 }
@@ -236,7 +236,7 @@ public class AddClubs extends AppCompatActivity {
         });
     }
 
-    private void registration(){
+    private void registration() {
         String user_email = clubEmail.getText().toString().trim();
         String user_password = clubPass.getText().toString().trim();
         Log.d("****1", "1");
@@ -244,7 +244,7 @@ public class AddClubs extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
 
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     //sendEmailVerification();
                     uid = firebaseAuth2.getCurrentUser().getUid();
                     FirebaseUser user = firebaseAuth2.getCurrentUser();
@@ -262,7 +262,7 @@ public class AddClubs extends AppCompatActivity {
                     uploadImageToFirebase();
                     firebaseAuth2.signOut();
                     Toast.makeText(AddClubs.this, "Successfully Registered, Upload complete!", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     Toast.makeText(AddClubs.this, "Registration Failed", Toast.LENGTH_SHORT).show();
                 }
 
