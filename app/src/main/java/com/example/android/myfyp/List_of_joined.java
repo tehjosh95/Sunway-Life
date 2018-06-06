@@ -59,7 +59,7 @@ public class List_of_joined extends AppCompatActivity {
         AllClubsList2 = new ArrayList<>();
         keys = new ArrayList<>();
         Parentkeys = new ArrayList<>();
-        mUserDatabase = FirebaseDatabase.getInstance().getReference("join_list");
+        mUserDatabase = FirebaseDatabase.getInstance().getReference("join_list").child("members");
         mUserDatabase2 = FirebaseDatabase.getInstance().getReference("Clubs");
 
 
@@ -99,6 +99,8 @@ public class List_of_joined extends AppCompatActivity {
                 }
             }
         });
+
+
     }
 
     private void firebaseUserSearch(String searchText) {

@@ -55,7 +55,7 @@ public class List_of_pending extends AppCompatActivity {
         AllClubsList = new ArrayList<>();
         keys = new ArrayList<>();
         AllUsers = new ArrayList<>();
-        mUserDatabase = FirebaseDatabase.getInstance().getReference("join_list").child(firebaseAuth.getCurrentUser().getUid());
+        mUserDatabase = FirebaseDatabase.getInstance().getReference("join_list").child("members").child(firebaseAuth.getCurrentUser().getUid());
         mUserDatabase2 = FirebaseDatabase.getInstance().getReference("Users");
 
         mSearchField = (EditText) findViewById(R.id.search_field);

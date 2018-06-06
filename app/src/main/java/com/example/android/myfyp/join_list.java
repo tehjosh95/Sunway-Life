@@ -8,14 +8,17 @@ public class join_list {
 
     private String myname;
 
+    private float rating;
+
     public join_list(){
 
     }
 
-    public join_list(String status, String clubname, String myname){
+    public join_list(String status, String clubname, String myname, float rating){
         this.clubname = clubname;
         this.myname = myname;
         this.status = status;
+        this.rating = rating;
     }
 
     public String getMyname() { return myname; }
@@ -29,4 +32,8 @@ public class join_list {
     public String getStatus() { return status; }
 
     public void setStatus(String status) { this.status = status; }
+
+    public float getRating() { return rating; }
+
+    public void setRating(float rating) { this.rating = rating; }
 }
