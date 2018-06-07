@@ -59,14 +59,15 @@
         <activity android:name=".EditActivity" />
         <activity
             android:name=".ListOfClubsActivity"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".AddClubs" />
         <activity android:name=".ClubProfileActivity" />
         <activity android:name=".UpdateClubProfile" />
         <activity android:name=".ListOfClubsView" />
         <activity android:name=".List_of_pending" />
         <activity android:name=".List_of_successful" />
-        <activity android:name=".List_of_joined"></activity>
+        <activity android:name=".List_of_joined" />
+        <activity android:name=".tabs"></activity>
     </application>
 
 </manifest>

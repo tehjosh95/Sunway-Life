@@ -70,7 +70,7 @@ public class List_of_joined extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.result_list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mUserDatabase.addListenerForSingleValueEvent(valueEventListener);
+        mUserDatabase.addValueEventListener(valueEventListener);
         mSearchField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -100,8 +100,6 @@ public class List_of_joined extends AppCompatActivity {
                 }
             }
         });
-
-
     }
 
     private void firebaseUserSearch(String searchText) {
@@ -131,6 +129,7 @@ public class List_of_joined extends AppCompatActivity {
                     }
                 }
             }
+
             adapter = new ListOfJoinedAdapter(List_of_joined.this, AllClubsList);
             Log.d("****clubsize", "" + AllClubsList.size());
             recyclerView.setAdapter(adapter);

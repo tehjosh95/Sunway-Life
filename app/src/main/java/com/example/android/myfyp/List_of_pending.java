@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,7 +65,7 @@ public class List_of_pending extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.result_list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mUserDatabase.addListenerForSingleValueEvent(valueEventListener);
+        mUserDatabase.addValueEventListener(valueEventListener);
         mSearchField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

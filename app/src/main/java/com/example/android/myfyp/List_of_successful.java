@@ -62,7 +62,7 @@ public class List_of_successful extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.result_list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mUserDatabase.addListenerForSingleValueEvent(valueEventListener);
+        mUserDatabase.addValueEventListener(valueEventListener);
         mSearchField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -103,6 +103,7 @@ public class List_of_successful extends AppCompatActivity {
     ValueEventListener valueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
+            Log.d("******","listenerrunning");
             count = 0;
             keys.clear();
             AllClubsList.clear();

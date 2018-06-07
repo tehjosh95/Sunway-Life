@@ -337,9 +337,8 @@ public class SecondActivity extends AppCompatActivity {
                     PrimaryDrawerItem item2 = new PrimaryDrawerItem().withIdentifier(2).withName("Inbox");
                     PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(3).withName("Edit and view posted");
                     PrimaryDrawerItem item4 = new PrimaryDrawerItem().withIdentifier(4).withName("List of Clubs with search");
-                    PrimaryDrawerItem item5 = new PrimaryDrawerItem().withIdentifier(5).withName("List of pendings for clubs");
-                    PrimaryDrawerItem item6 = new PrimaryDrawerItem().withIdentifier(6).withName("List of successful for clubs");
-                    PrimaryDrawerItem item7 = new PrimaryDrawerItem().withIdentifier(7).withName("Logout");
+                    PrimaryDrawerItem item5 = new PrimaryDrawerItem().withIdentifier(5).withName("Members");
+                    PrimaryDrawerItem item6 = new PrimaryDrawerItem().withIdentifier(7).withName("Logout");
 
                     Drawer result = new DrawerBuilder()
                             .withActivity(SecondActivity.this)
@@ -351,9 +350,8 @@ public class SecondActivity extends AppCompatActivity {
                                     item3,
                                     item4,
                                     item5,
-                                    item6,
                                     new DividerDrawerItem(),
-                                    item7
+                                    item6
                             )
                             .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                                 @Override
@@ -372,14 +370,11 @@ public class SecondActivity extends AppCompatActivity {
                                             startActivity(new Intent(SecondActivity.this, ListOfClubsActivity.class));
                                             break;
                                         case 5:
-                                            startActivity(new Intent(SecondActivity.this, List_of_pending.class));
+                                            startActivity(new Intent(SecondActivity.this, tabs.class));
                                             break;
                                         case 6:
-                                            startActivity(new Intent(SecondActivity.this, List_of_successful.class));
                                             break;
                                         case 7:
-                                            break;
-                                        case 8:
                                             Logout();
                                             break;
                                     }
