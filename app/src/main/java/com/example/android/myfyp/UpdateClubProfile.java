@@ -41,7 +41,7 @@ public class UpdateClubProfile extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private ImageView imgView;
     private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference mDataRef;
+    private DatabaseReference mDataRef, mDataRef2, mDataRef3;
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private FirebaseStorage mStorage;
     private StorageReference storageRef;
@@ -73,6 +73,11 @@ public class UpdateClubProfile extends AppCompatActivity {
         mStorRef = mStorage.getReference();
         mDataRef = mDataRef.child("Clubs").child(firebaseAuth.getCurrentUser().getUid());
         storageRef = storage.getReferenceFromUrl("gs://myfyp-25f5d.appspot.com/images");
+
+        mDataRef2 = firebaseDatabase.getReference();
+        mDataRef2 = mDataRef2.child("messages");
+        mDataRef3 = firebaseDatabase.getReference();
+        mDataRef3 = mDataRef3.child("join_list").child("members");
 
         mDataRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -174,7 +179,7 @@ public class UpdateClubProfile extends AppCompatActivity {
                 Log.d("*****url", "" + imgUrl);
 
 
-                String name = newUserName.getText().toString();
+                final String name = newUserName.getText().toString();
                 String cont = newUserCont.getText().toString();
                 String desc = newUserDesc.getText().toString();
                 String type = userType;
@@ -192,15 +197,60 @@ public class UpdateClubProfile extends AppCompatActivity {
                 progDialog.show();
                 final ListOfClubs listOfClubs = new ListOfClubs(name, imgUrl, cont, desc, type, myuid);
 
-                final Runnable uploadTask = new Runnable() {
+                mDataRef3.addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void run() {
-                        mDataRef.setValue(listOfClubs);
-                        progDialog.dismiss();
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot postsnap : dataSnapshot.getChildren()){
+                            for (DataSnapshot nextsnap : postsnap.getChildren()){
+                                if(nextsnap.child("clubname").getValue(String.class).equals(firebaseAuth.getCurrentUser().getDisplayName())){
+                                    mDataRef3.child(postsnap.getKey()).child(nextsnap.getKey()).child("clubname").setValue(name);
+                                }
+                            }
+                        }
                     }
-                };
-                new Thread(uploadTask).start();
-                onSuccessfulSave();
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                mDataRef2.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot postsnap : dataSnapshot.getChildren()){
+                            if(postsnap.child("others").getValue(String.class).equals(firebaseAuth.getCurrentUser().getDisplayName())){
+                                mDataRef2.child(postsnap.getKey()).child("others").setValue(name);
+                            }
+                        }
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                .setDisplayName(name)
+                                .build();
+
+                        user.updateProfile(profileUpdates)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                    }
+                                });
+
+                        final Runnable uploadTask = new Runnable() {
+                            @Override
+                            public void run() {
+                                mDataRef.setValue(listOfClubs);
+                                progDialog.dismiss();
+                            }
+                        };
+                        new Thread(uploadTask).start();
+                        onSuccessfulSave();                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
         });
     }

@@ -95,19 +95,19 @@ public class ListOfClubsView extends AppCompatActivity {
         mDataRef4.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                total = 0;
+                totalperson = 0;
                 for (DataSnapshot postsnapshot : dataSnapshot.getChildren()) {
-                    total = 0;
-                    totalperson = 0;
-                    for (DataSnapshot nextsnap : postsnapshot.getChildren()) {
-                        final join_list joinList = nextsnap.getValue(join_list.class);
+                     final join_list joinList = postsnapshot.getValue(join_list.class);
                         total += joinList.getRating();
-                        totalperson += 1;
+                        if(joinList.getRating() > 0) {
+                            totalperson += 1;
+                        }
                     }
                     ratingbar1.setRating(total / totalperson);
                     ratingbar1.setClickable(false);
-                    averagetext.setText("Average is: " + total / totalperson);
+                    averagetext.setText("Average is: " + Float.toString(total / totalperson));
                 }
-            }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -207,9 +207,9 @@ public class ListOfClubsView extends AppCompatActivity {
                                     join_list joinList = new join_list(status, nameofclub, firebaseAuth.getCurrentUser().getDisplayName(), 0);
                                     mDataRef.child(Myuid).child(firebaseAuth.getCurrentUser().getUid()).setValue(joinList);
                                     Log.d("***method3", "" + nameofclub);
-                                    Toast.makeText(ListOfClubsView.this, "On pending list...", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(ListOfClubsView.this, "On pending list...", Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Toast.makeText(ListOfClubsView.this, "Already joined!!", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(ListOfClubsView.this, "Already joined!!", Toast.LENGTH_SHORT).show();
                                 }
                             }
 
