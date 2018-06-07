@@ -50,6 +50,7 @@ import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.onesignal.OneSignal;
+import com.roger.catloadinglibrary.CatLoadingView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +82,7 @@ public class SecondActivity extends AppCompatActivity {
 
     clubModel[] arrayName;
     String username, email, age;
-    ;
+    CatLoadingView mView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +122,8 @@ public class SecondActivity extends AppCompatActivity {
                 arrayName = clubModelList.toArray(arrayName);
                 adapter = new clubAdapter(SecondActivity.this, clubModelList);
                 recyclerView.setAdapter(adapter);
-                progDialog.dismiss();
+//                progDialog.dismiss();
+                mView.dismiss();
             }
 
             @Override
@@ -191,8 +193,12 @@ public class SecondActivity extends AppCompatActivity {
                 })
         );
 
-        progDialog = ProgressDialog.show(this, null, "Wait.....");
-        progDialog.setContentView(new ProgressBar(this));
+//        progDialog = ProgressDialog.show(this, null, "Wait.....");
+//        progDialog.setContentView(new ProgressBar(this));
+
+        mView = new CatLoadingView();
+        mView.show(getSupportFragmentManager(), "");
+
         mDataRef3.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

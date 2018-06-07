@@ -84,6 +84,78 @@ public class Inbox extends AppCompatActivity {
 
         mDataRef = firebaseDatabase.getReference("messages");
         mDataRef2 = firebaseDatabase.getReference("Users");
+
+        usersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                UserDetails.username = encodeUserEmail(user.getUid());
+                UserDetails.chatWith = encodeUserEmail(al4.get(position));
+                UserDetails.name = al6.get(position);
+                Log.d("****chatwith1", "****chatwith" + UserDetails.chatWith);
+                Log.d("****username2", "****username" + UserDetails.username);
+                startActivity(new Intent(com.example.android.myfyp.Inbox.this, Chat.class));
+            }
+        });
+
+
+        usersList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int position, long l) {
+
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(com.example.android.myfyp.Inbox.this);
+                // Setting Dialog Title
+                alertDialog.setTitle("Delete?");
+                alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        UserDetails.username = encodeUserEmail(user.getUid());
+                        UserDetails.chatWith = encodeUserEmail(al4.get(position));
+                        String delete = UserDetails.username + "_" + UserDetails.chatWith;
+                        String delete2 = UserDetails.chatWith + "_" + UserDetails.username;
+                        Log.d("****delete", "" + delete);
+                        mDataRef.child(delete).removeValue();
+                        mDataRef.child(delete2).removeValue();
+                    }
+                });
+
+                alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    public void onDismiss(DialogInterface dialog) {
+                        finish();
+                        startActivity(new Intent(com.example.android.myfyp.Inbox.this, com.example.android.myfyp.Inbox.class));
+                    }
+                });
+
+                alertDialog.show();
+                return true;
+            }
+        });
+    }
+
+    static String encodeUserEmail(String userEmail) {
+        return userEmail.replace(".", ",");
+    }
+
+    static String decodeUserEmail(String userEmail) {
+        return userEmail.replace(",", ".");
+    }
+
+//    @Override
+//    public void onBackPressed() {
+//        Log.d("backpressed", "onBackPressed Called");
+//        finish();
+//        startActivity(new Intent(Inbox.this, SecondActivity.class));
+//    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
         mDataRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -163,74 +235,6 @@ public class Inbox extends AppCompatActivity {
                 System.out.println("The read failed: " + databaseError.getMessage());
             }
         });
-
-        usersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                UserDetails.username = encodeUserEmail(user.getUid());
-                UserDetails.chatWith = encodeUserEmail(al4.get(position));
-                UserDetails.name = al6.get(position);
-                Log.d("****chatwith1", "****chatwith" + UserDetails.chatWith);
-                Log.d("****username2", "****username" + UserDetails.username);
-                finish();
-                startActivity(new Intent(com.example.android.myfyp.Inbox.this, Chat.class));
-            }
-        });
-
-
-        usersList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int position, long l) {
-
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(com.example.android.myfyp.Inbox.this);
-                // Setting Dialog Title
-                alertDialog.setTitle("Delete?");
-                alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                        UserDetails.username = encodeUserEmail(user.getUid());
-                        UserDetails.chatWith = encodeUserEmail(al4.get(position));
-                        String delete = UserDetails.username + "_" + UserDetails.chatWith;
-                        String delete2 = UserDetails.chatWith + "_" + UserDetails.username;
-                        Log.d("****delete", "" + delete);
-                        mDataRef.child(delete).removeValue();
-                        mDataRef.child(delete2).removeValue();
-                    }
-                });
-
-                alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    public void onDismiss(DialogInterface dialog) {
-                        finish();
-                        startActivity(new Intent(com.example.android.myfyp.Inbox.this, com.example.android.myfyp.Inbox.class));
-                    }
-                });
-
-                alertDialog.show();
-                return true;
-            }
-        });
-    }
-
-    static String encodeUserEmail(String userEmail) {
-        return userEmail.replace(".", ",");
-    }
-
-    static String decodeUserEmail(String userEmail) {
-        return userEmail.replace(",", ".");
-    }
-
-    @Override
-    public void onBackPressed() {
-        Log.d("backpressed", "onBackPressed Called");
-        finish();
-        startActivity(new Intent(Inbox.this, SecondActivity.class));
     }
 
 }

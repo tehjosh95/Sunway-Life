@@ -438,9 +438,9 @@ public class Chat extends AppCompatActivity {
         });
     }
 
-    @Override
-    public void onBackPressed() {
-        Log.d("backpressed", "onBackPressed Called");
-        startActivity(new Intent(Chat.this, Inbox.class));
-    }
+//    @Override
+//    public void onBackPressed() {
+//        Log.d("backpressed", "onBackPressed Called");
+//        startActivity(new Intent(Chat.this, Inbox.class));
+//    }
 }

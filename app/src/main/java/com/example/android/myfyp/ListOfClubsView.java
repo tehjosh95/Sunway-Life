@@ -24,6 +24,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
+import static java.lang.Double.NaN;
+
 public class ListOfClubsView extends AppCompatActivity {
     public interface MyCallback {
         void onCallback(String value);
@@ -98,16 +100,23 @@ public class ListOfClubsView extends AppCompatActivity {
                 total = 0;
                 totalperson = 0;
                 for (DataSnapshot postsnapshot : dataSnapshot.getChildren()) {
-                     final join_list joinList = postsnapshot.getValue(join_list.class);
-                        total += joinList.getRating();
-                        if(joinList.getRating() > 0) {
-                            totalperson += 1;
-                        }
+                    final join_list joinList = postsnapshot.getValue(join_list.class);
+                    total += joinList.getRating();
+                    if (joinList.getRating() > 0) {
+                        totalperson += 1;
                     }
+                }
+                Float ans = total / totalperson;
+                if (!Float.isNaN(ans)) {
                     ratingbar1.setRating(total / totalperson);
                     ratingbar1.setClickable(false);
                     averagetext.setText("Average is: " + Float.toString(total / totalperson));
+                }else{
+                    ratingbar1.setRating(0);
+                    ratingbar1.setClickable(false);
+                    averagetext.setText("Average is: " + "0");
                 }
+            }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
