@@ -110,31 +110,6 @@ public class SecondActivity extends AppCompatActivity {
         toolbar.setTitle("Club and Societies");
 
         clubModelList = new ArrayList<>();
-        mDataRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                clubModelList.clear();
-                for (DataSnapshot child : snapshot.getChildren()) {
-                    clubModel ClubModel = child.getValue(clubModel.class);
-                    clubModelList.add(ClubModel);
-                }
-                arrayName = new clubModel[clubModelList.size()];
-                arrayName = clubModelList.toArray(arrayName);
-                adapter = new clubAdapter(SecondActivity.this, clubModelList);
-                recyclerView.setAdapter(adapter);
-//                progDialog.dismiss();
-                mView.dismiss();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getMessage());
-            }
-        });
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setNestedScrollingEnabled(false);
 
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(SecondActivity.this, new RecyclerItemClickListener.OnItemClickListener() {
@@ -262,7 +237,11 @@ public class SecondActivity extends AppCompatActivity {
                                 }
                             })
                             .build();
+                    Log.d("***second", "second");
+                    getData();
+
                 } else if (dataSnapshot.hasChild(firebaseAuth.getCurrentUser().getUid()) && firebaseAuth.getCurrentUser().getUid().equals("XHR842kZD3cTZTwz7nM5LWJESW72")) {
+                    Log.d("***second", "second");
 
                     AccountHeader headerResult = new AccountHeaderBuilder()
                             .withActivity(SecondActivity.this)
@@ -323,7 +302,10 @@ public class SecondActivity extends AppCompatActivity {
                                 }
                             })
                             .build();
+                    Log.d("***second", "second");
+                    getData();
                 } else {
+                    Log.d("***second", "second");
                     AccountHeader headerResult = new AccountHeaderBuilder()
                             .withActivity(SecondActivity.this)
                             .withHeaderBackground(R.drawable.header)
@@ -388,6 +370,8 @@ public class SecondActivity extends AppCompatActivity {
                                 }
                             })
                             .build();
+                    Log.d("***second", "second");
+                    getData();
                 }
             }
 
@@ -486,6 +470,35 @@ public class SecondActivity extends AppCompatActivity {
             public void onAnimationRepeat(Animator animator) {
             }
         });
+    }
+
+    public void getData(){
+        mDataRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                clubModelList.clear();
+                for (DataSnapshot child : snapshot.getChildren()) {
+                    clubModel ClubModel = child.getValue(clubModel.class);
+                    clubModelList.add(ClubModel);
+                }
+                arrayName = new clubModel[clubModelList.size()];
+                arrayName = clubModelList.toArray(arrayName);
+                adapter = new clubAdapter(SecondActivity.this, clubModelList);
+                recyclerView.setAdapter(adapter);
+                Log.d("***first", "first");
+//                progDialog.dismiss();
+                mView.dismiss();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getMessage());
+            }
+        });
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setNestedScrollingEnabled(false);
     }
 
     @Override
