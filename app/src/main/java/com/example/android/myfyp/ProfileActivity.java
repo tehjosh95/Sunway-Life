@@ -22,7 +22,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private ImageView profilePic;
     private TextView profileName, profileAge, profileEmail, profileType;
-    private Button profileUpdate, changePassword;
+    private Button profileUpdate, changePassword, profileChat;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference mDataRef;
@@ -38,6 +38,7 @@ public class ProfileActivity extends AppCompatActivity {
         profileAge = findViewById(R.id.tvProfileAge);
         profileEmail = findViewById(R.id.tvProfileEmail);
         profileUpdate = findViewById(R.id.btnProfileUpdate);
+        profileChat = findViewById(R.id.btnChat);
         changePassword = findViewById(R.id.btnChangePassword);
         profileType = findViewById(R.id.tvProfileType);
         fab = (FloatingActionButton) findViewById(R.id.fabb);
@@ -50,10 +51,11 @@ public class ProfileActivity extends AppCompatActivity {
         mDataRef = firebaseDatabase.getReference();
         mDataRef = mDataRef.child("Users").child(firebaseAuth.getCurrentUser().getUid());
 
-        Intent startingIntent = getIntent();
+        final Intent startingIntent = getIntent();
         Bundle extras = startingIntent.getExtras();
 
         if (extras == null) {
+            profileChat.setVisibility(View.GONE);
             mDataRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -101,6 +103,19 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View view) {
                 finish();
                 startActivity(new Intent(ProfileActivity.this, SecondActivity.class));
+            }
+        });
+        profileChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String name = startingIntent.getStringExtra("isname");
+                final String key = startingIntent.getStringExtra("isid");
+
+                UserDetails.username = firebaseAuth.getCurrentUser().getUid();
+                UserDetails.chatWith = key;
+                UserDetails.name = name;
+                startActivity(new Intent(ProfileActivity.this, Chat.class));
+                finish();
             }
         });
     }

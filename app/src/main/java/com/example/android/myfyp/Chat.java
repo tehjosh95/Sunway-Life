@@ -88,7 +88,6 @@ public class Chat extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
         chatname = (TextView) findViewById(R.id.chatname);
 
-
         if (savedInstanceState != null) {
             UserDetails.username = savedInstanceState.getString(STATE_USERNAME);
             UserDetails.chatWith = savedInstanceState.getString(STATE_CHATWITH);
@@ -193,6 +192,7 @@ public class Chat extends AppCompatActivity {
                 } else if (chatModel.getMessage().equals("") && !userName.equals(UserDetails.username)) {
                     addMessageBox2(url, 2);
                 }
+                scrollView.fullScroll(View.FOCUS_DOWN);
             }
 
             @Override

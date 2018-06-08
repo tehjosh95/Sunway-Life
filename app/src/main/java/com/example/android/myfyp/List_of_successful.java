@@ -37,6 +37,7 @@ public class List_of_successful extends AppCompatActivity {
     RecyclerView recyclerView;
     ArrayList<join_list> AllClubsList;
     ArrayList<String> keys;
+    ArrayList<String> profilekey;
     ArrayList<UserProfile> AllUsers;
     private EditText mSearchField;
     private ImageButton mSearchBtn;
@@ -52,6 +53,7 @@ public class List_of_successful extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         AllClubsList = new ArrayList<>();
         keys = new ArrayList<>();
+        profilekey = new ArrayList<>();
         AllUsers = new ArrayList<>();
         mUserDatabase = FirebaseDatabase.getInstance().getReference("join_list").child("members").child(firebaseAuth.getCurrentUser().getUid());
         mUserDatabase2 = FirebaseDatabase.getInstance().getReference("Users");
@@ -120,10 +122,13 @@ public class List_of_successful extends AppCompatActivity {
             mUserDatabase2.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    AllUsers.clear();
+                    profilekey.clear();
                     for (int x = 0; x < keys.size(); x++) {
                         if (dataSnapshot.hasChild(keys.get(x))) {
                             UserProfile listOfClubs = dataSnapshot.child(keys.get(x)).getValue(UserProfile.class);
                             AllUsers.add(listOfClubs);
+                            profilekey.add(keys.get(x));
                             Log.d("^^^^^^^listclubs2size", "" + AllUsers.size());
                         }
                     }
@@ -139,11 +144,13 @@ public class List_of_successful extends AppCompatActivity {
                 @Override
                 public void onItemClick(View childView, int position) {
                     UserProfile userProfile = AllUsers.get(position);
+                    String key = profilekey.get(position);
                     Intent intent = new Intent(List_of_successful.this, ProfileActivity.class);
                     intent.putExtra("isname", userProfile.getUserName());
                     intent.putExtra("isage", userProfile.getUserAge());
                     intent.putExtra("isemail", userProfile.getUserEmail());
                     intent.putExtra("istype", userProfile.getUserType());
+                    intent.putExtra("isid", key);
                     startActivity(intent);
                 }
 
