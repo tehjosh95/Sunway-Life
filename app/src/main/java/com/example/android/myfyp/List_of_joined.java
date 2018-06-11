@@ -78,7 +78,6 @@ public class List_of_joined extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                mUserDatabase.removeEventListener(valueEventListener);
                 mSearchBtn.performClick();
             }
 
@@ -105,7 +104,7 @@ public class List_of_joined extends AppCompatActivity {
     private void firebaseUserSearch(String searchText) {
 //        Toast.makeText(ListOfClubsActivity.this, "Started Search", Toast.LENGTH_LONG).show();
         AllClubsList.clear();
-        Query firebaseSearchQuery = mUserDatabase.orderByChild("myname").startAt(searchText).endAt(searchText + "\uf8ff");
+        Query firebaseSearchQuery = mUserDatabase.orderByChild("clubname").startAt(searchText).endAt(searchText + "\uf8ff");
         firebaseSearchQuery.addListenerForSingleValueEvent(valueEventListener);
     }
 

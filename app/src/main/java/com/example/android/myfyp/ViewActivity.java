@@ -9,17 +9,25 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
-
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class ViewActivity extends AppCompatActivity {
     private ImageView profilePic;
     private TextView profileName, profilePlace, profilePrice;
-    private Button EditButton;
+    private Button EditButton, btnchat, join;
     private FloatingActionButton fabbb;
     private FirebaseAuth firebaseAuth;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference mDataRef;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,15 +41,23 @@ public class ViewActivity extends AppCompatActivity {
         profilePlace = findViewById(R.id.tvcont);
         profilePrice = findViewById(R.id.tvdesc);
         EditButton = findViewById(R.id.btnEdit);
+        btnchat = findViewById(R.id.btnchat);
+        join = findViewById(R.id.btnToJoin);
         fabbb = (FloatingActionButton) findViewById(R.id.fabbb);
 
-        Intent startingIntent = getIntent();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        mDataRef = firebaseDatabase.getReference();
+        mDataRef = firebaseDatabase.getReference().child("join_event");
+
+        final Intent startingIntent = getIntent();
         final String myurl = startingIntent.getStringExtra("myurl");
         final String Name = startingIntent.getStringExtra("myname");
         final String Place = startingIntent.getStringExtra("myplace");
         final String Price = startingIntent.getStringExtra("myprice");
         final String Owner = startingIntent.getStringExtra("myowner");
         final String myKey = startingIntent.getStringExtra("mykey");
+        final String ownername = startingIntent.getStringExtra("myownername");
+        final String parentkey = startingIntent.getStringExtra("myparentkey");
 
         Glide.with(this).load(myurl).thumbnail(0.1f).into(profilePic);
         profileName.setText(Name);
@@ -50,8 +66,10 @@ public class ViewActivity extends AppCompatActivity {
 
         if (!firebaseAuth.getCurrentUser().getUid().equals(Owner)) {
             EditButton.setVisibility(View.GONE);
+        }else{
+            btnchat.setVisibility(View.GONE);
+            join.setVisibility(View.GONE);
         }
-
 
         Log.d("****itemname", "" + Name);
         Log.d("****itemplace", "" + Place);
@@ -61,6 +79,44 @@ public class ViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(ViewActivity.this, SecondActivity.class));
+            }
+        });
+
+        btnchat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String ownername = startingIntent.getStringExtra("myownername");
+                final String Owner = startingIntent.getStringExtra("myowner");
+
+                UserDetails.username = firebaseAuth.getCurrentUser().getUid();
+                UserDetails.chatWith = Owner;
+                UserDetails.name = ownername;
+                startActivity(new Intent(ViewActivity.this, Chat.class));
+                finish();
+            }
+        });
+
+        join.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (!dataSnapshot.child(parentkey).hasChild(firebaseAuth.getCurrentUser().getUid())){
+                            String status = "pending";
+                            event_list eventList = new event_list(Owner, Name, firebaseAuth.getCurrentUser().getDisplayName(),status, ownername);
+                            mDataRef.child(parentkey).child(firebaseAuth.getCurrentUser().getUid()).setValue(eventList);
+                            Toast.makeText(ViewActivity.this, "Joined...", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(ViewActivity.this, "Already joined!!" , Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
         });
 

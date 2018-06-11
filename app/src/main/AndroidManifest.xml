@@ -67,7 +67,12 @@
         <activity android:name=".List_of_pending" />
         <activity android:name=".List_of_successful" />
         <activity android:name=".List_of_joined" />
-        <activity android:name=".tabs"></activity>
+        <activity android:name=".tabs" />
+        <activity android:name=".list_of_events_joined" />
+        <activity android:name=".list_of_event_club" />
+        <activity android:name=".list_of_event_club_successful" />
+        <activity android:name=".list_of_event_club_pending" />
+        <activity android:name=".tabs2"></activity>
     </application>
 
 </manifest>

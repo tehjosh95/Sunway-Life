@@ -2,6 +2,8 @@ package com.example.android.myfyp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
+import android.renderscript.Sampler;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,8 +14,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.firebase.client.FirebaseError;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,31 +31,36 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class List_of_successful extends AppCompatActivity {
+public class list_of_event_club extends AppCompatActivity {
+
     RecyclerView recyclerView;
-    ArrayList<join_list> AllClubsList;
+    ArrayList<event_list> AllClubsList;
+    ArrayList<ListOfClubs> AllClubsList2;
+    ArrayList<clubModel> clubModelList;
     ArrayList<String> keys;
-    ArrayList<String> profilekey;
-    ArrayList<UserProfile> AllUsers;
+    ArrayList<String> Parentkeys;
     private EditText mSearchField;
     private ImageButton mSearchBtn;
-    private PendingListAdapter adapter;
+    private list_of_event_club_adapter adapter;
     private DatabaseReference mUserDatabase, mUserDatabase2;
     private FirebaseAuth firebaseAuth;
     private int count;
+    int x;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_of_pending);
+        setContentView(R.layout.activity_list_of_events_joined);
         firebaseAuth = FirebaseAuth.getInstance();
         AllClubsList = new ArrayList<>();
+        AllClubsList2 = new ArrayList<>();
+        clubModelList = new ArrayList<>();
         keys = new ArrayList<>();
-        profilekey = new ArrayList<>();
-        AllUsers = new ArrayList<>();
-        mUserDatabase = FirebaseDatabase.getInstance().getReference("join_list").child("members").child(firebaseAuth.getCurrentUser().getUid());
-        mUserDatabase2 = FirebaseDatabase.getInstance().getReference("Users");
+        Parentkeys = new ArrayList<>();
+        mUserDatabase = FirebaseDatabase.getInstance().getReference("join_event");
+        mUserDatabase2 = FirebaseDatabase.getInstance().getReference("Item Information");
 
         mSearchField = (EditText) findViewById(R.id.search_field);
         mSearchBtn = (ImageButton) findViewById(R.id.search_btn);
@@ -54,7 +68,7 @@ public class List_of_successful extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.result_list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mUserDatabase.addValueEventListener(valueEventListener);
+        mUserDatabase2.addValueEventListener(valueEventListener);
         mSearchField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -62,6 +76,7 @@ public class List_of_successful extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mUserDatabase2.removeEventListener(valueEventListener);
                 mSearchBtn.performClick();
             }
 
@@ -79,7 +94,7 @@ public class List_of_successful extends AppCompatActivity {
                     firebaseUserSearch(searchText);
                 } else {
                     AllClubsList.clear();
-                    mUserDatabase.addListenerForSingleValueEvent(valueEventListener);
+                    mUserDatabase2.addListenerForSingleValueEvent(valueEventListener);
                 }
             }
         });
@@ -88,59 +103,57 @@ public class List_of_successful extends AppCompatActivity {
     private void firebaseUserSearch(String searchText) {
 //        Toast.makeText(ListOfClubsActivity.this, "Started Search", Toast.LENGTH_LONG).show();
         AllClubsList.clear();
-        Query firebaseSearchQuery = mUserDatabase.orderByChild("myname").startAt(searchText).endAt(searchText + "\uf8ff");
+        Query firebaseSearchQuery = mUserDatabase2.orderByChild("item_name").startAt(searchText).endAt(searchText + "\uf8ff");
         firebaseSearchQuery.addListenerForSingleValueEvent(valueEventListener);
     }
 
     ValueEventListener valueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
-            Log.d("******","listenerrunning");
             count = 0;
             keys.clear();
-            AllClubsList.clear();
+            Parentkeys.clear();
+            clubModelList.clear();
             for (DataSnapshot postsnapshot : dataSnapshot.getChildren()) {
-                final join_list joinList = postsnapshot.getValue(join_list.class);
-                if (joinList.getStatus().equals("successful")) {
-                    AllClubsList.add(joinList);
-                    keys.add(postsnapshot.getKey().toString());
+                final clubModel eventList = postsnapshot.getValue(clubModel.class);
+                Log.d("***getEventOwner", eventList.getItem_owner());
+                if (eventList.getItem_owner().equals(firebaseAuth.getCurrentUser().getUid())) {
+                    clubModelList.add(eventList);
+//                    keys.add(nextsnap.getKey());
+                    Parentkeys.add(postsnapshot.getKey());
+                    Log.d("^^^^^^^Call1", "" + "call1");
+                    Log.d("***parentkey", postsnapshot.getKey());
                 }
             }
-            adapter = new PendingListAdapter(List_of_successful.this, AllClubsList);
+
+            adapter = new list_of_event_club_adapter(list_of_event_club.this, clubModelList);
+            Log.d("****clubsize", "" + clubModelList.size());
             recyclerView.setAdapter(adapter);
 
-            mUserDatabase2.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    AllUsers.clear();
-                    profilekey.clear();
-                    for (int x = 0; x < keys.size(); x++) {
-                        if (dataSnapshot.hasChild(keys.get(x))) {
-                            UserProfile listOfClubs = dataSnapshot.child(keys.get(x)).getValue(UserProfile.class);
-                            AllUsers.add(listOfClubs);
-                            profilekey.add(keys.get(x));
-                            Log.d("^^^^^^^listclubs2size", "" + AllUsers.size());
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-
-            recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(List_of_successful.this, new RecyclerItemClickListener.OnItemClickListener() {
+//            mUserDatabase2.addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(DataSnapshot dataSnapshot) {
+//                    clubModelList.clear();
+//                    for (int x = 0; x < Parentkeys.size(); x++) {
+//                        if (dataSnapshot.hasChild(Parentkeys.get(x))) {
+//                            clubModel Clubmodel = dataSnapshot.child(Parentkeys.get(x)).getValue(clubModel.class);
+//                            Log.d("****yeap", "yeap");
+//                            clubModelList.add(Clubmodel);
+//                        }
+//                    }
+//                }
+//
+//                @Override
+//                public void onCancelled(DatabaseError databaseError) {
+//
+//                }
+//            });
+//
+            recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(list_of_event_club.this, new RecyclerItemClickListener.OnItemClickListener() {
                 @Override
                 public void onItemClick(View childView, int position) {
-                    UserProfile userProfile = AllUsers.get(position);
-                    String key = profilekey.get(position);
-                    Intent intent = new Intent(List_of_successful.this, ProfileActivity.class);
-                    intent.putExtra("isname", userProfile.getUserName());
-                    intent.putExtra("isage", userProfile.getUserAge());
-                    intent.putExtra("isemail", userProfile.getUserEmail());
-                    intent.putExtra("istype", userProfile.getUserType());
-                    intent.putExtra("isid", key);
+                    Intent intent = new Intent(list_of_event_club.this, tabs2.class);
+                    intent.putExtra("mykey", Parentkeys.get(position));
                     startActivity(intent);
                 }
 

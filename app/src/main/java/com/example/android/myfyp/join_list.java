@@ -41,9 +41,7 @@ public class join_list {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+    public void setStatus(String status) { this.status = status; }
 
     public float getRating() {
         return rating;

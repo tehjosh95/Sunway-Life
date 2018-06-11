@@ -55,6 +55,7 @@ public class UpdateProfile extends AppCompatActivity {
         mDataRef3 = firebaseDatabase.getReference();
         mDataRef3 = mDataRef3.child("join_list").child("members");
 
+
         mDataRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

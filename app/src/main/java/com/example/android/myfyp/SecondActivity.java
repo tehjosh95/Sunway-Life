@@ -121,6 +121,9 @@ public class SecondActivity extends AppCompatActivity {
                         intent.putExtra("myprice", ClubModel1.getItem_price());
                         intent.putExtra("myurl", ClubModel1.getImageLink());
                         intent.putExtra("mykey", mDataRef.getKey().toString());
+                        intent.putExtra("myowner", ClubModel1.getItem_owner());
+                        intent.putExtra("myownername", ClubModel1.getOwnerName());
+                        intent.putExtra("myparentkey", ClubModel1.getParentkey());
 
                         startActivity(intent);
                     }
@@ -196,8 +199,9 @@ public class SecondActivity extends AppCompatActivity {
                     PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName("Profile");
                     PrimaryDrawerItem item2 = new PrimaryDrawerItem().withIdentifier(2).withName("Inbox");
                     PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(3).withName("List of Clubs with search");
-                    PrimaryDrawerItem item4 = new PrimaryDrawerItem().withIdentifier(4).withName("List of joined for students");
-                    PrimaryDrawerItem item5 = new PrimaryDrawerItem().withIdentifier(5).withName("Logout");
+                    PrimaryDrawerItem item4 = new PrimaryDrawerItem().withIdentifier(4).withName("Clubs joined");
+                    PrimaryDrawerItem item5 = new PrimaryDrawerItem().withIdentifier(4).withName("Events joined");
+                    PrimaryDrawerItem item6 = new PrimaryDrawerItem().withIdentifier(5).withName("Logout");
 
                     Drawer result = new DrawerBuilder()
                             .withActivity(SecondActivity.this)
@@ -208,8 +212,9 @@ public class SecondActivity extends AppCompatActivity {
                                     item2,
                                     item3,
                                     item4,
+                                    item5,
                                     new DividerDrawerItem(),
-                                    item5
+                                    item6
                             )
                             .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                                 @Override
@@ -228,8 +233,11 @@ public class SecondActivity extends AppCompatActivity {
                                             startActivity(new Intent(SecondActivity.this, List_of_joined.class));
                                             break;
                                         case 5:
+                                            startActivity(new Intent(SecondActivity.this, list_of_events_joined.class));
                                             break;
                                         case 6:
+                                            break;
+                                        case 7:
                                             Logout();
                                             break;
                                     }
@@ -326,7 +334,8 @@ public class SecondActivity extends AppCompatActivity {
                     PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(3).withName("Edit and view posted");
                     PrimaryDrawerItem item4 = new PrimaryDrawerItem().withIdentifier(4).withName("List of Clubs with search");
                     PrimaryDrawerItem item5 = new PrimaryDrawerItem().withIdentifier(5).withName("Members");
-                    PrimaryDrawerItem item6 = new PrimaryDrawerItem().withIdentifier(7).withName("Logout");
+                    PrimaryDrawerItem item6 = new PrimaryDrawerItem().withIdentifier(6).withName("Events");
+                    PrimaryDrawerItem item7 = new PrimaryDrawerItem().withIdentifier(7).withName("Logout");
 
                     Drawer result = new DrawerBuilder()
                             .withActivity(SecondActivity.this)
@@ -338,8 +347,9 @@ public class SecondActivity extends AppCompatActivity {
                                     item3,
                                     item4,
                                     item5,
+                                    item6,
                                     new DividerDrawerItem(),
-                                    item6
+                                    item7
                             )
                             .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                                 @Override
@@ -361,8 +371,11 @@ public class SecondActivity extends AppCompatActivity {
                                             startActivity(new Intent(SecondActivity.this, tabs.class));
                                             break;
                                         case 6:
+                                            startActivity(new Intent(SecondActivity.this, list_of_event_club.class));
                                             break;
                                         case 7:
+                                            break;
+                                        case 8:
                                             Logout();
                                             break;
                                     }

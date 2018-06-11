@@ -1,7 +1,9 @@
 package com.example.android.myfyp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,15 +25,15 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class List_of_successful extends AppCompatActivity {
+public class list_of_event_club_pending extends AppCompatActivity {
     RecyclerView recyclerView;
-    ArrayList<join_list> AllClubsList;
+    ArrayList<event_list> AllClubsList;
     ArrayList<String> keys;
     ArrayList<String> profilekey;
     ArrayList<UserProfile> AllUsers;
     private EditText mSearchField;
     private ImageButton mSearchBtn;
-    private PendingListAdapter adapter;
+    private list_of_event_clubs_adapter2 adapter;
     private DatabaseReference mUserDatabase, mUserDatabase2;
     private FirebaseAuth firebaseAuth;
     private int count;
@@ -39,13 +41,19 @@ public class List_of_successful extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_of_pending);
+        setContentView(R.layout.activity_list_of_successful);
         firebaseAuth = FirebaseAuth.getInstance();
         AllClubsList = new ArrayList<>();
         keys = new ArrayList<>();
         profilekey = new ArrayList<>();
         AllUsers = new ArrayList<>();
-        mUserDatabase = FirebaseDatabase.getInstance().getReference("join_list").child("members").child(firebaseAuth.getCurrentUser().getUid());
+
+//        Intent startingIntent = getIntent();
+//        final String key = startingIntent.getStringExtra("mykey");
+
+        String key = getParent().getIntent().getStringExtra("mykey");
+
+        mUserDatabase = FirebaseDatabase.getInstance().getReference("join_event").child(key);
         mUserDatabase2 = FirebaseDatabase.getInstance().getReference("Users");
 
         mSearchField = (EditText) findViewById(R.id.search_field);
@@ -88,7 +96,7 @@ public class List_of_successful extends AppCompatActivity {
     private void firebaseUserSearch(String searchText) {
 //        Toast.makeText(ListOfClubsActivity.this, "Started Search", Toast.LENGTH_LONG).show();
         AllClubsList.clear();
-        Query firebaseSearchQuery = mUserDatabase.orderByChild("myname").startAt(searchText).endAt(searchText + "\uf8ff");
+        Query firebaseSearchQuery = mUserDatabase.orderByChild("studentName").startAt(searchText).endAt(searchText + "\uf8ff");
         firebaseSearchQuery.addListenerForSingleValueEvent(valueEventListener);
     }
 
@@ -100,13 +108,13 @@ public class List_of_successful extends AppCompatActivity {
             keys.clear();
             AllClubsList.clear();
             for (DataSnapshot postsnapshot : dataSnapshot.getChildren()) {
-                final join_list joinList = postsnapshot.getValue(join_list.class);
-                if (joinList.getStatus().equals("successful")) {
-                    AllClubsList.add(joinList);
+                final event_list eventList = postsnapshot.getValue(event_list.class);
+                if (eventList.getStatus().equals("pending")) {
+                    AllClubsList.add(eventList);
                     keys.add(postsnapshot.getKey().toString());
                 }
             }
-            adapter = new PendingListAdapter(List_of_successful.this, AllClubsList);
+            adapter = new list_of_event_clubs_adapter2(list_of_event_club_pending.this, AllClubsList);
             recyclerView.setAdapter(adapter);
 
             mUserDatabase2.addValueEventListener(new ValueEventListener() {
@@ -130,12 +138,12 @@ public class List_of_successful extends AppCompatActivity {
                 }
             });
 
-            recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(List_of_successful.this, new RecyclerItemClickListener.OnItemClickListener() {
+            recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(list_of_event_club_pending.this, new RecyclerItemClickListener.OnItemClickListener() {
                 @Override
                 public void onItemClick(View childView, int position) {
                     UserProfile userProfile = AllUsers.get(position);
                     String key = profilekey.get(position);
-                    Intent intent = new Intent(List_of_successful.this, ProfileActivity.class);
+                    Intent intent = new Intent(list_of_event_club_pending.this, ProfileActivity.class);
                     intent.putExtra("isname", userProfile.getUserName());
                     intent.putExtra("isage", userProfile.getUserAge());
                     intent.putExtra("isemail", userProfile.getUserEmail());
@@ -145,8 +153,24 @@ public class List_of_successful extends AppCompatActivity {
                 }
 
                 @Override
-                public void onItemLongPress(View childView, int position) {
+                public void onItemLongPress(View childView, final int position) {
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(list_of_event_club_pending.this);
+                    alertDialog.setTitle("Approve?");
 
+                    alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            event_list eventList = AllClubsList.get(position);
+                            mUserDatabase.child(keys.get(position)).child("status").setValue("successful");
+                            mSearchBtn.performClick();
+                        }
+                    });
+                    alertDialog.show();
                 }
             }));
         }

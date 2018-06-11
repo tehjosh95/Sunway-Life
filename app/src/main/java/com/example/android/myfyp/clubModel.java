@@ -8,7 +8,8 @@ public class clubModel {
     private String item_owner;
 
     private String imgName;
-    private int item_image;
+
+    private String ownerName;
 
     public String imageLink;
     private int item_position;
@@ -26,11 +27,11 @@ public class clubModel {
         this.parentkey = parentkey;
     }
 
-    public clubModel(String item_name, String item_place, String item_price, int item_image, String item_owner, int item_position, String imageLink, String imgName, String parentkey) {
+    public clubModel(String item_name, String item_place, String item_price, String ownerName, String item_owner, int item_position, String imageLink, String imgName, String parentkey) {
         this.item_name = item_name;
         this.item_place = item_place;
         this.item_price = item_price;
-        this.item_image = item_image;
+        this.ownerName = ownerName;
         this.item_owner = item_owner;
         this.item_position = item_position;
         this.imageLink = imageLink;
@@ -73,14 +74,6 @@ public class clubModel {
         this.item_price = item_price;
     }
 
-    public int getItem_image() {
-        return item_image;
-    }
-
-    public void setItem_image(int item_image) {
-        this.item_image = item_image;
-    }
-
     public String getItem_owner() {
         return item_owner;
     }
@@ -92,6 +85,10 @@ public class clubModel {
     public int getItem_position() {
         return item_position;
     }
+
+    public String getOwnerName() { return ownerName; }
+
+    public void setOwnerName(String ownerName) { this.ownerName = ownerName; }
 
     public void setItem_position(int item_position) {
         this.item_position = item_position;

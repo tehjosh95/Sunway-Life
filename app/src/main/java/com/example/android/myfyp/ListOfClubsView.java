@@ -235,13 +235,19 @@ public class ListOfClubsView extends AppCompatActivity {
     public void readData(final MyCallback myCallback) {
         Intent startingIntent = getIntent();
         final String Myuid = startingIntent.getStringExtra("isuid");
+        Log.d("***isuid", "" + Myuid);
         mDataRef2 = mDataRef2.child("Clubs").child(Myuid);
-        mDataRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+        mDataRef2.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ListOfClubs listOfClubs = dataSnapshot.getValue(ListOfClubs.class);
-                nameofclub = listOfClubs.getName();
-                myCallback.onCallback(nameofclub);
+                Log.d("***listOfClubs", "" + listOfClubs);
+                if(listOfClubs != null) {
+                    nameofclub = listOfClubs.getName();
+                    myCallback.onCallback(nameofclub);
+                }else{
+                    myCallback.onCallback("");
+                }
                 Log.d("***method", "" + nameofclub);
                 Log.d("***methoddown", "" + Myuid);
             }

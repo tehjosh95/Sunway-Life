@@ -237,6 +237,7 @@ public class AddActivity extends AppCompatActivity {
                 String place = itemPlace.getText().toString().trim();
                 String price = itemPrice.getText().toString().trim();
                 String owner = mAuth.getCurrentUser().getUid();
+                String ownername = mAuth.getCurrentUser().getDisplayName();
                 int position = 0;
                 Log.d("*****url1", "" + imgUrl);
 
@@ -252,6 +253,7 @@ public class AddActivity extends AppCompatActivity {
                 ClubModel.setImageLink(imgUrl);
                 ClubModel.setImgName(imageFileName);
                 ClubModel.setParentkey("");
+                ClubModel.setOwnerName(ownername);
 
                 final ProgressDialog progDialog = new ProgressDialog(AddActivity.this,
                         R.style.Theme_AppCompat_DayNight_NoActionBar);
@@ -259,7 +261,7 @@ public class AddActivity extends AppCompatActivity {
                 progDialog.setIndeterminate(true);
                 progDialog.setMessage("Uploading....");
                 progDialog.show();
-                final clubModel ClubModel = new clubModel(name, place, price, owner, position, imgUrl, imageFileName, "");
+                final clubModel ClubModel = new clubModel(name, place, price, ownername, owner, position, imgUrl, imageFileName, "");
 
                 Log.d("&&&&&&&uid", "" + owner);
                 final Runnable uploadTask = new Runnable() {
