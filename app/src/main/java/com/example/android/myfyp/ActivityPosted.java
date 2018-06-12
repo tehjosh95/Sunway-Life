@@ -61,6 +61,7 @@ public class ActivityPosted extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private DatabaseReference mDataRef;
     private FirebaseDatabase mDatabase;
+    private TextView textReminder;
     private Button logout;
     private int pos;
     private String key;
@@ -82,7 +83,7 @@ public class ActivityPosted extends AppCompatActivity {
         setContentView(R.layout.activity_posted);
 
         fab = (FloatingActionButton) findViewById(R.id.fabbb);
-
+        textReminder = findViewById(R.id.textReminder);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
 
@@ -120,6 +121,14 @@ public class ActivityPosted extends AppCompatActivity {
                 arrayName = clubModelList.toArray(arrayName);
                 adapter = new clubAdapter(ActivityPosted.this, clubModelList);
                 recyclerView.setAdapter(adapter);
+
+                if(clubModelList.size()>0){
+                    recyclerView.setVisibility(View.VISIBLE);
+                    textReminder.setVisibility(View.GONE);
+                }else{
+                    textReminder.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                }
                 progDialog.dismiss();
             }
 

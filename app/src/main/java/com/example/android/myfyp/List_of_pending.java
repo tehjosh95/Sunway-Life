@@ -45,6 +45,7 @@ public class List_of_pending extends AppCompatActivity {
     private EditText mSearchField;
     private ImageButton mSearchBtn;
     private PendingListAdapter adapter;
+    private  TextView textReminder;
     private DatabaseReference mUserDatabase, mUserDatabase2;
     private FirebaseAuth firebaseAuth;
     private int count;
@@ -61,6 +62,7 @@ public class List_of_pending extends AppCompatActivity {
         mUserDatabase = FirebaseDatabase.getInstance().getReference("join_list").child("members").child(firebaseAuth.getCurrentUser().getUid());
         mUserDatabase2 = FirebaseDatabase.getInstance().getReference("Users");
 
+        textReminder = findViewById(R.id.textReminder);
         mSearchField = (EditText) findViewById(R.id.search_field);
         mSearchBtn = (ImageButton) findViewById(R.id.search_btn);
         mSearchBtn.setVisibility(View.GONE);
@@ -126,6 +128,14 @@ public class List_of_pending extends AppCompatActivity {
             adapter = new PendingListAdapter(List_of_pending.this, AllClubsList);
             recyclerView.setAdapter(adapter);
 
+            if(AllClubsList.size()>0){
+                recyclerView.setVisibility(View.VISIBLE);
+                textReminder.setVisibility(View.GONE);
+            }else{
+                textReminder.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            }
+
             mUserDatabase2.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -172,7 +182,6 @@ public class List_of_pending extends AppCompatActivity {
 
                     alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            join_list joinList1 = AllClubsList.get(position);
                             mUserDatabase.child(keys.get(position)).child("status").setValue("successful");
                             mSearchBtn.performClick();
                         }

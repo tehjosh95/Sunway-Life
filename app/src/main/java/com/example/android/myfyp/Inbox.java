@@ -66,19 +66,20 @@ public class Inbox extends AppCompatActivity {
     private ListAdapter myAdapter;
     private FirebaseDatabase firebaseDatabase;
     private String Chatname;
+    private TextView textReminder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inbox);
 
+        textReminder = findViewById(R.id.textReminder);
         mDatabase = FirebaseDatabase.getInstance();
         mDataRef = mDatabase.getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         toolbar = (Toolbar) findViewById(R.id.toolbarMain);
         toolbar.setTitle("Long Press to Delete");
         usersList = (ListView) findViewById(R.id.usersList);
-        noUsersText = (TextView) findViewById(R.id.noUsersText);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
 
@@ -146,13 +147,6 @@ public class Inbox extends AppCompatActivity {
         return userEmail.replace(",", ".");
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        Log.d("backpressed", "onBackPressed Called");
-//        finish();
-//        startActivity(new Intent(Inbox.this, SecondActivity.class));
-//    }
-
     @Override
     protected void onResume(){
         super.onResume();
@@ -205,16 +199,16 @@ public class Inbox extends AppCompatActivity {
                                         }
                                     }
                                 }
-                                if (al6.size() < 1) {
-                                    Log.d("***totalusers1", "" + totalUsers);
-                                    noUsersText.setVisibility(View.VISIBLE);
-                                    usersList.setVisibility(View.GONE);
-                                } else {
-                                    noUsersText.setVisibility(View.GONE);
+
+                                myAdapter = new ArrayAdapter<String>(Inbox.this, android.R.layout.simple_list_item_1, al6);
+                                usersList.setAdapter(myAdapter);
+
+                                if(al6.size()>0){
                                     usersList.setVisibility(View.VISIBLE);
-                                    Log.d("*****list8", "" + al6.size());
-                                    myAdapter = new ArrayAdapter<String>(Inbox.this, android.R.layout.simple_list_item_1, al6);
-                                    usersList.setAdapter(myAdapter);
+                                    textReminder.setVisibility(View.GONE);
+                                }else{
+                                    textReminder.setVisibility(View.VISIBLE);
+                                    usersList.setVisibility(View.GONE);
                                 }
                             }
 

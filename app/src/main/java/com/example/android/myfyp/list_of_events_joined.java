@@ -1,9 +1,11 @@
 package com.example.android.myfyp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Image;
 import android.renderscript.Sampler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -46,6 +48,7 @@ public class list_of_events_joined extends AppCompatActivity {
     private list_of_events_adapter adapter;
     private DatabaseReference mUserDatabase, mUserDatabase2;
     private FirebaseAuth firebaseAuth;
+    private TextView textReminder;
     private int count;
     int x;
 
@@ -62,6 +65,7 @@ public class list_of_events_joined extends AppCompatActivity {
         mUserDatabase = FirebaseDatabase.getInstance().getReference("join_event");
         mUserDatabase2 = FirebaseDatabase.getInstance().getReference("Item Information");
 
+        textReminder = findViewById(R.id.textReminder);
         mSearchField = (EditText) findViewById(R.id.search_field);
         mSearchBtn = (ImageButton) findViewById(R.id.search_btn);
         mSearchBtn.setVisibility(View.GONE);
@@ -132,6 +136,14 @@ public class list_of_events_joined extends AppCompatActivity {
             Log.d("****clubsize", "" + AllClubsList.size());
             recyclerView.setAdapter(adapter);
 
+            if(AllClubsList.size()>0){
+                recyclerView.setVisibility(View.VISIBLE);
+                textReminder.setVisibility(View.GONE);
+            }else{
+                textReminder.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            }
+
             mUserDatabase2.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -168,8 +180,24 @@ public class list_of_events_joined extends AppCompatActivity {
                 }
 
                 @Override
-                public void onItemLongPress(View childView, int position) {
+                public void onItemLongPress(View childView, final int position) {
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(list_of_events_joined.this);
+                    alertDialog.setTitle("Undo?");
 
+                    alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            mUserDatabase.child(Parentkeys.get(position)).child(keys.get(position)).removeValue();
+                            mSearchBtn.performClick();
+                            Log.d("***allclublist", "" + AllClubsList.size());
+                        }
+                    });
+                    alertDialog.show();
                 }
             }));
         }

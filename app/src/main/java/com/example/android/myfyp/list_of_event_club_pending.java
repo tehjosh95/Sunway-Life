@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -36,6 +37,7 @@ public class list_of_event_club_pending extends AppCompatActivity {
     private list_of_event_clubs_adapter2 adapter;
     private DatabaseReference mUserDatabase, mUserDatabase2;
     private FirebaseAuth firebaseAuth;
+    private TextView textReminder;
     private int count;
 
     @Override
@@ -56,6 +58,7 @@ public class list_of_event_club_pending extends AppCompatActivity {
         mUserDatabase = FirebaseDatabase.getInstance().getReference("join_event").child(key);
         mUserDatabase2 = FirebaseDatabase.getInstance().getReference("Users");
 
+        textReminder = findViewById(R.id.textReminder);
         mSearchField = (EditText) findViewById(R.id.search_field);
         mSearchBtn = (ImageButton) findViewById(R.id.search_btn);
         mSearchBtn.setVisibility(View.GONE);
@@ -116,6 +119,14 @@ public class list_of_event_club_pending extends AppCompatActivity {
             }
             adapter = new list_of_event_clubs_adapter2(list_of_event_club_pending.this, AllClubsList);
             recyclerView.setAdapter(adapter);
+
+            if(AllClubsList.size()>0){
+                recyclerView.setVisibility(View.VISIBLE);
+                textReminder.setVisibility(View.GONE);
+            }else{
+                textReminder.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            }
 
             mUserDatabase2.addValueEventListener(new ValueEventListener() {
                 @Override

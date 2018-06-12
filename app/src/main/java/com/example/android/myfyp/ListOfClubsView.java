@@ -15,16 +15,11 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.List;
-
-import static java.lang.Double.NaN;
 
 public class ListOfClubsView extends AppCompatActivity {
     public interface MyCallback {
@@ -39,7 +34,7 @@ public class ListOfClubsView extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase;
     private FirebaseDatabase mDatabase;
     private Dialog rankDialog;
-    private DatabaseReference mDataRef, mDataRef2, mDataRef3, mDataRef4;
+    private DatabaseReference mDataRef, mDataRef2, mDataRef3, mDataRef4, mDataRef5;
     private String nameofclub;
     private RatingBar ratingbar1, ratingbar2;
     private float count, total, totalperson;
@@ -51,7 +46,6 @@ public class ListOfClubsView extends AppCompatActivity {
         setContentView(R.layout.activity_list_of_clubs_view);
 
         firebaseAuth = FirebaseAuth.getInstance();
-
         averagetext = findViewById(R.id.averagetext);
         ratingbar1 = findViewById(R.id.ratingBar1);
         profilePic = findViewById(R.id.ivimage);
@@ -63,14 +57,13 @@ public class ListOfClubsView extends AppCompatActivity {
         btnJoin = findViewById(R.id.btnJoin);
         fabbb = (FloatingActionButton) findViewById(R.id.fabbb);
 
+        final String myid = firebaseAuth.getCurrentUser().getUid();
         firebaseDatabase = FirebaseDatabase.getInstance();
         mDatabase = FirebaseDatabase.getInstance();
-        mDataRef = mDatabase.getReference();
         mDataRef = firebaseDatabase.getReference().child("join_list").child("members");
         mDataRef2 = firebaseDatabase.getReference();
-        mDataRef3 = mDatabase.getReference();
         mDataRef3 = firebaseDatabase.getReference().child("join_list").child("members");
-        mDataRef4 = mDatabase.getReference();
+        mDataRef5 = firebaseDatabase.getReference().child("Users");
 
         Intent startingIntent = getIntent();
         final String myurl = startingIntent.getStringExtra("isimg");
@@ -78,6 +71,25 @@ public class ListOfClubsView extends AppCompatActivity {
         final String Cont = startingIntent.getStringExtra("iscont");
         final String Desc = startingIntent.getStringExtra("isdesc");
         final String Myuid = startingIntent.getStringExtra("isuid");
+
+        mDataRef5.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChild(myid)){
+                    UserProfile userProfile = dataSnapshot.child(myid).getValue(UserProfile.class);
+                    if(!userProfile.getUserType().equals("student")){
+                        EditButton.setVisibility(View.GONE);
+                        rate.setVisibility(View.GONE);
+                        btnJoin.setVisibility(View.GONE);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         Glide.with(this).load(myurl).thumbnail(0.1f).into(profilePic);
         profileName.setText(Name);

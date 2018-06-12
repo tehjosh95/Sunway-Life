@@ -1,7 +1,9 @@
 package com.example.android.myfyp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -34,6 +37,8 @@ public class list_of_event_club_successful extends AppCompatActivity {
     private list_of_event_clubs_adapter2 adapter;
     private DatabaseReference mUserDatabase, mUserDatabase2;
     private FirebaseAuth firebaseAuth;
+    private TextView textReminder;
+
     private int count;
 
     @Override
@@ -54,6 +59,7 @@ public class list_of_event_club_successful extends AppCompatActivity {
         mUserDatabase = FirebaseDatabase.getInstance().getReference("join_event").child(key);
         mUserDatabase2 = FirebaseDatabase.getInstance().getReference("Users");
 
+        textReminder = findViewById(R.id.textReminder);
         mSearchField = (EditText) findViewById(R.id.search_field);
         mSearchBtn = (ImageButton) findViewById(R.id.search_btn);
         mSearchBtn.setVisibility(View.GONE);
@@ -115,6 +121,14 @@ public class list_of_event_club_successful extends AppCompatActivity {
             adapter = new list_of_event_clubs_adapter2(list_of_event_club_successful.this, AllClubsList);
             recyclerView.setAdapter(adapter);
 
+            if(AllClubsList.size()>0){
+                recyclerView.setVisibility(View.VISIBLE);
+                textReminder.setVisibility(View.GONE);
+            }else{
+                textReminder.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            }
+
             mUserDatabase2.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -151,8 +165,23 @@ public class list_of_event_club_successful extends AppCompatActivity {
                 }
 
                 @Override
-                public void onItemLongPress(View childView, int position) {
+                public void onItemLongPress(View childView, final int position) {
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(list_of_event_club_successful.this);
+                    alertDialog.setTitle("Undo?");
 
+                    alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            mUserDatabase.child(keys.get(position)).child("status").setValue("pending");
+                            mSearchBtn.performClick();
+                        }
+                    });
+                    alertDialog.show();
                 }
             }));
         }

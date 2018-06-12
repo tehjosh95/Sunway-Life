@@ -63,4 +63,13 @@
         android:layout_below="@+id/search_field"
         android:layout_marginTop="4dp"></android.support.v7.widget.RecyclerView>
 
+    <TextView
+        android:id="@+id/textReminder"
+        android:layout_width="349dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="82dp"
+        android:text="Haven't join any clubs yet" />
+
 </RelativeLayout>

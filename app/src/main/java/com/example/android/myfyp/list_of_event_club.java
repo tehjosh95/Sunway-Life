@@ -44,6 +44,7 @@ public class list_of_event_club extends AppCompatActivity {
     private EditText mSearchField;
     private ImageButton mSearchBtn;
     private list_of_event_club_adapter adapter;
+    private TextView textReminder;
     private DatabaseReference mUserDatabase, mUserDatabase2;
     private FirebaseAuth firebaseAuth;
     private int count;
@@ -62,6 +63,7 @@ public class list_of_event_club extends AppCompatActivity {
         mUserDatabase = FirebaseDatabase.getInstance().getReference("join_event");
         mUserDatabase2 = FirebaseDatabase.getInstance().getReference("Item Information");
 
+        textReminder = findViewById(R.id.textReminder);
         mSearchField = (EditText) findViewById(R.id.search_field);
         mSearchBtn = (ImageButton) findViewById(R.id.search_btn);
         mSearchBtn.setVisibility(View.GONE);
@@ -129,6 +131,14 @@ public class list_of_event_club extends AppCompatActivity {
             adapter = new list_of_event_club_adapter(list_of_event_club.this, clubModelList);
             Log.d("****clubsize", "" + clubModelList.size());
             recyclerView.setAdapter(adapter);
+
+            if(clubModelList.size()>0){
+                recyclerView.setVisibility(View.VISIBLE);
+                textReminder.setVisibility(View.GONE);
+            }else{
+                textReminder.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            }
 
 //            mUserDatabase2.addValueEventListener(new ValueEventListener() {
 //                @Override

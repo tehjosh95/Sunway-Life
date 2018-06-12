@@ -26,8 +26,7 @@ public class ViewActivity extends AppCompatActivity {
     private FloatingActionButton fabbb;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference mDataRef;
-
+    private DatabaseReference mDataRef, mDataRef2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +48,9 @@ public class ViewActivity extends AppCompatActivity {
         mDataRef = firebaseDatabase.getReference();
         mDataRef = firebaseDatabase.getReference().child("join_event");
 
+        final String myid = firebaseAuth.getCurrentUser().getUid();
+        mDataRef2 = firebaseDatabase.getReference().child("Users");
+
         final Intent startingIntent = getIntent();
         final String myurl = startingIntent.getStringExtra("myurl");
         final String Name = startingIntent.getStringExtra("myname");
@@ -64,12 +66,44 @@ public class ViewActivity extends AppCompatActivity {
         profilePlace.setText(Place);
         profilePrice.setText(Price);
 
-        if (!firebaseAuth.getCurrentUser().getUid().equals(Owner)) {
-            EditButton.setVisibility(View.GONE);
-        }else{
-            btnchat.setVisibility(View.GONE);
-            join.setVisibility(View.GONE);
-        }
+        mDataRef2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(myid)) {
+                    UserProfile userProfile = dataSnapshot.child(myid).getValue(UserProfile.class);
+                    if (userProfile.getUserType().equals("student")) {
+                        EditButton.setVisibility(View.GONE);
+                    } else if(userProfile.getUserType().equals("admin") && Owner.equals(myid)){
+                        btnchat.setVisibility(View.GONE);
+                        join.setVisibility(View.GONE);
+                    }else if(userProfile.getUserType().equals("admin") && !Owner.equals(myid)){
+                        btnchat.setVisibility(View.GONE);
+                        join.setVisibility(View.GONE);
+                        EditButton.setVisibility(View.GONE);
+                    }
+                }else{
+                    if(Owner.equals(myid)){
+                        btnchat.setVisibility(View.GONE);
+                        join.setVisibility(View.GONE);
+                    }else {
+                        btnchat.setVisibility(View.GONE);
+                        join.setVisibility(View.GONE);
+                        EditButton.setVisibility(View.GONE);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+//        if (!firebaseAuth.getCurrentUser().getUid().equals(Owner)) {
+//            EditButton.setVisibility(View.GONE);
+//        }else{
+//            btnchat.setVisibility(View.GONE);
+//            join.setVisibility(View.GONE);
+//        }
 
         Log.d("****itemname", "" + Name);
         Log.d("****itemplace", "" + Place);

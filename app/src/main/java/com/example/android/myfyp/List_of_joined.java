@@ -45,6 +45,7 @@ public class List_of_joined extends AppCompatActivity {
     ArrayList<String> Parentkeys;
     private EditText mSearchField;
     private ImageButton mSearchBtn;
+    private TextView textReminder;
     private ListOfJoinedAdapter adapter;
     private DatabaseReference mUserDatabase, mUserDatabase2;
     private FirebaseAuth firebaseAuth;
@@ -63,7 +64,7 @@ public class List_of_joined extends AppCompatActivity {
         mUserDatabase = FirebaseDatabase.getInstance().getReference("join_list").child("members");
         mUserDatabase2 = FirebaseDatabase.getInstance().getReference("Clubs");
 
-
+        textReminder = findViewById(R.id.textReminder);
         mSearchField = (EditText) findViewById(R.id.search_field);
         mSearchBtn = (ImageButton) findViewById(R.id.search_btn);
         mSearchBtn.setVisibility(View.GONE);
@@ -132,6 +133,14 @@ public class List_of_joined extends AppCompatActivity {
             adapter = new ListOfJoinedAdapter(List_of_joined.this, AllClubsList);
             Log.d("****clubsize", "" + AllClubsList.size());
             recyclerView.setAdapter(adapter);
+
+            if(AllClubsList.size()>0){
+                recyclerView.setVisibility(View.VISIBLE);
+                textReminder.setVisibility(View.GONE);
+            }else{
+                textReminder.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            }
 
             mUserDatabase2.addValueEventListener(new ValueEventListener() {
                 @Override

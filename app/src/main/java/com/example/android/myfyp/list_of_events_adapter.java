@@ -45,10 +45,10 @@ public class list_of_events_adapter extends RecyclerView.Adapter<list_of_events_
         event_list contact = mList.get(position);
 
         TextView name = holder.name;
-        TextView status = holder.status;
+//        TextView status = holder.status;
 
         name.setText(contact.getEventName());
-        status.setText(contact.getStatus());
+//        status.setText(contact.getStatus());
     }
 
     @Override
@@ -65,7 +65,7 @@ public class list_of_events_adapter extends RecyclerView.Adapter<list_of_events_
             super(itemView);
 //
             name = itemView.findViewById(R.id.name_text);
-            status = itemView.findViewById(R.id.status_text);
+//            status = itemView.findViewById(R.id.status_text);
 
         }
 
