@@ -105,7 +105,8 @@ public class List_of_joined extends AppCompatActivity {
     private void firebaseUserSearch(String searchText) {
 //        Toast.makeText(ListOfClubsActivity.this, "Started Search", Toast.LENGTH_LONG).show();
         AllClubsList.clear();
-        Query firebaseSearchQuery = mUserDatabase.orderByChild("clubname").startAt(searchText).endAt(searchText + "\uf8ff");
+        final String userID = firebaseAuth.getCurrentUser().getUid();
+        Query firebaseSearchQuery = mUserDatabase.orderByChild(userID + "/clubname").startAt(searchText).endAt(searchText + "\uf8ff");
         firebaseSearchQuery.addListenerForSingleValueEvent(valueEventListener);
     }
 
@@ -122,7 +123,7 @@ public class List_of_joined extends AppCompatActivity {
                         final join_list joinList = nextsnap.getValue(join_list.class);
                         if (nextsnap.getKey().equals(firebaseAuth.getCurrentUser().getUid())) {
                             AllClubsList.add(joinList);
-                            keys.add(nextsnap.getKey().toString());
+                            keys.add(nextsnap.getKey());
                             Parentkeys.add(postsnapshot.getKey());
                             Log.d("^^^^^^^Call1", "" + "call1");
                         }

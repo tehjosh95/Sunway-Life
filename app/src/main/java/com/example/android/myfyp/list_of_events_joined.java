@@ -106,7 +106,8 @@ public class list_of_events_joined extends AppCompatActivity {
     private void firebaseUserSearch(String searchText) {
 //        Toast.makeText(ListOfClubsActivity.this, "Started Search", Toast.LENGTH_LONG).show();
         AllClubsList.clear();
-        Query firebaseSearchQuery = mUserDatabase.orderByChild("eventName").startAt(searchText).endAt(searchText + "\uf8ff");
+        final String userID = firebaseAuth.getCurrentUser().getUid();
+        Query firebaseSearchQuery = mUserDatabase.orderByChild(userID + "/eventName").startAt(searchText).endAt(searchText + "\uf8ff");
         firebaseSearchQuery.addListenerForSingleValueEvent(valueEventListener);
     }
 
