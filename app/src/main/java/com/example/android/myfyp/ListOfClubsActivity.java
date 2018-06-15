@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.firebase.client.FirebaseError;
@@ -34,6 +35,7 @@ public class ListOfClubsActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     ArrayList<ListOfClubs> AllClubsList;
 
+    Toolbar toolbar;
     private EditText mSearchField;
     private ImageButton mSearchBtn;
     private ClubListAdapter adapter;
@@ -48,6 +50,15 @@ public class ListOfClubsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_of_clubs);
         AllClubsList = new ArrayList<>();
         mUserDatabase = FirebaseDatabase.getInstance().getReference("Clubs");
+
+        toolbar = (Toolbar) findViewById(R.id.toolbarMain);
+        toolbar.setTitle("List of Clubs");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         mSearchField = (EditText) findViewById(R.id.search_field);
         mSearchBtn = (ImageButton) findViewById(R.id.search_btn);
@@ -114,7 +125,8 @@ public class ListOfClubsActivity extends AppCompatActivity {
                     ListOfClubs listOfClubs = AllClubsList.get(position);
                     Intent intent = new Intent(ListOfClubsActivity.this, ListOfClubsView.class);
                     intent.putExtra("isname", listOfClubs.getName());
-                    intent.putExtra("iscont", listOfClubs.getContact());
+                    intent.putExtra("isadvisor", listOfClubs.getAdvisor());
+                    intent.putExtra("isemail", listOfClubs.getEmail());
                     intent.putExtra("isdesc", listOfClubs.getDesc());
                     intent.putExtra("isimg", listOfClubs.getImage());
                     intent.putExtra("isuid", listOfClubs.getMyUid());

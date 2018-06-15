@@ -47,17 +47,18 @@ public class clubAdapter extends RecyclerView.Adapter<clubAdapter.ViewHolder> {
         clubModel contact = mList.get(position);
 
         TextView item_name = holder.item_name;
-        TextView item_place = holder.item_place;
+        TextView item_desc = holder.item_desc;
         TextView item_price = holder.item_price;
+        TextView item_price2 = holder.item_price2;
         ImageView item_img = holder.item_image;
 
         item_name.setText(contact.getItem_name());
-        item_place.setText(contact.getItem_place());
-        item_price.setText(contact.getItem_price());
+        item_desc.setText(contact.getItem_desc());
+        item_price.setText(contact.getItem_date());
+        item_price2.setText(contact.getItem_start_time());
         Glide.with(mContext).load(contact.getImageLink()).thumbnail(0.1f).into(item_img);
 
     }
-
 
     @Override
     public int getItemCount() {
@@ -67,16 +68,17 @@ public class clubAdapter extends RecyclerView.Adapter<clubAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public ImageView item_image;
-        public TextView item_name, item_place, item_price;
+        public TextView item_name, item_desc, item_price, item_price2;
         View view;
 
 
         public ViewHolder(View itemView) {
             super(itemView);
-//
+
+            item_price2 = itemView.findViewById(R.id.rv_item_price2);
             item_image = itemView.findViewById(R.id.rv_item_img);
             item_name = itemView.findViewById(R.id.rv_item_name);
-            item_place = itemView.findViewById(R.id.rv_item_place);
+            item_desc = itemView.findViewById(R.id.rv_item_desc);
             item_price = itemView.findViewById(R.id.rv_item_price);
 
 

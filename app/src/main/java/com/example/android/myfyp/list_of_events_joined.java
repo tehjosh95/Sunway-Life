@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -37,6 +38,7 @@ import java.util.List;
 
 public class list_of_events_joined extends AppCompatActivity {
 
+    Toolbar toolbar;
     RecyclerView recyclerView;
     ArrayList<event_list> AllClubsList;
     ArrayList<ListOfClubs> AllClubsList2;
@@ -64,6 +66,15 @@ public class list_of_events_joined extends AppCompatActivity {
         Parentkeys = new ArrayList<>();
         mUserDatabase = FirebaseDatabase.getInstance().getReference("join_event");
         mUserDatabase2 = FirebaseDatabase.getInstance().getReference("Item Information");
+
+        toolbar = (Toolbar) findViewById(R.id.toolbarMain);
+        toolbar.setTitle("Joined events");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         textReminder = findViewById(R.id.textReminder);
         mSearchField = (EditText) findViewById(R.id.search_field);
@@ -170,8 +181,13 @@ public class list_of_events_joined extends AppCompatActivity {
                     clubModel ClubModel1 = clubModelList.get(position);
                     Intent intent = new Intent(list_of_events_joined.this, ViewActivity.class);
                     intent.putExtra("myname", ClubModel1.getItem_name());
-                    intent.putExtra("myplace", ClubModel1.getItem_place());
-                    intent.putExtra("myprice", ClubModel1.getItem_price());
+                    intent.putExtra("mydesc", ClubModel1.getItem_desc());
+                    intent.putExtra("mydate", ClubModel1.getItem_date());
+                    intent.putExtra("mystarttime", ClubModel1.getItem_start_time());
+                    intent.putExtra("myendtime", ClubModel1.getItem_end_time());
+                    intent.putExtra("mymemberfee", ClubModel1.getFee_for_member());
+                    intent.putExtra("mynonmemberfee", ClubModel1.getFee_for_nonmember());
+                    intent.putExtra("myvenue", ClubModel1.getVenue());
                     intent.putExtra("myurl", ClubModel1.getImageLink());
                     intent.putExtra("mykey", mUserDatabase2.getKey());
                     intent.putExtra("myowner", ClubModel1.getItem_owner());

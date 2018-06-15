@@ -44,8 +44,10 @@
 
         <activity android:name=".RegistrationActivity" />
         <activity android:name=".PasswordActivity" />
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".UpdateProfile" />
+        <activity android:name=".ProfileActivity"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".UpdateProfile"
+            android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".Users" />
         <activity
             android:name=".Chat"
@@ -54,16 +56,22 @@
         <activity android:name=".UpdatePassword" />
         <activity android:name=".MainActivity" />
         <activity android:name=".ActivityPosted" />
-        <activity android:name=".ViewActivity" />
-        <activity android:name=".AddActivity" />
-        <activity android:name=".EditActivity" />
+        <activity android:name=".ViewActivity"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".AddActivity"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".EditActivity"
+            android:windowSoftInputMode="stateHidden"/>
         <activity
             android:name=".ListOfClubsActivity"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".AddClubs" />
-        <activity android:name=".ClubProfileActivity" />
-        <activity android:name=".UpdateClubProfile" />
-        <activity android:name=".ListOfClubsView" />
+        <activity android:name=".ClubProfileActivity"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".UpdateClubProfile"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".ListOfClubsView"
+            android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".List_of_pending" />
         <activity android:name=".List_of_successful" />
         <activity android:name=".List_of_joined" />

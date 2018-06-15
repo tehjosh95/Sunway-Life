@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -39,6 +40,7 @@ public class list_of_event_club_pending extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private TextView textReminder;
     private int count;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,15 @@ public class list_of_event_club_pending extends AppCompatActivity {
 
         mUserDatabase = FirebaseDatabase.getInstance().getReference("join_event").child(key);
         mUserDatabase2 = FirebaseDatabase.getInstance().getReference("Users");
+
+        toolbar = (Toolbar) findViewById(R.id.toolbarMain);
+        toolbar.setTitle("Pending join");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         textReminder = findViewById(R.id.textReminder);
         mSearchField = (EditText) findViewById(R.id.search_field);
@@ -155,9 +166,10 @@ public class list_of_event_club_pending extends AppCompatActivity {
                     UserProfile userProfile = AllUsers.get(position);
                     String key = profilekey.get(position);
                     Intent intent = new Intent(list_of_event_club_pending.this, ProfileActivity.class);
-                    intent.putExtra("isname", userProfile.getUserName());
-                    intent.putExtra("isage", userProfile.getUserAge());
-                    intent.putExtra("isemail", userProfile.getUserEmail());
+                    intent.putExtra("isstudentid", userProfile.getStudentID());
+                    intent.putExtra("isname", userProfile.getStudentName());
+                    intent.putExtra("iscourse", userProfile.getStudentCourse());
+                    intent.putExtra("isphone", userProfile.getStudentPhone());
                     intent.putExtra("istype", userProfile.getUserType());
                     intent.putExtra("isid", key);
                     startActivity(intent);

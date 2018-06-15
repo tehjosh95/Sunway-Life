@@ -4,9 +4,11 @@ public class ListOfClubs {
 
     private String name;
     private String image;
-    private String contact;
+    private String advisor;
     private String desc;
     private String myUid;
+
+    private String email;
 
     private String userType;
 
@@ -37,12 +39,12 @@ public class ListOfClubs {
         this.desc = desc;
     }
 
-    public String getContact() {
-        return contact;
+    public String getAdvisor() {
+        return advisor;
     }
 
-    public void setContact(String contact) {
-        this.contact = contact;
+    public void setAdvisor(String advisor) {
+        this.advisor = advisor;
     }
 
     public String getUserType() {
@@ -61,12 +63,17 @@ public class ListOfClubs {
         this.myUid = myUid;
     }
 
-    public ListOfClubs(String name, String image, String contact, String desc, String userType, String myUid) {
+    public String getEmail() { return email; }
+
+    public void setEmail(String email) { this.email = email; }
+
+    public ListOfClubs(String name, String image, String advisor, String desc, String userType, String myUid, String email) {
         this.name = name;
         this.image = image;
-        this.contact = contact;
+        this.advisor = advisor;
         this.desc = desc;
         this.userType = userType;
         this.myUid = myUid;
+        this.email = email;
     }
 }

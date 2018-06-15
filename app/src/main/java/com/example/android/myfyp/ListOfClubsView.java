@@ -8,10 +8,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,9 +27,10 @@ public class ListOfClubsView extends AppCompatActivity {
     public interface MyCallback {
         void onCallback(String value);
     }
-
+    Toolbar toolbar;
     private ImageView profilePic;
-    private TextView profileName, profileCont, profileDesc, averagetext;
+    private TextView averagetext;
+    private EditText edit_name, edit_advisor, edit_email, edit_desc;
     private Button EditButton, btnJoin, rate;
     private FloatingActionButton fabbb;
     private FirebaseAuth firebaseAuth;
@@ -49,13 +52,23 @@ public class ListOfClubsView extends AppCompatActivity {
         averagetext = findViewById(R.id.averagetext);
         ratingbar1 = findViewById(R.id.ratingBar1);
         profilePic = findViewById(R.id.ivimage);
-        profileName = findViewById(R.id.tvname);
-        profileCont = findViewById(R.id.tvcont);
-        profileDesc = findViewById(R.id.tvdesc);
+        edit_name = findViewById(R.id.edit_name);
+        edit_advisor = findViewById(R.id.edit_advisor);
+        edit_email = findViewById(R.id.edit_email);
+        edit_desc = findViewById(R.id.edit_desc);
         EditButton = findViewById(R.id.btnEdit);
         rate = findViewById(R.id.rate);
         btnJoin = findViewById(R.id.btnJoin);
         fabbb = (FloatingActionButton) findViewById(R.id.fabbb);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbarMain);
+        toolbar.setTitle("Clubs Profile");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         final String myid = firebaseAuth.getCurrentUser().getUid();
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -68,9 +81,10 @@ public class ListOfClubsView extends AppCompatActivity {
         Intent startingIntent = getIntent();
         final String myurl = startingIntent.getStringExtra("isimg");
         final String Name = startingIntent.getStringExtra("isname");
-        final String Cont = startingIntent.getStringExtra("iscont");
+        final String Adv = startingIntent.getStringExtra("isadvisor");
         final String Desc = startingIntent.getStringExtra("isdesc");
         final String Myuid = startingIntent.getStringExtra("isuid");
+        final String email = startingIntent.getStringExtra("isemail");
 
         mDataRef5.addValueEventListener(new ValueEventListener() {
             @Override
@@ -82,6 +96,10 @@ public class ListOfClubsView extends AppCompatActivity {
                         rate.setVisibility(View.GONE);
                         btnJoin.setVisibility(View.GONE);
                     }
+                }else{
+                    EditButton.setVisibility(View.GONE);
+                    rate.setVisibility(View.GONE);
+                    btnJoin.setVisibility(View.GONE);
                 }
             }
 
@@ -92,10 +110,10 @@ public class ListOfClubsView extends AppCompatActivity {
         });
 
         Glide.with(this).load(myurl).thumbnail(0.1f).into(profilePic);
-        profileName.setText(Name);
-        profileCont.setText(Cont);
-        profileDesc.setText(Desc);
-        Log.d("^^^uidview", "" + Myuid);
+        edit_name.setText(Name);
+        edit_advisor.setText(Adv);
+        edit_email.setText(email);
+        edit_desc.setText(Desc);
 
         fabbb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,12 +138,15 @@ public class ListOfClubsView extends AppCompatActivity {
                 }
                 Float ans = total / totalperson;
                 if (!Float.isNaN(ans)) {
+                    ratingbar1.setIsIndicator(true);
                     ratingbar1.setRating(total / totalperson);
                     ratingbar1.setClickable(false);
                     averagetext.setText("Average is: " + Float.toString(total / totalperson));
                 }else{
+                    ratingbar1.setIsIndicator(true);
                     ratingbar1.setRating(0);
                     ratingbar1.setClickable(false);
+                    ratingbar1.setEnabled(false);
                     averagetext.setText("Average is: " + "0");
                 }
             }

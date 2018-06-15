@@ -23,16 +23,15 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class RegistrationActivity extends AppCompatActivity {
 
-    private EditText userName, userPassword, userEmail, userAge;
+    private EditText UserId, UserName, UserCourse, UserPhone, UserPassword;
     private Button regButton;
     private TextView userLogin, referAdmin;
     private FirebaseAuth firebaseAuth;
     private Switch switch1;
     private ImageView userProfilePic;
-    String email, name, age, password, type;
+    String studentid, studentname, studentcourse, studentphone, type, password;
     private DatabaseReference mDataRef;
     private FirebaseDatabase mDatabase;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +49,8 @@ public class RegistrationActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (validate()) {
                     //Upload data to the database
-                    String user_email = userEmail.getText().toString().trim();
-                    String user_password = userPassword.getText().toString().trim();
+                    String user_email = UserId.getText().toString().trim() + "@imail.sunway.edu.my";
+                    String user_password = UserPassword.getText().toString().trim();
 
                     firebaseAuth.createUserWithEmailAndPassword(user_email, user_password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
@@ -84,32 +83,35 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private void setupUIViews() {
-        userName = (EditText) findViewById(R.id.etUserName);
-        userPassword = (EditText) findViewById(R.id.etUserPassword);
-        userEmail = (EditText) findViewById(R.id.etUserEmail);
+        UserId = (EditText) findViewById(R.id.UserId);
+        UserCourse = (EditText) findViewById(R.id.UserCourse);
+        UserName = (EditText) findViewById(R.id.UserName);
+        UserPhone = findViewById(R.id.UserPhone);
         regButton = (Button) findViewById(R.id.btnRegister);
         userLogin = (TextView) findViewById(R.id.tvUserLogin);
-        userAge = (EditText) findViewById(R.id.etAge);
         userProfilePic = (ImageView) findViewById(R.id.ivProfile);
         switch1 = (Switch) findViewById(R.id.switch1);
         referAdmin = (TextView) findViewById(R.id.referAdmin);
+        UserPassword = findViewById(R.id.UserPassword);
 
         switch1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (switch1.isChecked()) {
-                    userName.setVisibility(View.GONE);
-                    userPassword.setVisibility(View.GONE);
-                    userEmail.setVisibility(View.GONE);
-                    userAge.setVisibility(View.GONE);
+                    UserId.setVisibility(View.GONE);
+                    UserCourse.setVisibility(View.GONE);
+                    UserName.setVisibility(View.GONE);
+                    UserPhone.setVisibility(View.GONE);
                     regButton.setVisibility(View.GONE);
+                    UserPassword.setVisibility(View.GONE);
                     referAdmin.setVisibility(View.VISIBLE);
                 } else {
-                    userName.setVisibility(View.VISIBLE);
-                    userPassword.setVisibility(View.VISIBLE);
-                    userEmail.setVisibility(View.VISIBLE);
-                    userAge.setVisibility(View.VISIBLE);
+                    UserId.setVisibility(View.VISIBLE);
+                    UserCourse.setVisibility(View.VISIBLE);
+                    UserName.setVisibility(View.VISIBLE);
+                    UserPhone.setVisibility(View.VISIBLE);
                     regButton.setVisibility(View.VISIBLE);
+                    UserPassword.setVisibility(View.VISIBLE);
                     referAdmin.setVisibility(View.GONE);
                 }
             }
@@ -119,14 +121,15 @@ public class RegistrationActivity extends AppCompatActivity {
     private Boolean validate() {
         Boolean result = false;
 
-        name = userName.getText().toString();
-        password = userPassword.getText().toString();
-        email = userEmail.getText().toString();
-        age = userAge.getText().toString();
+        studentid = UserId.getText().toString();
+        studentname = UserName.getText().toString();
+        studentcourse = UserCourse.getText().toString();
+        studentphone = UserPhone.getText().toString();
         type = "student";
+        password = UserPassword.getText().toString();
 
 
-        if (name.isEmpty() || password.isEmpty() || email.isEmpty() || age.isEmpty()) {
+        if (studentid.isEmpty() || studentcourse.isEmpty() || studentname.isEmpty() || studentphone.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "Please enter all the details", Toast.LENGTH_SHORT).show();
         } else {
             result = true;
@@ -158,12 +161,12 @@ public class RegistrationActivity extends AppCompatActivity {
 
     private void sendUserData() {
 
-        UserProfile userProfile = new UserProfile(age, email, name, type);
+        UserProfile userProfile = new UserProfile(studentid, studentname, studentcourse, studentphone, type);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName(name)
+                .setDisplayName(studentid)
                 .build();
 
         user.updateProfile(profileUpdates)

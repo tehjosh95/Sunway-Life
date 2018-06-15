@@ -1,9 +1,9 @@
 package com.example.android.myfyp;
 
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,27 +22,36 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class UpdateProfile extends AppCompatActivity {
 
-    private EditText newUserName, newUserEmail, newUserAge;
+    private EditText newUserName, newUserCourse, newUserPhone, etIdupdate;
     private Button save;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference mDataRef, mDataRef2, mDataRef3;
     String userType;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_profile);
 
+        etIdupdate = findViewById(R.id.etIdUpdate);
         newUserName = findViewById(R.id.etNameUpdate);
-        newUserEmail = findViewById(R.id.etEmailUpdate);
-        newUserAge = findViewById(R.id.etAgeUpdate);
+        newUserCourse = findViewById(R.id.etCourseUpdate);
+        newUserPhone = findViewById(R.id.etPhoneUpdate);
         save = findViewById(R.id.btnSave);
+
+
+        toolbar = (Toolbar) findViewById(R.id.toolbarMain);
+        toolbar.setTitle("Update Profile");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -60,9 +69,10 @@ public class UpdateProfile extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
-                newUserName.setText(userProfile.getUserName());
-                newUserAge.setText(userProfile.getUserAge());
-                newUserEmail.setText(userProfile.getUserEmail());
+                etIdupdate.setText(userProfile.getStudentID());
+                newUserName.setText(userProfile.getStudentName());
+                newUserCourse.setText(userProfile.getStudentCourse());
+                newUserPhone.setText(userProfile.getStudentPhone());
                 userType = userProfile.getUserType();
             }
 
@@ -75,11 +85,12 @@ public class UpdateProfile extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String id = etIdupdate.getText().toString();
                 final String name = newUserName.getText().toString();
-                String age = newUserAge.getText().toString();
-                String email = newUserEmail.getText().toString();
+                String course = newUserCourse.getText().toString();
+                String phone = newUserPhone.getText().toString();
                 String type = userType;
-                final UserProfile userProfile = new UserProfile(age, email, name, type);
+                final UserProfile userProfile = new UserProfile(id, name, course, phone, type);
 
                 mDataRef2.addValueEventListener(new ValueEventListener() {
                     @Override

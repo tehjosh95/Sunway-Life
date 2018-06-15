@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,12 +23,13 @@ import com.google.firebase.database.ValueEventListener;
 public class ProfileActivity extends AppCompatActivity {
 
     private ImageView profilePic;
-    private TextView profileName, profileAge, profileEmail, profileType;
     private Button profileUpdate, changePassword, profileChat;
+    private EditText editId, editName, editCourse, editPhone, editType;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference mDataRef;
-    private FloatingActionButton fab = null;
+    private FloatingActionButton fab;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,13 +37,25 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
 
         profilePic = findViewById(R.id.ivProfilePic);
-        profileName = findViewById(R.id.tvProfileName);
-        profileAge = findViewById(R.id.tvProfileAge);
-        profileEmail = findViewById(R.id.tvProfileEmail);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbarMain);
+        toolbar.setTitle("My profile");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        editId = findViewById(R.id.edit_user_id);
+        editName = findViewById(R.id.edit_user_name);
+        editCourse = findViewById(R.id.edit_user_course);
+        editPhone = findViewById(R.id.edit_user_contact);
+        editType = findViewById(R.id.edit_user_type);
+
         profileUpdate = findViewById(R.id.btnProfileUpdate);
         profileChat = findViewById(R.id.btnChat);
         changePassword = findViewById(R.id.btnChangePassword);
-        profileType = findViewById(R.id.tvProfileType);
         fab = (FloatingActionButton) findViewById(R.id.fabb);
 
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -60,10 +75,11 @@ public class ProfileActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
-                    profileName.setText("Name: " + userProfile.getUserName());
-                    profileAge.setText("Age: " + userProfile.getUserAge());
-                    profileEmail.setText("Email: " + userProfile.getUserEmail());
-                    profileType.setText("User Type: " + userProfile.getUserType());
+                    editId.setText(userProfile.getStudentID());
+                    editName.setText(userProfile.getStudentName());
+                    editCourse.setText(userProfile.getStudentCourse());
+                    editPhone.setText(userProfile.getStudentPhone());
+                    editType.setText(userProfile.getUserType());
                 }
 
                 @Override
@@ -72,17 +88,19 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             });
         } else {
+            final String id = startingIntent.getStringExtra("isstudentid");
             final String name = startingIntent.getStringExtra("isname");
-            final String age = startingIntent.getStringExtra("isage");
-            final String email = startingIntent.getStringExtra("isemail");
+            final String course = startingIntent.getStringExtra("iscourse");
+            final String phone = startingIntent.getStringExtra("isphone");
             final String type = startingIntent.getStringExtra("istype");
             profileUpdate.setVisibility(View.GONE);
             changePassword.setVisibility(View.GONE);
 
-            profileName.setText("Name: " + name);
-            profileAge.setText("Age: " + age);
-            profileEmail.setText("Email: " + email);
-            profileType.setText("User Type: " + type);
+            editId.setText(id);
+            editName.setText(name);
+            editCourse.setText(course);
+            editPhone.setText(phone);
+            editType.setText(type);
         }
 
         profileUpdate.setOnClickListener(new View.OnClickListener() {
@@ -98,6 +116,7 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivity(new Intent(ProfileActivity.this, UpdatePassword.class));
             }
         });
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,10 +124,17 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivity(new Intent(ProfileActivity.this, SecondActivity.class));
             }
         });
+
+//        final String key = startingIntent.getStringExtra("isid");
+//        if (key == null){
+//            profileChat.setVisibility(View.GONE);
+//            fab.setVisibility(View.GONE);
+//        }
+
         profileChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String name = startingIntent.getStringExtra("isname");
+                final String name = startingIntent.getStringExtra("isstudentid");
                 final String key = startingIntent.getStringExtra("isid");
 
                 UserDetails.username = firebaseAuth.getCurrentUser().getUid();

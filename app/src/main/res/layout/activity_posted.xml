@@ -16,7 +16,9 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbarMain"
             android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize"/>
+            android:layout_height="?android:attr/actionBarSize"
+            app:navigationIcon="?android:attr/homeAsUpIndicator"/>
+
     </android.support.design.widget.AppBarLayout>
 
     <TextView
@@ -49,6 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
+        android:visibility="gone"
         android:src="@drawable/ic_home_black" />
 
 </android.support.design.widget.CoordinatorLayout>

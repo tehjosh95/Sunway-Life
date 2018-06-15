@@ -3,8 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#ffffff"
     tools:context=".ListOfClubsActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+        <!--android:theme="@style/AppTheme">-->
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbarMain"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            app:navigationIcon="?android:attr/homeAsUpIndicator" />
+
+    </android.support.design.widget.AppBarLayout>
 
     <TextView
         android:id="@+id/heading_label"
@@ -30,7 +46,7 @@
         android:layout_marginLeft="23dp"
         android:layout_marginRight="20dp"
         android:layout_marginStart="23dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="60dp"
         android:layout_toLeftOf="@+id/search_btn"
         android:layout_toStartOf="@+id/search_btn"
         android:background="@drawable/search_layout"
@@ -52,6 +68,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/search_field"
+        android:visibility="gone"
         android:layout_marginRight="30dp"
         android:background="@color/md_white_1000"
         android:src="@drawable/ic_search_black"/>

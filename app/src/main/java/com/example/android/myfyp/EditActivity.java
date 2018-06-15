@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.roger.catloadinglibrary.CatLoadingView;
 
 import java.io.ByteArrayOutputStream;
 
@@ -35,7 +37,7 @@ public class EditActivity extends AppCompatActivity {
     private clubModel ClubModel = new clubModel();
     private Button editButton;
     private ImageView profilePic;
-    private EditText profileName, profilePlace, profilePrice;
+    private EditText item_name, item_description, item_date, item_start_time, item_end_time, item_fee_member, item_fee_nonmember, item_venue;
     private Button EditButton;
     private FloatingActionButton fabbb;
     private FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -50,7 +52,8 @@ public class EditActivity extends AppCompatActivity {
     private String imageFileName;
     private String imgUrl;
     private String theKey;
-
+    CatLoadingView mView;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,41 +66,59 @@ public class EditActivity extends AppCompatActivity {
         mStorRef = mStorage.getReference();
         mAuth = FirebaseAuth.getInstance();
 
+        toolbar = (Toolbar) findViewById(R.id.toolbarMain);
+        toolbar.setTitle("Edit Events");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
-        profilePic = findViewById(R.id.editImg);
-        profileName = findViewById(R.id.edit_name);
-        profilePlace = findViewById(R.id.edit_place);
-        profilePrice = findViewById(R.id.edit_price);
+        profilePic = findViewById(R.id.image_preview);
+        item_name = findViewById(R.id.item_name);
+        item_description = findViewById(R.id.item_description);
+        item_date = findViewById(R.id.item_date);
+        item_start_time = findViewById(R.id.item_start_time);
+        item_end_time = findViewById(R.id.item_end_time);
+        item_fee_member = findViewById(R.id.item_fee_member);
+        item_fee_nonmember = findViewById(R.id.item_fee_nonmember);
+        item_venue = findViewById(R.id.item_venue);
         editButton = findViewById(R.id.edit_button);
         fabbb = (FloatingActionButton) findViewById(R.id.fab);
 
         Intent startingIntent = getIntent();
         String theUrl = startingIntent.getStringExtra("theurl");
         String theName = startingIntent.getStringExtra("thename");
-        String thePlace = startingIntent.getStringExtra("theplace");
-        String thePrice = startingIntent.getStringExtra("theprice");
+        String theDesc = startingIntent.getStringExtra("thedesc");
+        String theDate = startingIntent.getStringExtra("thedate");
+        String theStarttime = startingIntent.getStringExtra("thestarttime");
+        String theEndtime = startingIntent.getStringExtra("theendtime");
+        String theMemberfee = startingIntent.getStringExtra("thememberfee");
+        String theNonmemberfee = startingIntent.getStringExtra("thenonmemberfee");
+        String theVenue = startingIntent.getStringExtra("thevenue");
+
         String theOwner = startingIntent.getStringExtra("theowner");
         theKey = startingIntent.getStringExtra("thekey");
 
         Glide.with(this).load(theUrl).thumbnail(0.1f).into(profilePic);
-        profileName.setText(theName);
-        profilePlace.setText(thePlace);
-        profilePrice.setText(thePrice);
+        item_name.setText(theName);
+        item_description.setText(theDesc);
+        item_date.setText(theDate);
+        item_start_time.setText(theStarttime);
+        item_end_time.setText(theEndtime);
+        item_fee_member.setText(theMemberfee);
+        item_fee_nonmember.setText(theNonmemberfee);
+        item_venue.setText(theVenue);
 
         mUserRef = mDatabase.getReference();
         mUserRef = mUserRef.child("Item Information").child(mAuth.getCurrentUser().getUid());
         storageRef = storage.getReferenceFromUrl("gs://myfyp-25f5d.appspot.com/images");
 
-        final ProgressDialog progDialog = new ProgressDialog(EditActivity.this,
-                R.style.Theme_AppCompat_DayNight_NoActionBar);
-        progDialog.setIndeterminate(true);
-        progDialog.setMessage("Loading user data...");
-        progDialog.show();
         ValueEventListener userListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 userProfile = dataSnapshot.getValue(UserProfile.class);
-                progDialog.dismiss();
             }
 
             @Override
@@ -112,6 +133,8 @@ public class EditActivity extends AppCompatActivity {
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mView = new CatLoadingView();
+                mView.show(getSupportFragmentManager(), "");
                 uploadItem();
             }
         });
@@ -133,6 +156,7 @@ public class EditActivity extends AppCompatActivity {
     public void onSuccessfulSave() {
         Toast.makeText(EditActivity.this, "Successfully uploaded item.", Toast.LENGTH_LONG).show();
         editButton.setEnabled(true);
+        mView.dismiss();
         finish();
         startActivity(new Intent(EditActivity.this, ActivityPosted.class));
     }
@@ -188,9 +212,15 @@ public class EditActivity extends AppCompatActivity {
                 Log.d("*****url", "" + imgUrl);
 
 
-                String name = profileName.getText().toString().trim();
-                String place = profilePlace.getText().toString().trim();
-                String price = profilePrice.getText().toString().trim();
+                String name = item_name.getText().toString().trim();
+                String desc = item_description.getText().toString().trim();
+                String date = item_date.getText().toString().trim();
+                String starttime = item_start_time.getText().toString().trim();
+                String endtime = item_end_time.getText().toString().trim();
+                String feeformember = item_fee_member.getText().toString().trim();
+                String feefornonmember = item_fee_nonmember.getText().toString().trim();
+                String venue = item_venue.getText().toString().trim();
+
                 String owner = mAuth.getCurrentUser().getUid();
                 int position = 0;
                 Log.d("*****url1", "" + imgUrl);
@@ -200,8 +230,14 @@ public class EditActivity extends AppCompatActivity {
 //        } else {
                 editButton.setEnabled(false);
                 ClubModel.setItem_name(name);
-                ClubModel.setItem_place(place);
-                ClubModel.setItem_price(price);
+                ClubModel.setItem_desc(desc);
+                ClubModel.setItem_date(date);
+                ClubModel.setItem_start_time(starttime);
+                ClubModel.setItem_end_time(endtime);
+                ClubModel.setFee_for_member(feeformember);
+                ClubModel.setFee_for_nonmember(feefornonmember);
+                ClubModel.setVenue(venue);
+
                 ClubModel.setItem_owner(owner);
                 ClubModel.setItem_position(position);
                 ClubModel.setImageLink(imgUrl);
@@ -214,7 +250,7 @@ public class EditActivity extends AppCompatActivity {
                 progDialog.setIndeterminate(true);
                 progDialog.setMessage("Uploading....");
                 progDialog.show();
-                final clubModel ClubModel = new clubModel(name, place, price, owner, position, imgUrl, imageFileName, theKey);
+                final clubModel ClubModel = new clubModel(name, desc, date, starttime, endtime, feeformember, feefornonmember, venue, owner, position, imgUrl, imageFileName, theKey);
 
                 Log.d("&&&&&&&uid", "" + owner);
                 final Runnable uploadTask = new Runnable() {

@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -51,6 +52,7 @@ public class List_of_joined extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private int count;
     int x;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,15 @@ public class List_of_joined extends AppCompatActivity {
         Parentkeys = new ArrayList<>();
         mUserDatabase = FirebaseDatabase.getInstance().getReference("join_list").child("members");
         mUserDatabase2 = FirebaseDatabase.getInstance().getReference("Clubs");
+
+        toolbar = (Toolbar) findViewById(R.id.toolbarMain);
+        toolbar.setTitle("Joined clubs");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         textReminder = findViewById(R.id.textReminder);
         mSearchField = (EditText) findViewById(R.id.search_field);
@@ -168,7 +179,8 @@ public class List_of_joined extends AppCompatActivity {
                     Log.d("^^^^^^^listclubs", "" + listOfClubs);
                     Intent intent = new Intent(List_of_joined.this, ListOfClubsView.class);
                     intent.putExtra("isname", listOfClubs.getName());
-                    intent.putExtra("iscont", listOfClubs.getContact());
+                    intent.putExtra("isadvisor", listOfClubs.getAdvisor());
+                    intent.putExtra("isemail", listOfClubs.getEmail());
                     intent.putExtra("isdesc", listOfClubs.getDesc());
                     intent.putExtra("isimg", listOfClubs.getImage());
                     intent.putExtra("isuid", listOfClubs.getMyUid());

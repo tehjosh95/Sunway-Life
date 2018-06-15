@@ -1,9 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.android.myfyp.AddClubs">
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+        <!--android:theme="@style/AppTheme">-->
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbarMain"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            app:navigationIcon="?android:attr/homeAsUpIndicator" />
+    </android.support.design.widget.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="60dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,13 +34,13 @@
 
         <ImageView
             android:id="@+id/image_preview"
-            android:layout_width="331dp"
+            android:layout_width="388dp"
             android:layout_height="199dp"
             android:layout_gravity="center"
             android:layout_marginTop="0dp"
-            android:scaleType="centerCrop"
             android:background="@color/md_blue_grey_100"
-            android:onClick="handleChooseImage" />
+            android:onClick="handleChooseImage"
+            android:scaleType="centerCrop" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -44,10 +63,10 @@
             android:layout_marginTop="8dp">
 
             <EditText
-                android:id="@+id/club_contact"
+                android:id="@+id/club_advisor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="club contact"
+                android:hint="club advisor"
                 android:inputType="text" />
         </android.support.design.widget.TextInputLayout>
 
@@ -76,7 +95,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="email"
-                android:inputType="text" />
+                android:inputType="textEmailAddress" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -90,7 +109,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="password"
-                android:inputType="text" />
+                android:inputType="textPassword" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.v7.widget.AppCompatButton
@@ -106,9 +125,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
+            android:visibility="gone"
             android:layout_margin="16dp"
             android:src="@drawable/ic_home_black" />
 
 
     </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</android.support.design.widget.CoordinatorLayout>

@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,12 +32,13 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.roger.catloadinglibrary.CatLoadingView;
 
 import java.io.ByteArrayOutputStream;
 
 public class UpdateClubProfile extends AppCompatActivity {
     private ListOfClubs listOfClubs = new ListOfClubs();
-    private EditText newUserName, newUserCont, newUserDesc;
+    private EditText newUserName, newUserAdvisor, newUserDesc, newUserEmail, usertype;
     private Button save;
     private FirebaseAuth firebaseAuth;
     private ImageView imgView;
@@ -50,17 +52,29 @@ public class UpdateClubProfile extends AppCompatActivity {
     private String imageFileName;
     private String imgUrl;
     private String theKey;
+    CatLoadingView mView;
+    Toolbar toolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_club_profile);
 
+        usertype = findViewById(R.id.edit_user_type);
         newUserName = findViewById(R.id.etNameUpdate);
-        newUserCont = findViewById(R.id.etContactUpdate);
+        newUserAdvisor = findViewById(R.id.etAdvisorUpdate);
+        newUserEmail = findViewById(R.id.etEmailUpdate);
         newUserDesc = findViewById(R.id.etDescUpdate);
         imgView = findViewById(R.id.ivProfileUpdate);
-
+        toolbar = (Toolbar) findViewById(R.id.toolbarMain);
+        toolbar.setTitle("Update Club Profile");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         save = findViewById(R.id.btnSave);
 
@@ -83,8 +97,10 @@ public class UpdateClubProfile extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ListOfClubs listOfClubs = dataSnapshot.getValue(ListOfClubs.class);
+                usertype.setText(listOfClubs.getUserType());
                 newUserName.setText(listOfClubs.getName());
-                newUserCont.setText(listOfClubs.getContact());
+                newUserAdvisor.setText(listOfClubs.getAdvisor());
+                newUserEmail.setText(listOfClubs.getEmail());
                 newUserDesc.setText(listOfClubs.getDesc());
                 theurl = listOfClubs.getImage();
                 Glide.with(UpdateClubProfile.this).load(theurl).into(imgView);
@@ -100,6 +116,8 @@ public class UpdateClubProfile extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mView = new CatLoadingView();
+                mView.show(getSupportFragmentManager(), "");
                 uploadItem();
             }
         });
@@ -124,6 +142,7 @@ public class UpdateClubProfile extends AppCompatActivity {
     public void onSuccessfulSave() {
         Toast.makeText(UpdateClubProfile.this, "Successfully uploaded item.", Toast.LENGTH_LONG).show();
         save.setEnabled(true);
+        mView.dismiss();
         finish();
         startActivity(new Intent(UpdateClubProfile.this, ClubProfileActivity.class));
     }
@@ -180,7 +199,8 @@ public class UpdateClubProfile extends AppCompatActivity {
 
 
                 final String name = newUserName.getText().toString();
-                String cont = newUserCont.getText().toString();
+                String adv = newUserAdvisor.getText().toString();
+                String email = newUserEmail.getText().toString();
                 String desc = newUserDesc.getText().toString();
                 String type = userType;
                 String myuid = firebaseAuth.getCurrentUser().getUid();
@@ -189,13 +209,14 @@ public class UpdateClubProfile extends AppCompatActivity {
                 save.setEnabled(false);
                 listOfClubs.setImage(imgUrl);
 
-                final ProgressDialog progDialog = new ProgressDialog(UpdateClubProfile.this,
-                        R.style.Theme_AppCompat_DayNight_NoActionBar);
+//                final ProgressDialog progDialog = new ProgressDialog(UpdateClubProfile.this,
+//                        R.style.Theme_AppCompat_DayNight_NoActionBar);
+//
+//                progDialog.setIndeterminate(true);
+//                progDialog.setMessage("Uploading....");
+//                progDialog.show();
 
-                progDialog.setIndeterminate(true);
-                progDialog.setMessage("Uploading....");
-                progDialog.show();
-                final ListOfClubs listOfClubs = new ListOfClubs(name, imgUrl, cont, desc, type, myuid);
+                final ListOfClubs listOfClubs = new ListOfClubs(name, imgUrl, adv, desc, type, myuid, email);
 
                 mDataRef3.addValueEventListener(new ValueEventListener() {
                     @Override
@@ -240,7 +261,7 @@ public class UpdateClubProfile extends AppCompatActivity {
                             @Override
                             public void run() {
                                 mDataRef.setValue(listOfClubs);
-                                progDialog.dismiss();
+//                                progDialog.dismiss();
                             }
                         };
                         new Thread(uploadTask).start();

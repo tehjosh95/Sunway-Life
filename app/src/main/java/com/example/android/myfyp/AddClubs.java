@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -53,14 +54,13 @@ public class AddClubs extends AppCompatActivity {
     private FirebaseAuth firebaseAuth2;
     private static final String TAG = "AddActivity";
     private EditText clubName = null;
-    private EditText clubContact = null;
+    private EditText clubAdvisor = null;
     private EditText clubDesc = null;
     private EditText clubEmail = null;
     private EditText clubPass = null;
     private FloatingActionButton fab = null;
     private String imgUrl;
     private FirebaseAuth firebaseAuth;
-    //    private UserProfile userProfile;
     private DatabaseReference mUserRef;
     private Button btnLoadImage;
     private Button btnUploadItem;
@@ -68,7 +68,7 @@ public class AddClubs extends AppCompatActivity {
     private boolean isImgUploaded = false;
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference storageRef;
-
+    Toolbar toolbar;
     private String imageFileName;
 
     @Override
@@ -81,10 +81,18 @@ public class AddClubs extends AppCompatActivity {
         mStorage = FirebaseStorage.getInstance();
         mStorRef = mStorage.getReference();
 
+        toolbar = (Toolbar) findViewById(R.id.toolbarMain);
+        toolbar.setTitle("Add Clubs");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         clubName = (EditText) findViewById(R.id.club_name);
         clubEmail = (EditText) findViewById(R.id.club_email);
         clubPass = (EditText) findViewById(R.id.club_password);
-        clubContact = (EditText) findViewById(R.id.club_contact);
+        clubAdvisor = (EditText) findViewById(R.id.club_advisor);
         clubDesc = (EditText) findViewById(R.id.club_desc);
         fab = (FloatingActionButton) findViewById(R.id.fabb);
         btnUploadItem = (AppCompatButton) findViewById(R.id.btn_upload);
@@ -202,8 +210,9 @@ public class AddClubs extends AppCompatActivity {
                 imgUrl = downloadUrl.toString();
 
                 String name = clubName.getText().toString().trim();
-                String cont = clubContact.getText().toString().trim();
+                String adv = clubAdvisor.getText().toString().trim();
                 String desc = clubDesc.getText().toString().trim();
+                String emails = clubEmail.getText().toString().trim();
                 String usertype = "club";
 
 //        if (isInputInvalid(name, place, price)) {
@@ -211,8 +220,9 @@ public class AddClubs extends AppCompatActivity {
 //        } else {
                 btnUploadItem.setEnabled(false);
                 listofclubs.setName(name);
-                listofclubs.setContact(cont);
+                listofclubs.setAdvisor(adv);
                 listofclubs.setDesc(desc);
+                listofclubs.setEmail(emails);
                 listofclubs.setUserType(usertype);
                 listofclubs.setMyUid(uid);
 
@@ -222,7 +232,7 @@ public class AddClubs extends AppCompatActivity {
                 progDialog.setIndeterminate(true);
                 progDialog.setMessage("Uploading....");
                 progDialog.show();
-                final ListOfClubs listofclubs = new ListOfClubs(name, imgUrl, cont, desc, usertype, uid);
+                final ListOfClubs listofclubs = new ListOfClubs(name, imgUrl, adv, desc, usertype, uid, emails);
                 final Runnable uploadTask = new Runnable() {
                     @Override
                     public void run() {

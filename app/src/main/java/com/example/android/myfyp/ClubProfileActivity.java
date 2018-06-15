@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,9 +23,11 @@ import com.google.firebase.database.ValueEventListener;
 
 public class ClubProfileActivity extends AppCompatActivity {
 
+    Toolbar toolbar;
     private ImageView profilePic;
-    private TextView profileName, profileContact, profileDesc, profileType;
     private Button profileUpdate, changePassword;
+    private EditText edit_user_type, edit_user_name, edit_user_advisor, edit_user_email;
+    private TextView edit_user_desc;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference mDataRef;
@@ -35,13 +39,23 @@ public class ClubProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_club_profile);
 
         profilePic = findViewById(R.id.ivProfilePic);
-        profileName = findViewById(R.id.tvProfileName);
-        profileContact = findViewById(R.id.tvProfileContact);
-        profileDesc = findViewById(R.id.tvProfileDesc);
+        edit_user_type = findViewById(R.id.edit_user_type);
+        edit_user_name = findViewById(R.id.edit_user_name);
+        edit_user_advisor = findViewById(R.id.edit_user_advisor);
+        edit_user_email = findViewById(R.id.edit_user_email);
+        edit_user_desc = findViewById(R.id.edit_user_desc);
         profileUpdate = findViewById(R.id.btnProfileUpdate);
         changePassword = findViewById(R.id.btnChangePassword);
-        profileType = findViewById(R.id.tvProfileType);
         fab = (FloatingActionButton) findViewById(R.id.fabb);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbarMain);
+        toolbar.setTitle("Profile");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -55,10 +69,11 @@ public class ClubProfileActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ListOfClubs listOfClubs = dataSnapshot.getValue(ListOfClubs.class);
-                profileName.setText("Name: " + listOfClubs.getName());
-                profileContact.setText("Contact: " + listOfClubs.getContact());
-                profileDesc.setText("Desc: " + listOfClubs.getDesc());
-                profileType.setText("User Type: " + listOfClubs.getUserType());
+                edit_user_type.setText(listOfClubs.getUserType());
+                edit_user_name.setText(listOfClubs.getName());
+                edit_user_advisor.setText(listOfClubs.getAdvisor());
+                edit_user_email.setText(listOfClubs.getEmail());
+                edit_user_desc.setText(listOfClubs.getDesc());
                 Glide.with(ClubProfileActivity.this).load(listOfClubs.getImage()).thumbnail(0.1f).into(profilePic);
             }
 

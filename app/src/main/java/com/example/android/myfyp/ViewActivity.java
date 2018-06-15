@@ -4,9 +4,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,8 +22,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class ViewActivity extends AppCompatActivity {
+    Toolbar toolbar;
     private ImageView profilePic;
-    private TextView profileName, profilePlace, profilePrice;
+    private EditText item_name, item_description, item_date, item_start_time, item_end_time, item_fee_member, item_fee_nonmember, item_venue;
     private Button EditButton, btnchat, join;
     private FloatingActionButton fabbb;
     private FirebaseAuth firebaseAuth;
@@ -36,9 +39,23 @@ public class ViewActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
 
         profilePic = findViewById(R.id.ivimage);
-        profileName = findViewById(R.id.tvname);
-        profilePlace = findViewById(R.id.tvcont);
-        profilePrice = findViewById(R.id.tvdesc);
+        toolbar = (Toolbar) findViewById(R.id.toolbarMain);
+        toolbar.setTitle("Event details");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        item_name = findViewById(R.id.item_name);
+        item_description = findViewById(R.id.item_description);
+        item_date = findViewById(R.id.item_date);
+        item_start_time = findViewById(R.id.item_start_time);
+        item_end_time = findViewById(R.id.item_end_time);
+        item_fee_member = findViewById(R.id.item_fee_member);
+        item_fee_nonmember = findViewById(R.id.item_fee_nonmember);
+        item_venue = findViewById(R.id.item_venue);
+
         EditButton = findViewById(R.id.btnEdit);
         btnchat = findViewById(R.id.btnchat);
         join = findViewById(R.id.btnToJoin);
@@ -54,17 +71,27 @@ public class ViewActivity extends AppCompatActivity {
         final Intent startingIntent = getIntent();
         final String myurl = startingIntent.getStringExtra("myurl");
         final String Name = startingIntent.getStringExtra("myname");
-        final String Place = startingIntent.getStringExtra("myplace");
-        final String Price = startingIntent.getStringExtra("myprice");
+        final String Desc = startingIntent.getStringExtra("mydesc");
+        final String Date = startingIntent.getStringExtra("mydate");
+        final String Starttime = startingIntent.getStringExtra("mystarttime");
+        final String Endtime = startingIntent.getStringExtra("myendtime");
+        final String Memberfee = startingIntent.getStringExtra("mymemberfee");
+        final String Nonmemberfee = startingIntent.getStringExtra("mynonmemberfee");
+        final String Venue = startingIntent.getStringExtra("myvenue");
         final String Owner = startingIntent.getStringExtra("myowner");
         final String myKey = startingIntent.getStringExtra("mykey");
         final String ownername = startingIntent.getStringExtra("myownername");
         final String parentkey = startingIntent.getStringExtra("myparentkey");
 
         Glide.with(this).load(myurl).thumbnail(0.1f).into(profilePic);
-        profileName.setText(Name);
-        profilePlace.setText(Place);
-        profilePrice.setText(Price);
+        item_name.setText(Name);
+        item_description.setText(Desc);
+        item_date.setText(Date);
+        item_start_time.setText(Starttime);
+        item_end_time.setText(Endtime);
+        item_fee_member.setText(Memberfee);
+        item_fee_nonmember.setText(Nonmemberfee);
+        item_venue.setText(Venue);
 
         mDataRef2.addValueEventListener(new ValueEventListener() {
             @Override
@@ -98,17 +125,6 @@ public class ViewActivity extends AppCompatActivity {
 
             }
         });
-//        if (!firebaseAuth.getCurrentUser().getUid().equals(Owner)) {
-//            EditButton.setVisibility(View.GONE);
-//        }else{
-//            btnchat.setVisibility(View.GONE);
-//            join.setVisibility(View.GONE);
-//        }
-
-        Log.d("****itemname", "" + Name);
-        Log.d("****itemplace", "" + Place);
-        Log.d("****itemprice", "" + Price);
-
         fabbb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -159,8 +175,14 @@ public class ViewActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(ViewActivity.this, EditActivity.class);
                 intent.putExtra("thename", Name);
-                intent.putExtra("theplace", Place);
-                intent.putExtra("theprice", Price);
+                intent.putExtra("thedesc", Desc);
+                intent.putExtra("thedate", Date);
+                intent.putExtra("thestarttime", Starttime);
+                intent.putExtra("theendtime", Endtime);
+                intent.putExtra("thememberfee", Memberfee);
+                intent.putExtra("thenonmemberfee", Nonmemberfee);
+                intent.putExtra("thevenue", Venue);
+
                 intent.putExtra("theurl", myurl);
                 intent.putExtra("theowner", Owner);
                 intent.putExtra("thekey", myKey);

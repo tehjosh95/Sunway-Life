@@ -35,9 +35,11 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ServerValue;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -65,7 +67,7 @@ public class Chat extends AppCompatActivity {
     private FirebaseStorage mStorage;
     private StorageReference mStorRef;
     private FirebaseDatabase mDatabase;
-    private DatabaseReference mDataRef;
+    private DatabaseReference mDataRef, mDataRef2, mDataRef3;
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference storageRef;
     private String imgUrl;
@@ -123,14 +125,62 @@ public class Chat extends AppCompatActivity {
         storageRef = storage.getReferenceFromUrl("gs://myfyp-25f5d.appspot.com/images");
 
         mDataRef = firebaseDatabase.getReference().child("messages");
+        mDataRef2 = firebaseDatabase.getReference().child("Clubs");
+        mDataRef3 = firebaseDatabase.getReference().child("Users");
         chatname.setText(UserDetails.name);
 
         Firebase.setAndroidContext(this);
         reference1 = new Firebase("https://myfyp-25f5d.firebaseio.com/messages/" + UserDetails.username + "_" + UserDetails.chatWith + "/chat");
         reference2 = new Firebase("https://myfyp-25f5d.firebaseio.com/messages/" + UserDetails.chatWith + "_" + UserDetails.username + "/chat");
-        Log.d("****userD, username5", "" + UserDetails.username);
-        Log.d("****userD, chatwith", "" + UserDetails.chatWith);
-        Log.d("****userD, chatwith", "" + UserDetails.name);
+
+        chatname.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDataRef3.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.hasChild(UserDetails.chatWith)){
+                            UserProfile userProfile = dataSnapshot.child(UserDetails.chatWith).getValue(UserProfile.class);
+                            Intent intent = new Intent(Chat.this, ProfileActivity.class);
+                            intent.putExtra("isstudentid", userProfile.getStudentID());
+                            intent.putExtra("isname", userProfile.getStudentName());
+                            intent.putExtra("iscourse", userProfile.getStudentCourse());
+                            intent.putExtra("isphone", userProfile.getStudentPhone());
+                            intent.putExtra("istype", userProfile.getUserType());
+                            intent.putExtra("isid", 0);
+                            startActivity(intent);
+                        }else{
+                            mDataRef2.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(com.google.firebase.database.DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.hasChild(UserDetails.chatWith)){
+                                        ListOfClubs listOfClubs = dataSnapshot.child(UserDetails.chatWith).getValue(ListOfClubs.class);
+                                        Intent intent = new Intent(Chat.this, ListOfClubsView.class);
+                                        intent.putExtra("isname", listOfClubs.getName());
+                                        intent.putExtra("isadvisor", listOfClubs.getAdvisor());
+                                        intent.putExtra("isemail", listOfClubs.getEmail());
+                                        intent.putExtra("isdesc", listOfClubs.getDesc());
+                                        intent.putExtra("isimg", listOfClubs.getImage());
+                                        intent.putExtra("isuid", listOfClubs.getMyUid());
+                                        startActivity(intent);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override

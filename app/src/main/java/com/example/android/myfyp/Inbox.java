@@ -78,7 +78,14 @@ public class Inbox extends AppCompatActivity {
         mDataRef = mDatabase.getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         toolbar = (Toolbar) findViewById(R.id.toolbarMain);
-        toolbar.setTitle("Long Press to Delete");
+        toolbar.setTitle("Inbox");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         usersList = (ListView) findViewById(R.id.usersList);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();

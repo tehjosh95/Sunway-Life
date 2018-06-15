@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -35,6 +36,7 @@ import java.util.List;
 
 public class list_of_event_club extends AppCompatActivity {
 
+    Toolbar toolbar;
     RecyclerView recyclerView;
     ArrayList<event_list> AllClubsList;
     ArrayList<ListOfClubs> AllClubsList2;
@@ -62,6 +64,15 @@ public class list_of_event_club extends AppCompatActivity {
         Parentkeys = new ArrayList<>();
         mUserDatabase = FirebaseDatabase.getInstance().getReference("join_event");
         mUserDatabase2 = FirebaseDatabase.getInstance().getReference("Item Information");
+
+        toolbar = (Toolbar) findViewById(R.id.toolbarMain);
+        toolbar.setTitle("List of my events");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         textReminder = findViewById(R.id.textReminder);
         mSearchField = (EditText) findViewById(R.id.search_field);
