@@ -222,6 +222,7 @@ public class EditActivity extends AppCompatActivity {
                 String venue = item_venue.getText().toString().trim();
 
                 String owner = mAuth.getCurrentUser().getUid();
+                String ownername = mAuth.getCurrentUser().getDisplayName();
                 int position = 0;
                 Log.d("*****url1", "" + imgUrl);
 
@@ -250,7 +251,7 @@ public class EditActivity extends AppCompatActivity {
                 progDialog.setIndeterminate(true);
                 progDialog.setMessage("Uploading....");
                 progDialog.show();
-                final clubModel ClubModel = new clubModel(name, desc, date, starttime, endtime, feeformember, feefornonmember, venue, owner, position, imgUrl, imageFileName, theKey);
+                final clubModel ClubModel = new clubModel(name, desc, date, starttime, endtime, feeformember, feefornonmember, venue, ownername, owner, position, imgUrl, imageFileName, theKey);
 
                 Log.d("&&&&&&&uid", "" + owner);
                 final Runnable uploadTask = new Runnable() {

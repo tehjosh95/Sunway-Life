@@ -39,6 +39,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.roger.catloadinglibrary.CatLoadingView;
 
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
@@ -71,6 +72,7 @@ public class AddActivity extends AppCompatActivity {
     int hour = myCalendar.get(Calendar.HOUR_OF_DAY);
     int minute = myCalendar.get(Calendar.MINUTE);
     private String imageFileName;
+    CatLoadingView mView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,6 +150,8 @@ public class AddActivity extends AppCompatActivity {
         btnUploadItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mView = new CatLoadingView();
+                mView.show(getSupportFragmentManager(), "");
                 uploadItem();
             }
         });
@@ -218,6 +222,7 @@ public class AddActivity extends AppCompatActivity {
     public void onSuccessfulSave() {
         Toast.makeText(AddActivity.this, "Successfully uploaded item.", Toast.LENGTH_LONG).show();
         btnUploadItem.setEnabled(true);
+        mView.dismiss();
         finish();
     }
 

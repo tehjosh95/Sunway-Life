@@ -9,17 +9,29 @@ import android.content.res.Configuration;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.TabHost;
 
 public class tabs extends Activity {
     private static final String TAG = tabs.class.getSimpleName();
     private LocalActivityManager mLocalActivityManager;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabs);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbarMain);
+        toolbar.setTitle("Club Members");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         TabHost host = (TabHost)findViewById(R.id.tabhost);
         mLocalActivityManager = new LocalActivityManager(tabs.this, false);

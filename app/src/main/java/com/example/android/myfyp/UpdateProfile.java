@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.roger.catloadinglibrary.CatLoadingView;
 
 public class UpdateProfile extends AppCompatActivity {
 
@@ -31,6 +32,7 @@ public class UpdateProfile extends AppCompatActivity {
     private DatabaseReference mDataRef, mDataRef2, mDataRef3;
     String userType;
     Toolbar toolbar;
+    CatLoadingView mView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,62 +92,74 @@ public class UpdateProfile extends AppCompatActivity {
                 String course = newUserCourse.getText().toString();
                 String phone = newUserPhone.getText().toString();
                 String type = userType;
-                final UserProfile userProfile = new UserProfile(id, name, course, phone, type);
 
-                mDataRef2.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        for (DataSnapshot postsnap : dataSnapshot.getChildren()){
-                            Log.d("***mynam1", "" + postsnap.child("others").getValue(String.class));
-                            Log.d("***uid1", "" + firebaseAuth.getCurrentUser().getDisplayName());
-                            if(postsnap.child("others").getValue(String.class).equals(firebaseAuth.getCurrentUser().getDisplayName())){
-                                mDataRef2.child(postsnap.getKey()).child("others").setValue(name);
+                if(validate(id, name, course, phone)){
+                    final UserProfile userProfile = new UserProfile(id, name, course, phone, type);
+
+                    mDataRef2.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot postsnap : dataSnapshot.getChildren()){
+                                Log.d("***mynam1", "" + postsnap.child("others").getValue(String.class));
+                                Log.d("***uid1", "" + firebaseAuth.getCurrentUser().getDisplayName());
+                                if(postsnap.child("others").getValue(String.class).equals(firebaseAuth.getCurrentUser().getDisplayName())){
+                                    mDataRef2.child(postsnap.getKey()).child("others").setValue(name);
+                                }
                             }
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(name)
+                                    .build();
+
+                            user.updateProfile(profileUpdates)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                        }
+                                    });
+                            mDataRef.setValue(userProfile);
                         }
-                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                .setDisplayName(name)
-                                .build();
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                        user.updateProfile(profileUpdates)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
+                        }
+                    });
+
+                    mDataRef3.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            for (DataSnapshot postsnap : dataSnapshot.getChildren()){
+                                for (DataSnapshot nextsnap : postsnap.getChildren()){
+                                    Log.d("***mynam2", "" + nextsnap.child("myname").getValue(String.class));
+                                    Log.d("***uid2", "" + firebaseAuth.getCurrentUser().getDisplayName());
+                                    if(nextsnap.child("myname").getValue(String.class).equals(firebaseAuth.getCurrentUser().getDisplayName())){
+                                        mDataRef3.child(postsnap.getKey()).child(nextsnap.getKey()).child("myname").setValue(name);
                                     }
-                                });
-                        mDataRef.setValue(userProfile);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
-                mDataRef3.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        for (DataSnapshot postsnap : dataSnapshot.getChildren()){
-                            for (DataSnapshot nextsnap : postsnap.getChildren()){
-                                Log.d("***mynam2", "" + nextsnap.child("myname").getValue(String.class));
-                                Log.d("***uid2", "" + firebaseAuth.getCurrentUser().getDisplayName());
-                                if(nextsnap.child("myname").getValue(String.class).equals(firebaseAuth.getCurrentUser().getDisplayName())){
-                                    mDataRef3.child(postsnap.getKey()).child(nextsnap.getKey()).child("myname").setValue(name);
                                 }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
-
-                finish();
+                        }
+                    });
+                    finish();
+                }else{
+                    Toast.makeText(UpdateProfile.this, "Please fill in all required data", Toast.LENGTH_SHORT).show();
+                }
             }
         });
+    }
+
+    public Boolean validate(String i1, String i2, String i3, String i4){
+        if(i1.isEmpty() || i2.isEmpty() || i3.isEmpty() || i4.isEmpty()){
+            return false;
+        }else{
+            return true;
+        }
     }
 
     @Override

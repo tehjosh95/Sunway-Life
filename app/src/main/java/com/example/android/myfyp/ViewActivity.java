@@ -30,6 +30,7 @@ public class ViewActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference mDataRef, mDataRef2;
+    private TextView displaytext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,7 @@ public class ViewActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
+        displaytext = findViewById(R.id.displaytext);
         profilePic = findViewById(R.id.ivimage);
         toolbar = (Toolbar) findViewById(R.id.toolbarMain);
         toolbar.setTitle("Event details");
@@ -83,7 +85,11 @@ public class ViewActivity extends AppCompatActivity {
         final String ownername = startingIntent.getStringExtra("myownername");
         final String parentkey = startingIntent.getStringExtra("myparentkey");
 
+        Log.d("***ownername", "" + ownername);
+
         Glide.with(this).load(myurl).thumbnail(0.1f).into(profilePic);
+        displaytext.setText(ownername);
+        Log.d("***ownername", "" + ownername);
         item_name.setText(Name);
         item_description.setText(Desc);
         item_date.setText(Date);
@@ -109,10 +115,14 @@ public class ViewActivity extends AppCompatActivity {
                         EditButton.setVisibility(View.GONE);
                     }
                 }else{
-                    if(Owner.equals(myid)){
+                    if(Owner.equals(myid) && !parentkey.equals("")){
                         btnchat.setVisibility(View.GONE);
                         join.setVisibility(View.GONE);
-                    }else {
+                        EditButton.setVisibility(View.GONE);
+                    }else if(Owner.equals(myid) && parentkey.equals("")){
+                        btnchat.setVisibility(View.GONE);
+                        join.setVisibility(View.GONE);
+                    } else {
                         btnchat.setVisibility(View.GONE);
                         join.setVisibility(View.GONE);
                         EditButton.setVisibility(View.GONE);
@@ -182,7 +192,7 @@ public class ViewActivity extends AppCompatActivity {
                 intent.putExtra("thememberfee", Memberfee);
                 intent.putExtra("thenonmemberfee", Nonmemberfee);
                 intent.putExtra("thevenue", Venue);
-
+                intent.putExtra("theownername", ownername);
                 intent.putExtra("theurl", myurl);
                 intent.putExtra("theowner", Owner);
                 intent.putExtra("thekey", myKey);

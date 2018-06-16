@@ -13,8 +13,7 @@
         android:layout_height="50dp"
         android:paddingLeft="20dp"
         android:paddingTop="15dp"
-        android:background="@color/colorPrimaryDark"
-        android:textColor="@color/md_white_1000"
+        android:background="@color/lightorange"
         android:textSize="20dp"
         android:text="" />
 

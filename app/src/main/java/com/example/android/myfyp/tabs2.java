@@ -9,12 +9,15 @@ import android.content.res.Configuration;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.TabHost;
 
 public class tabs2 extends Activity {
     private static final String TAG = tabs2.class.getSimpleName();
     private LocalActivityManager mLocalActivityManager;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +26,15 @@ public class tabs2 extends Activity {
 
         Intent startingIntent = getIntent();
         final String key = startingIntent.getStringExtra("mykey");
+
+        toolbar = (Toolbar) findViewById(R.id.toolbarMain);
+        toolbar.setTitle("Event members");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         TabHost host = (TabHost)findViewById(R.id.tabhost);
         mLocalActivityManager = new LocalActivityManager(tabs2.this, false);

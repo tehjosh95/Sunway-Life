@@ -7,16 +7,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
-    android:background="@color/colorAccent"
     android:clickable="true">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="302dp"
-        android:layout_marginLeft="-2dp"
-        android:layout_marginStart="-2dp"
+        android:layout_height="237dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/customborder"
         android:orientation="vertical"
-        android:padding="5dp"
         android:weightSum="10"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -59,7 +57,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="134dp"
+            android:layout_height="30dp"
             android:orientation="vertical"
             android:paddingLeft="20dp"
             android:paddingRight="20dp">
@@ -72,15 +70,19 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/rv_item_desc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Karachi Savour"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+            <!--<TextView-->
+            <!--android:id="@+id/rv_item_desc"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Karachi Savour"-->
+            <!--android:textSize="14sp"-->
+            <!--android:textStyle="bold" />-->
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:background="@android:color/holo_blue_light" />
 
     </LinearLayout>
 

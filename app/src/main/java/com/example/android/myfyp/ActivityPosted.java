@@ -163,7 +163,9 @@ public class ActivityPosted extends AppCompatActivity {
                         intent.putExtra("myvenue", ClubModel1.getVenue());
                         intent.putExtra("myurl", ClubModel1.getImageLink());
                         intent.putExtra("myowner", ClubModel1.getItem_owner());
+                        intent.putExtra("myownername", ClubModel1.getOwnerName());
                         intent.putExtra("mykey", ClubModel1.getParentkey());
+                        intent.putExtra("myparentkey", "");
                         startActivity(intent);
                     }
 

@@ -60,14 +60,14 @@ public class list_of_event_club_successful extends AppCompatActivity {
         mUserDatabase = FirebaseDatabase.getInstance().getReference("join_event").child(key);
         mUserDatabase2 = FirebaseDatabase.getInstance().getReference("Users");
 
-        toolbar = (Toolbar) findViewById(R.id.toolbarMain);
-        toolbar.setTitle("Successfully joined");
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+//        toolbar = (Toolbar) findViewById(R.id.toolbarMain);
+//        toolbar.setTitle("Successfully joined");
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                finish();
+//            }
+//        });
 
         textReminder = findViewById(R.id.textReminder);
         mSearchField = (EditText) findViewById(R.id.search_field);

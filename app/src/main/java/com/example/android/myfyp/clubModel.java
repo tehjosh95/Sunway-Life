@@ -19,21 +19,21 @@ public class clubModel {
 
     private String parentkey;
 
-    public clubModel(String item_name, String item_desc, String item_date, String item_start_time, String item_end_time, String fee_for_member, String fee_for_nonmember, String venue, String item_owner, int item_position, String imageLink, String imgName, String parentkey) {
-        this.item_name = item_name;
-        this.item_desc = item_desc;
-        this.item_date = item_date;
-        this.item_start_time = item_start_time;
-        this.item_end_time = item_end_time;
-        this.fee_for_member = fee_for_member;
-        this.fee_for_nonmember = fee_for_nonmember;
-        this.venue = venue;
-        this.item_owner = item_owner;
-        this.item_position = item_position;
-        this.imageLink = imageLink;
-        this.imgName = imgName;
-        this.parentkey = parentkey;
-    }
+//    public clubModel(String item_name, String item_desc, String item_date, String item_start_time, String item_end_time, String fee_for_member, String fee_for_nonmember, String venue, String item_owner, int item_position, String imageLink, String imgName, String parentkey) {
+//        this.item_name = item_name;
+//        this.item_desc = item_desc;
+//        this.item_date = item_date;
+//        this.item_start_time = item_start_time;
+//        this.item_end_time = item_end_time;
+//        this.fee_for_member = fee_for_member;
+//        this.fee_for_nonmember = fee_for_nonmember;
+//        this.venue = venue;
+//        this.item_owner = item_owner;
+//        this.item_position = item_position;
+//        this.imageLink = imageLink;
+//        this.imgName = imgName;
+//        this.parentkey = parentkey;
+//    }
 
     public clubModel(String item_name, String item_desc, String item_date, String item_start_time, String item_end_time, String fee_for_member, String fee_for_nonmember, String venue, String ownerName, String item_owner, int item_position, String imageLink, String imgName, String parentkey) {
         this.item_name = item_name;

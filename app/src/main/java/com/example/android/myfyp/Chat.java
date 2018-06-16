@@ -211,7 +211,7 @@ public class Chat extends AppCompatActivity {
 
                     messageArea.setText("");
                     sendNotification();
-                } else if (messageText.equals(imgIdentity)) {
+                } else if (!messageText.equals("") && messageText.equals(imgIdentity)) {
                     imgUpload();
                     messageArea.setText("");
                 }

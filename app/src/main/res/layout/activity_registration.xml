@@ -16,6 +16,7 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:hint="Student ID"
+        android:background="@drawable/bordertext"
         android:inputType="number"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
@@ -32,6 +33,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
+        android:background="@drawable/bordertext"
         android:ems="10"
         android:hint="Nick Name"
         android:inputType="text"
@@ -48,6 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="7dp"
         android:layout_marginLeft="8dp"
+        android:background="@drawable/bordertext"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
@@ -68,12 +71,13 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
+        android:background="@drawable/buttonstyle"
         android:text="Register"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/UserCourse"
-        app:layout_constraintVertical_bias="0.736" />
+        app:layout_constraintVertical_bias="0.549" />
 
     <TextView
         android:id="@+id/tvUserLogin"
@@ -103,6 +107,7 @@
         android:ems="10"
         android:hint="Phone Number"
         android:inputType="number"
+        android:background="@drawable/bordertext"
         app:layout_constraintBottom_toTopOf="@+id/btnRegister"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
@@ -123,7 +128,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@mipmap/ic_launcher" />
+        app:srcCompat="@drawable/icon" />
 
     <Switch
         android:id="@+id/switch1"
@@ -190,6 +195,8 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:background="@drawable/bordertext"
+
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"

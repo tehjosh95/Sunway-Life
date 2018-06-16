@@ -54,14 +54,14 @@ public class List_of_successful extends AppCompatActivity {
         mUserDatabase = FirebaseDatabase.getInstance().getReference("join_list").child("members").child(firebaseAuth.getCurrentUser().getUid());
         mUserDatabase2 = FirebaseDatabase.getInstance().getReference("Users");
 
-        toolbar = (Toolbar) findViewById(R.id.toolbarMain);
-        toolbar.setTitle("Successfully joined");
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+//        toolbar = (Toolbar) findViewById(R.id.toolbarMain);
+//        toolbar.setTitle("Successfully joined");
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                finish();
+//            }
+//        });
 
         textReminder = findViewById(R.id.textReminder);
         mSearchField = (EditText) findViewById(R.id.search_field);

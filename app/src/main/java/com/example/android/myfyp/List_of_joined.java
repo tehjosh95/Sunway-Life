@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,7 +58,7 @@ public class List_of_joined extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_of_pending);
+        setContentView(R.layout.activity_list_of_event_club_successful);
         firebaseAuth = FirebaseAuth.getInstance();
         AllClubsList = new ArrayList<>();
         AllClubsList2 = new ArrayList<>();
@@ -67,6 +68,7 @@ public class List_of_joined extends AppCompatActivity {
         mUserDatabase2 = FirebaseDatabase.getInstance().getReference("Clubs");
 
         toolbar = (Toolbar) findViewById(R.id.toolbarMain);
+        toolbar.setVisibility(View.VISIBLE);
         toolbar.setTitle("Joined clubs");
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

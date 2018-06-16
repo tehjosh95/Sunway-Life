@@ -48,6 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:background="@drawable/bordertext"
             android:layout_marginBottom="8dp">
 
             <EditText
@@ -62,6 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:background="@drawable/bordertext"
             android:layout_marginBottom="8dp">
 
             <EditText
@@ -76,6 +78,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:background="@drawable/bordertext"
             android:layout_marginBottom="8dp">
 
             <EditText
@@ -90,6 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:background="@drawable/bordertext"
             android:layout_marginBottom="8dp">
 
             <EditText
@@ -104,6 +108,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:background="@drawable/bordertext"
             android:layout_marginBottom="8dp">
 
             <EditText
@@ -118,6 +123,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
+            android:background="@drawable/bordertext"
             android:layout_marginTop="8dp">
 
             <EditText
@@ -132,6 +138,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:background="@drawable/bordertext"
             android:layout_marginBottom="8dp">
 
             <EditText
@@ -145,6 +152,7 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/bordertext"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
 
@@ -164,6 +172,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:layout_marginTop="15dp"
+            android:background="@drawable/buttonstyle"
             android:text="UPDATE" />
 
         <android.support.design.widget.FloatingActionButton
@@ -172,6 +181,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
+            android:visibility="gone"
             android:src="@drawable/ic_home_black" />
 
 

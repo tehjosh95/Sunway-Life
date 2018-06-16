@@ -38,6 +38,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.roger.catloadinglibrary.CatLoadingView;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
@@ -70,6 +71,8 @@ public class AddClubs extends AppCompatActivity {
     private StorageReference storageRef;
     Toolbar toolbar;
     private String imageFileName;
+    CatLoadingView mView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +142,8 @@ public class AddClubs extends AppCompatActivity {
         btnUploadItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mView = new CatLoadingView();
+                mView.show(getSupportFragmentManager(), "");
                 uploadItem();
             }
         });
@@ -159,6 +164,7 @@ public class AddClubs extends AppCompatActivity {
     public void onSuccessfulSave() {
         Toast.makeText(AddClubs.this, "Successfully uploaded item.", Toast.LENGTH_LONG).show();
         btnUploadItem.setEnabled(true);
+        mView.dismiss();
         finish();
     }
 
