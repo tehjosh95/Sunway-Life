@@ -59,7 +59,7 @@ public class AddActivity extends AppCompatActivity {
     private EditText item_name, item_description, item_date, item_start_time, item_end_time, item_fee_member, item_fee_nonmember, item_venue;
     private static final String TAG = "AddActivity";
     private FloatingActionButton fab = null;
-    private String imgUrl;
+    private String imgUrl = "";
     private UserProfile userProfile;
     private DatabaseReference mUserRef;
     private Button btnLoadImage;
@@ -72,6 +72,7 @@ public class AddActivity extends AppCompatActivity {
     int hour = myCalendar.get(Calendar.HOUR_OF_DAY);
     int minute = myCalendar.get(Calendar.MINUTE);
     private String imageFileName;
+    int test = 1;
     CatLoadingView mView;
 
     @Override
@@ -111,8 +112,9 @@ public class AddActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                 myCalendar.set(Calendar.YEAR, i);
-                myCalendar.set(Calendar.MONTH, i2);
+                myCalendar.set(Calendar.MONTH, i1);
                 myCalendar.set(Calendar.DAY_OF_MONTH, i2);
+
                 updateLabel();
             }
         };
@@ -126,16 +128,10 @@ public class AddActivity extends AppCompatActivity {
         mUserRef = mUserRef.child("Item Information").child(mAuth.getCurrentUser().getUid());
         storageRef = storage.getReferenceFromUrl("gs://myfyp-25f5d.appspot.com/images");
 
-        final ProgressDialog progDialog = new ProgressDialog(AddActivity.this,
-                R.style.Theme_AppCompat_DayNight_NoActionBar);
-        progDialog.setIndeterminate(true);
-        progDialog.setMessage("Loading user data...");
-        progDialog.show();
         ValueEventListener userListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 userProfile = dataSnapshot.getValue(UserProfile.class);
-                progDialog.dismiss();
             }
 
             @Override
@@ -152,6 +148,8 @@ public class AddActivity extends AppCompatActivity {
             public void onClick(View view) {
                 mView = new CatLoadingView();
                 mView.show(getSupportFragmentManager(), "");
+                mView.setCanceledOnTouchOutside(false);
+                mView.setCancelable(false);
                 uploadItem();
             }
         });
@@ -209,13 +207,27 @@ public class AddActivity extends AppCompatActivity {
     }
 
     private void updateLabel() {
-        String myFormat = "MM/dd/yy"; //In which you need put here
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.ENGLISH);
+        String myFormat = "dd/MM/yy";
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
         item_date.setText(sdf.format(myCalendar.getTime()));
     }
 
     private void uploadItem() {
-        this.uploadImageToFirebase();
+        String name = item_name.getText().toString().trim();
+        String desc = item_description.getText().toString().trim();
+        String date = item_date.getText().toString().trim();
+        String starttime = item_start_time.getText().toString().trim();
+        String endtime = item_end_time.getText().toString().trim();
+        String memberfee = item_fee_member.getText().toString().trim();
+        String nonmemberfee = item_fee_nonmember.getText().toString().trim();
+        String venue = item_venue.getText().toString().trim();
+
+        if (validate(name, desc, date, starttime, endtime, memberfee, nonmemberfee, venue) && test == 0) {
+            this.uploadImageToFirebase();
+        } else{
+        mView.dismiss();
+        Toast.makeText(AddActivity.this, "Please fill in all required data", Toast.LENGTH_SHORT).show();
+    }
 
     }
 
@@ -225,56 +237,6 @@ public class AddActivity extends AppCompatActivity {
         mView.dismiss();
         finish();
     }
-
-//    private boolean isInputInvalid(String name, String place, String price) {
-//        boolean inputInvalid = false;
-//
-//        if (name.isEmpty()) {
-//            itemName.setError("Please enter an item name.");
-//            inputInvalid = true;
-//        } else {
-//            itemName.setError(null);
-//        }
-//        if (place.isEmpty()) {
-//            itemPlace.setError("Please fill in a short description of the item.");
-//            inputInvalid = true;
-//        } else {
-//            itemPlace.setError(null);
-//        }
-//        if (price.isEmpty()) {
-//            itemPrice.setError("Please explain how to collect the items.");
-//            inputInvalid = true;
-//        } else {
-//            itemPrice.setError(null);
-//        }
-//        return inputInvalid;
-//    }
-
-//    private boolean isNumeric(String s) {
-//        try {
-//            Long.parseLong(s);
-//        } catch (NumberFormatException e) {
-//            return false;
-//        } catch (Exception e) {
-//            return false;
-//        }
-//        return true;
-//    }
-
-//    private void updateView(clubModel ClubModel) {
-//        if (ClubModel != null) {
-//
-//            imageView.setVisibility(View.VISIBLE);
-//            itemName.setText(ClubModel.getItem_name());
-//            itemPlace.setText(ClubModel.getItem_place());
-//            itemPrice.setText(ClubModel.getItem_price());
-//        }
-//    }
-//
-//    public void onFailedSave() {
-//        Toast.makeText(AddActivity.this, "Item is not uploaded.Please try again.", Toast.LENGTH_LONG).show();
-//        btnUploadItem.setEnabled(true);
-//    }
 
     public void handleChooseImage(View view) {
         Intent pickerPhotoIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -293,13 +255,13 @@ public class AddActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     Uri selectedImage = imageReturnedIntent.getData();
                     this.imageView.setImageURI(selectedImage);
+                    test = 0;
                 }
                 break;
         }
     }
 
     private void uploadImageToFirebase() {
-        // Get the data from an ImageView as bytes
         this.imageView.setDrawingCacheEnabled(true);
         this.imageView.buildDrawingCache();
 
@@ -321,11 +283,9 @@ public class AddActivity extends AppCompatActivity {
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
                 imgUrl = downloadUrl.toString();
                 Log.d("*****url", "" + imgUrl);
-
 
                 String name = item_name.getText().toString().trim();
                 String desc = item_description.getText().toString().trim();
@@ -341,46 +301,44 @@ public class AddActivity extends AppCompatActivity {
                 int position = 0;
                 Log.d("*****url1", "" + imgUrl);
 
-//        if (isInputInvalid(name, place, price)) {
-//            onFailedSave();
-//        } else {
-                btnUploadItem.setEnabled(false);
-                ClubModel.setItem_name(name);
-                ClubModel.setItem_desc(desc);
-                ClubModel.setItem_date(date);
-                ClubModel.setItem_start_time(starttime);
-                ClubModel.setItem_end_time(endtime);
-                ClubModel.setFee_for_member(memberfee);
-                ClubModel.setFee_for_nonmember(nonmemberfee);
-                ClubModel.setVenue(venue);
+                    btnUploadItem.setEnabled(false);
+                    ClubModel.setItem_name(name);
+                    ClubModel.setItem_desc(desc);
+                    ClubModel.setItem_date(date);
+                    ClubModel.setItem_start_time(starttime);
+                    ClubModel.setItem_end_time(endtime);
+                    ClubModel.setFee_for_member(memberfee);
+                    ClubModel.setFee_for_nonmember(nonmemberfee);
+                    ClubModel.setVenue(venue);
 
-                ClubModel.setItem_owner(owner);
-                ClubModel.setItem_position(position);
-                ClubModel.setImageLink(imgUrl);
-                ClubModel.setImgName(imageFileName);
-                ClubModel.setParentkey("");
-                ClubModel.setOwnerName(ownername);
+                    ClubModel.setItem_owner(owner);
+                    ClubModel.setItem_position(position);
+                    ClubModel.setImageLink(imgUrl);
+                    ClubModel.setImgName(imageFileName);
+                    ClubModel.setParentkey("");
+                    ClubModel.setOwnerName(ownername);
 
-                final ProgressDialog progDialog = new ProgressDialog(AddActivity.this,
-                        R.style.Theme_AppCompat_DayNight_NoActionBar);
+                    final clubModel ClubModel = new clubModel(name, desc, date, starttime, endtime, memberfee, nonmemberfee, venue, ownername, owner, position, imgUrl, imageFileName, "");
 
-                progDialog.setIndeterminate(true);
-                progDialog.setMessage("Uploading....");
-                progDialog.show();
-                final clubModel ClubModel = new clubModel(name, desc, date, starttime, endtime, memberfee, nonmemberfee, venue, ownername, owner, position, imgUrl, imageFileName, "");
-
-                Log.d("&&&&&&&uid", "" + owner);
-                final Runnable uploadTask = new Runnable() {
-                    @Override
-                    public void run() {
-                        mDataRef.child("Item Information").push().setValue(ClubModel);
-                        progDialog.dismiss();
-                    }
-                };
-                new Thread(uploadTask).start();
-                onSuccessfulSave();
-                Log.d("*****url2", "" + imgUrl);
+                    Log.d("&&&&&&&uid", "" + owner);
+                    final Runnable uploadTask = new Runnable() {
+                        @Override
+                        public void run() {
+                            mDataRef.child("Item Information").push().setValue(ClubModel);
+                        }
+                    };
+                    new Thread(uploadTask).start();
+                    onSuccessfulSave();
+                    Log.d("*****url2", "" + imgUrl);
             }
         });
+    }
+
+    public Boolean validate(String i1, String i2, String i3, String i4, String i5, String i6, String i7, String i8){
+        if(i1.isEmpty() || i2.isEmpty() || i3.isEmpty() || i4.isEmpty() || i5.isEmpty() || i6.isEmpty() || i7.isEmpty() || i8.isEmpty()){
+            return false;
+        }else{
+            return true;
+        }
     }
 }

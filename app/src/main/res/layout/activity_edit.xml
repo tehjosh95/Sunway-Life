@@ -85,6 +85,7 @@
                 android:id="@+id/item_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusableInTouchMode="false"
                 android:hint="item date"
                 android:inputType="text" />
         </android.support.design.widget.TextInputLayout>
@@ -100,6 +101,7 @@
                 android:id="@+id/item_start_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusableInTouchMode="false"
                 android:hint="start time"
                 android:inputType="text" />
         </android.support.design.widget.TextInputLayout>
@@ -115,6 +117,7 @@
                 android:id="@+id/item_end_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusableInTouchMode="false"
                 android:hint="end time"
                 android:inputType="text" />
         </android.support.design.widget.TextInputLayout>

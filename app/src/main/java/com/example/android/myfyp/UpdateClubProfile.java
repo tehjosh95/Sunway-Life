@@ -118,6 +118,8 @@ public class UpdateClubProfile extends AppCompatActivity {
             public void onClick(View view) {
                 mView = new CatLoadingView();
                 mView.show(getSupportFragmentManager(), "");
+                mView.setCanceledOnTouchOutside(false);
+                mView.setCancelable(false);
                 uploadItem();
             }
         });
@@ -134,10 +136,20 @@ public class UpdateClubProfile extends AppCompatActivity {
     }
 
     private void uploadItem() {
-        this.uploadImageToFirebase();
+        String name = newUserName.getText().toString();
+        String adv = newUserAdvisor.getText().toString();
+        String email = newUserEmail.getText().toString();
+        String desc = newUserDesc.getText().toString();
+        String type = userType;
+
+        if(validate(name, adv, email, desc, type)) {
+            this.uploadImageToFirebase();
+        }else{
+            mView.dismiss();
+            Toast.makeText(UpdateClubProfile.this, "Please fill in all required data", Toast.LENGTH_SHORT).show();
+        }
 
     }
-//    }
 
     public void onSuccessfulSave() {
         Toast.makeText(UpdateClubProfile.this, "Successfully uploaded item.", Toast.LENGTH_LONG).show();
@@ -192,11 +204,9 @@ public class UpdateClubProfile extends AppCompatActivity {
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
                 imgUrl = downloadUrl.toString();
                 Log.d("*****url", "" + imgUrl);
-
 
                 final String name = newUserName.getText().toString();
                 String adv = newUserAdvisor.getText().toString();
@@ -208,13 +218,6 @@ public class UpdateClubProfile extends AppCompatActivity {
 
                 save.setEnabled(false);
                 listOfClubs.setImage(imgUrl);
-
-//                final ProgressDialog progDialog = new ProgressDialog(UpdateClubProfile.this,
-//                        R.style.Theme_AppCompat_DayNight_NoActionBar);
-//
-//                progDialog.setIndeterminate(true);
-//                progDialog.setMessage("Uploading....");
-//                progDialog.show();
 
                 final ListOfClubs listOfClubs = new ListOfClubs(name, imgUrl, adv, desc, type, myuid, email);
 
@@ -239,8 +242,8 @@ public class UpdateClubProfile extends AppCompatActivity {
                 mDataRef2.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        for (DataSnapshot postsnap : dataSnapshot.getChildren()){
-                            if(postsnap.child("others").getValue(String.class).equals(firebaseAuth.getCurrentUser().getDisplayName())){
+                        for (DataSnapshot postsnap : dataSnapshot.getChildren()) {
+                            if (postsnap.child("others").getValue(String.class).equals(firebaseAuth.getCurrentUser().getDisplayName())) {
                                 mDataRef2.child(postsnap.getKey()).child("others").setValue(name);
                             }
                         }
@@ -265,7 +268,8 @@ public class UpdateClubProfile extends AppCompatActivity {
                             }
                         };
                         new Thread(uploadTask).start();
-                        onSuccessfulSave();                    }
+                        onSuccessfulSave();
+                    }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
@@ -274,5 +278,12 @@ public class UpdateClubProfile extends AppCompatActivity {
                 });
             }
         });
+    }
+    public Boolean validate(String i1, String i2, String i3, String i4, String i5){
+        if(i1.isEmpty() || i2.isEmpty() || i3.isEmpty() || i4.isEmpty() || i5.isEmpty()){
+            return false;
+        }else{
+            return true;
+        }
     }
 }

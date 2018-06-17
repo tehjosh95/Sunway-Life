@@ -5,18 +5,20 @@ public class UserProfile {
     public String studentName;
     public String studentCourse;
     public String studentPhone;
-
     public String userType;
+
+    public String imgurl;
 
     public UserProfile() {
     }
 
-    public UserProfile(String studentID, String studentName, String studentCourse, String studentPhone, String userType) {
+    public UserProfile(String studentID, String studentName, String studentCourse, String studentPhone, String userType, String imgurl) {
         this.studentID = studentID;
         this.studentName = studentName;
         this.studentCourse = studentCourse;
         this.studentPhone = studentPhone;
         this.userType = userType;
+        this.imgurl = imgurl;
     }
 
     public String getStudentID() { return studentID; }
@@ -38,4 +40,8 @@ public class UserProfile {
     public String getUserType() { return userType; }
 
     public void setUserType(String userType) { this.userType = userType; }
+
+    public String getImgurl() { return imgurl; }
+
+    public void setImgurl(String imgurl) { this.imgurl = imgurl; }
 }

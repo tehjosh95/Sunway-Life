@@ -48,17 +48,21 @@ public class UpdatePassword extends AppCompatActivity {
             public void onClick(View view) {
 
                 String userPasswordNew = newPassword.getText().toString().trim();
-                firebaseUser.updatePassword(userPasswordNew).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(UpdatePassword.this, "Password Changed", Toast.LENGTH_SHORT).show();
-                            finish();
-                        } else {
-                            Toast.makeText(UpdatePassword.this, "Password Update Failed", Toast.LENGTH_SHORT).show();
+                if(!newPassword.equals("")) {
+                    firebaseUser.updatePassword(userPasswordNew).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(UpdatePassword.this, "Password Changed", Toast.LENGTH_SHORT).show();
+                                finish();
+                            } else {
+                                Toast.makeText(UpdatePassword.this, "Password Update Failed", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
+                }else{
+                    Toast.makeText(UpdatePassword.this, "Please fill in all required data", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

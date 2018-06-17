@@ -107,7 +107,7 @@ public class SecondActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.rvv);
         toolbar = (Toolbar) findViewById(R.id.toolbarMain);
-        toolbar.setTitle("Club and Societies");
+        toolbar.setTitle("Home");
 
         clubModelList = new ArrayList<>();
 
@@ -181,6 +181,8 @@ public class SecondActivity extends AppCompatActivity {
 
         mView = new CatLoadingView();
         mView.show(getSupportFragmentManager(), "");
+        mView.setCanceledOnTouchOutside(false);
+        mView.setCancelable(false);
 
         mDataRef3.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -189,6 +191,7 @@ public class SecondActivity extends AppCompatActivity {
                     AccountHeader headerResult = new AccountHeaderBuilder()
                             .withActivity(SecondActivity.this)
                             .withHeaderBackground(R.drawable.header)
+                            .withProfileImagesVisible(false)
                             .addProfiles(
                                     new ProfileDrawerItem().withName(firebaseAuth.getCurrentUser().getDisplayName()).withEmail(firebaseAuth.getCurrentUser().getEmail())
 //                                .withIcon(getResources().getDrawable(R.drawable.profile))
@@ -200,10 +203,9 @@ public class SecondActivity extends AppCompatActivity {
                                 }
                             })
                             .build();
-
                     PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName("Profile");
                     PrimaryDrawerItem item2 = new PrimaryDrawerItem().withIdentifier(2).withName("Inbox");
-                    PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(3).withName("List of Clubs with search");
+                    PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(3).withName("All Clubs");
                     PrimaryDrawerItem item4 = new PrimaryDrawerItem().withIdentifier(4).withName("Clubs joined");
                     PrimaryDrawerItem item5 = new PrimaryDrawerItem().withIdentifier(4).withName("Events joined");
                     PrimaryDrawerItem item6 = new PrimaryDrawerItem().withIdentifier(5).withName("Logout");
@@ -259,6 +261,7 @@ public class SecondActivity extends AppCompatActivity {
                     AccountHeader headerResult = new AccountHeaderBuilder()
                             .withActivity(SecondActivity.this)
                             .withHeaderBackground(R.drawable.header)
+                            .withProfileImagesVisible(false)
                             .addProfiles(
                                     new ProfileDrawerItem().withName(firebaseAuth.getCurrentUser().getDisplayName()).withEmail(firebaseAuth.getCurrentUser().getEmail())
 //                                .withIcon(getResources().getDrawable(R.drawable.profile))
@@ -273,9 +276,10 @@ public class SecondActivity extends AppCompatActivity {
 
                     PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName("Profile");
                     PrimaryDrawerItem item2 = new PrimaryDrawerItem().withIdentifier(2).withName("Inbox");
-                    PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(4).withName("Edit and view posted");
-                    PrimaryDrawerItem item4 = new PrimaryDrawerItem().withIdentifier(3).withName("List of Clubs with search");
-                    PrimaryDrawerItem item5 = new PrimaryDrawerItem().withIdentifier(5).withName("Logout");
+                    PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(3).withName("Event posted");
+                    PrimaryDrawerItem item4 = new PrimaryDrawerItem().withIdentifier(4).withName("All Clubs");
+                    PrimaryDrawerItem item5 = new PrimaryDrawerItem().withIdentifier(5).withName("All Students");
+                    PrimaryDrawerItem item6 = new PrimaryDrawerItem().withIdentifier(6).withName("Logout");
 
                     Drawer result = new DrawerBuilder()
                             .withActivity(SecondActivity.this)
@@ -286,9 +290,10 @@ public class SecondActivity extends AppCompatActivity {
                                     item2,
                                     item3,
                                     item4,
+                                    item5,
                                     new DividerDrawerItem(),
-                                    item5
-                            )
+                                    item6
+                                    )
                             .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                                 @Override
                                 public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
@@ -306,8 +311,11 @@ public class SecondActivity extends AppCompatActivity {
                                             startActivity(new Intent(SecondActivity.this, ListOfClubsActivity.class));
                                             break;
                                         case 5:
+                                            startActivity(new Intent(SecondActivity.this, Users.class));
                                             break;
                                         case 6:
+                                            break;
+                                        case 7:
                                             Logout();
                                             break;
                                     }
@@ -322,6 +330,7 @@ public class SecondActivity extends AppCompatActivity {
                     AccountHeader headerResult = new AccountHeaderBuilder()
                             .withActivity(SecondActivity.this)
                             .withHeaderBackground(R.drawable.header)
+                            .withProfileImagesVisible(false)
                             .addProfiles(
                                     new ProfileDrawerItem().withName(firebaseAuth.getCurrentUser().getDisplayName()).withEmail(firebaseAuth.getCurrentUser().getEmail())
 //                                .withIcon(getResources().getDrawable(R.drawable.profile))
@@ -336,8 +345,8 @@ public class SecondActivity extends AppCompatActivity {
 
                     PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName("Profile");
                     PrimaryDrawerItem item2 = new PrimaryDrawerItem().withIdentifier(2).withName("Inbox");
-                    PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(3).withName("Edit and view posted");
-                    PrimaryDrawerItem item4 = new PrimaryDrawerItem().withIdentifier(4).withName("List of Clubs with search");
+                    PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(3).withName("Event posted");
+                    PrimaryDrawerItem item4 = new PrimaryDrawerItem().withIdentifier(4).withName("All Clubs");
                     PrimaryDrawerItem item5 = new PrimaryDrawerItem().withIdentifier(5).withName("Members");
                     PrimaryDrawerItem item6 = new PrimaryDrawerItem().withIdentifier(6).withName("Events");
                     PrimaryDrawerItem item7 = new PrimaryDrawerItem().withIdentifier(7).withName("Logout");

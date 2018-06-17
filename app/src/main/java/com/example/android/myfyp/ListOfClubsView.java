@@ -85,6 +85,11 @@ public class ListOfClubsView extends AppCompatActivity {
         final String Desc = startingIntent.getStringExtra("isdesc");
         final String Myuid = startingIntent.getStringExtra("isuid");
         final String email = startingIntent.getStringExtra("isemail");
+        final int fromchat = startingIntent.getIntExtra("fromchat", 0);
+
+        if(fromchat == 1){
+            EditButton.setVisibility(View.GONE);
+        }
 
         mDataRef5.addValueEventListener(new ValueEventListener() {
             @Override

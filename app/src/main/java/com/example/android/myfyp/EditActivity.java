@@ -1,6 +1,8 @@
 package com.example.android.myfyp;
 
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -12,9 +14,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -32,6 +36,8 @@ import com.google.firebase.storage.UploadTask;
 import com.roger.catloadinglibrary.CatLoadingView;
 
 import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class EditActivity extends AppCompatActivity {
     private clubModel ClubModel = new clubModel();
@@ -54,6 +60,9 @@ public class EditActivity extends AppCompatActivity {
     private String theKey;
     CatLoadingView mView;
     Toolbar toolbar;
+    Calendar myCalendar = Calendar.getInstance();
+    int hour = myCalendar.get(Calendar.HOUR_OF_DAY);
+    int minute = myCalendar.get(Calendar.MINUTE);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +124,17 @@ public class EditActivity extends AppCompatActivity {
         mUserRef = mUserRef.child("Item Information").child(mAuth.getCurrentUser().getUid());
         storageRef = storage.getReferenceFromUrl("gs://myfyp-25f5d.appspot.com/images");
 
+        final DatePickerDialog.OnDateSetListener dates = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                myCalendar.set(Calendar.YEAR, i);
+                myCalendar.set(Calendar.MONTH, i1);
+                myCalendar.set(Calendar.DAY_OF_MONTH, i2);
+
+                updateLabel();
+            }
+        };
+
         ValueEventListener userListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -135,6 +155,8 @@ public class EditActivity extends AppCompatActivity {
             public void onClick(View view) {
                 mView = new CatLoadingView();
                 mView.show(getSupportFragmentManager(), "");
+                mView.setCanceledOnTouchOutside(false);
+                mView.setCancelable(false);
                 uploadItem();
             }
         });
@@ -145,11 +167,74 @@ public class EditActivity extends AppCompatActivity {
                 startActivity(new Intent(EditActivity.this, SecondActivity.class));
             }
         });
+
+        item_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new DatePickerDialog(EditActivity.this, dates, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+        item_start_time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(EditActivity.this,
+                        new TimePickerDialog.OnTimeSetListener() {
+
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay,
+                                                  int minute) {
+
+                                item_start_time.setText(hourOfDay + ":" + minute);
+                            }
+                        }, hour, minute, false);
+                timePickerDialog.show();
+            }
+        });
+
+        item_end_time.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(EditActivity.this,
+                        new TimePickerDialog.OnTimeSetListener() {
+
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay,
+                                                  int minute) {
+
+                                item_end_time.setText(hourOfDay + ":" + minute);
+                            }
+                        }, hour, minute, false);
+                timePickerDialog.show();
+            }
+        });
+
+    }
+
+    private void updateLabel() {
+        String myFormat = "dd/MM/yy";
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat);
+        item_date.setText(sdf.format(myCalendar.getTime()));
     }
 
     private void uploadItem() {
-        this.uploadImageToFirebase();
+        String name = item_name.getText().toString().trim();
+        String desc = item_description.getText().toString().trim();
+        String date = item_date.getText().toString().trim();
+        String starttime = item_start_time.getText().toString().trim();
+        String endtime = item_end_time.getText().toString().trim();
+        String feeformember = item_fee_member.getText().toString().trim();
+        String feefornonmember = item_fee_nonmember.getText().toString().trim();
+        String venue = item_venue.getText().toString().trim();
 
+        if (validate(name, desc, date, starttime, endtime, feeformember, feefornonmember, venue)) {
+            this.uploadImageToFirebase();
+        } else{
+            mView.dismiss();
+            Toast.makeText(EditActivity.this, "Please fill in all required data", Toast.LENGTH_SHORT).show();
+        }
     }
 //    }
 
@@ -206,11 +291,9 @@ public class EditActivity extends AppCompatActivity {
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
                 imgUrl = downloadUrl.toString();
                 Log.d("*****url", "" + imgUrl);
-
 
                 String name = item_name.getText().toString().trim();
                 String desc = item_description.getText().toString().trim();
@@ -226,9 +309,6 @@ public class EditActivity extends AppCompatActivity {
                 int position = 0;
                 Log.d("*****url1", "" + imgUrl);
 
-//        if (isInputInvalid(name, place, price)) {
-//            onFailedSave();
-//        } else {
                 editButton.setEnabled(false);
                 ClubModel.setItem_name(name);
                 ClubModel.setItem_desc(desc);
@@ -266,5 +346,12 @@ public class EditActivity extends AppCompatActivity {
                 Log.d("*****url2", "" + imgUrl);
             }
         });
+    }
+    public Boolean validate(String i1, String i2, String i3, String i4, String i5, String i6, String i7, String i8){
+        if(i1.isEmpty() || i2.isEmpty() || i3.isEmpty() || i4.isEmpty() || i5.isEmpty() || i6.isEmpty() || i7.isEmpty() || i8.isEmpty()){
+            return false;
+        }else{
+            return true;
+        }
     }
 }

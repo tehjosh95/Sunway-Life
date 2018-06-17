@@ -1,150 +1,168 @@
 package com.example.android.myfyp;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class Users extends AppCompatActivity {
     ListView usersList;
-    TextView noUsersText;
     ArrayList<String> al = new ArrayList<>();
     ArrayList<String> al2 = new ArrayList<>();
     int totalUsers = 0;
     ProgressDialog pd;
-    private DatabaseReference mDataRef;
+    private DatabaseReference mDataRef, mDataRef2;
     private FirebaseDatabase mDatabase;
     private FirebaseAuth firebaseAuth;
+    private EditText mSearchField;
+    private ImageButton mSearchBtn;
+    Toolbar toolbar;
+    private TextView remindertext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users);
 
+        remindertext = findViewById(R.id.remindertext);
         mDatabase = FirebaseDatabase.getInstance();
-        mDataRef = mDatabase.getReference();
+        mDataRef = FirebaseDatabase.getInstance().getReference("Users");
         firebaseAuth = FirebaseAuth.getInstance();
-
+        mSearchField = (EditText) findViewById(R.id.search_field);
+        mSearchBtn = (ImageButton) findViewById(R.id.search_btn);
+        mSearchBtn.setVisibility(View.GONE);
         usersList = (ListView) findViewById(R.id.usersList);
-        noUsersText = (TextView) findViewById(R.id.noUsersText);
+        mDataRef.addValueEventListener(valueEventListener);
 
-        pd = new ProgressDialog(Users.this);
-        pd.setMessage("Loading...");
-        pd.show();
-
-        String url = "https://myfyp-25f5d.firebaseio.com/Users.json";
-
-        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+        toolbar = (Toolbar) findViewById(R.id.toolbarMain);
+        toolbar.setTitle("List of students");
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public void onResponse(String s) {
-                doOnSuccess(s);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                System.out.println("" + volleyError);
+            public void onClick(View v) {
+                finish();
             }
         });
 
-        RequestQueue rQueue = Volley.newRequestQueue(Users.this);
-        rQueue.add(request);
+        mSearchField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                mSearchBtn.performClick();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
+
+        mSearchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String searchText = mSearchField.getText().toString();
+
+                if (searchText.length() > 0) {
+                    firebaseUserSearch(searchText);
+                } else {
+                    al.clear();
+                    mDataRef.addListenerForSingleValueEvent(valueEventListener);
+                }
+            }
+        });
 
         usersList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                mDataRef2 = FirebaseDatabase.getInstance().getReference("Users").child(al2.get(position));
+                mDataRef2.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
+                        Intent intent = new Intent(Users.this, ProfileActivity.class);
+                        intent.putExtra("isstudentid", userProfile.getStudentID());
+                        intent.putExtra("isname", userProfile.getStudentName());
+                        intent.putExtra("iscourse", userProfile.getStudentCourse());
+                        intent.putExtra("isphone", userProfile.getStudentPhone());
+                        intent.putExtra("istype", userProfile.getUserType());
+                        intent.putExtra("isid", al2.get(position));
+                        intent.putExtra("fromchat", 0);
+                        intent.putExtra("isurl", userProfile.getImgurl());
+                        startActivity(intent);
+                    }
 
-//                mDataRef = mDataRef.child("Users").child(firebaseAuth.getCurrentUser().getUid());
-//
-//                mDataRef.addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                        UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
-//                        UserDetails.username = userProfile.getUserName();
-//
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//                        Toast.makeText(Users.this, databaseError.getCode(), Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-                UserDetails.username = encodeUserEmail(user.getUid());
-                UserDetails.chatWith = encodeUserEmail(al.get(position));
-                UserDetails.name = (al2.get(position));
-                finish();
-                startActivity(new Intent(Users.this, Chat.class));
+                    }
+                });
             }
         });
     }
 
-    public void doOnSuccess(String s) {
-        try {
-            JSONObject obj = new JSONObject(s);
-            String currentuser = firebaseAuth.getCurrentUser().getUid().toString();
-
-            Iterator i = obj.keys();
-            String key = "";
-
-            while (i.hasNext()) {
-                key = i.next().toString();
-                JSONObject user = obj.getJSONObject(key);
-
-                if (!key.equals(currentuser)) {
-                    al.add(key);
-                    al2.add(user.getString("userName"));
-                }
-                totalUsers++;
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        if (totalUsers <= 1) {
-            noUsersText.setVisibility(View.VISIBLE);
-            usersList.setVisibility(View.GONE);
+    private void firebaseUserSearch(String searchText) {
+        al.clear();
+        if (!searchText.equals("")) {
+            Query firebaseSearchQuery = mDataRef.orderByChild("studentID").startAt(searchText).endAt(searchText + "\uf8ff");
+            firebaseSearchQuery.addListenerForSingleValueEvent(valueEventListener);
         } else {
-            noUsersText.setVisibility(View.GONE);
-            usersList.setVisibility(View.VISIBLE);
-            usersList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, al2));
+            Query firebaseSearchQuery = mDataRef;
+            firebaseSearchQuery.addListenerForSingleValueEvent(valueEventListener);
         }
-        pd.dismiss();
     }
 
-    static String encodeUserEmail(String userEmail) {
-        return userEmail.replace(".", ",");
-    }
+    ValueEventListener valueEventListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            al.clear();
+            al2.clear();
+            for (DataSnapshot postsnapshot : dataSnapshot.getChildren()) {
+                UserProfile userProfile = postsnapshot.getValue(UserProfile.class);
+                Log.d("***usertype", "" + userProfile.getUserType());
+                Log.d("***dataSnapshot", "" + dataSnapshot.getKey());
+                Log.d("***postsnapshot", "" + postsnapshot.getKey());
 
-    static String decodeUserEmail(String userEmail) {
-        return userEmail.replace(",", ".");
-    }
+                if(userProfile.getUserType().equals("student")){
+                    al.add(userProfile.getStudentID());
+                    al2.add(postsnapshot.getKey());
+                }
+            }
+            usersList.setAdapter(new ArrayAdapter<String>(Users.this, android.R .layout.simple_list_item_1, al));
+            if (al.size() > 0){
+                usersList.setVisibility(View.VISIBLE);
+                remindertext.setVisibility(View.GONE);
+            }else{
+                remindertext.setVisibility(View.VISIBLE);
+                usersList.setVisibility(View.GONE);
+            }
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
 }

@@ -113,7 +113,7 @@ public class Inbox extends AppCompatActivity {
 
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(com.example.android.myfyp.Inbox.this);
                 // Setting Dialog Title
-                alertDialog.setTitle("Delete?");
+                alertDialog.setTitle("Clear history?");
                 alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -129,7 +129,7 @@ public class Inbox extends AppCompatActivity {
                         String delete2 = UserDetails.chatWith + "_" + UserDetails.username;
                         Log.d("****delete", "" + delete);
                         mDataRef.child(delete).removeValue();
-                        mDataRef.child(delete2).removeValue();
+//                        mDataRef.child(delete2).removeValue();
                     }
                 });
 

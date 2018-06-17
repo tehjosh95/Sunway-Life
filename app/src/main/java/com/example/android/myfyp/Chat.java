@@ -16,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -82,6 +83,7 @@ public class Chat extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
     private String imageFileName;
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +91,14 @@ public class Chat extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         chatname = (TextView) findViewById(R.id.chatname);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbarMain);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         if (savedInstanceState != null) {
             UserDetails.username = savedInstanceState.getString(STATE_USERNAME);
@@ -148,6 +158,8 @@ public class Chat extends AppCompatActivity {
                             intent.putExtra("isphone", userProfile.getStudentPhone());
                             intent.putExtra("istype", userProfile.getUserType());
                             intent.putExtra("isid", 0);
+                            intent.putExtra("fromchat", 1);
+                            intent.putExtra("isurl", userProfile.getImgurl());
                             startActivity(intent);
                         }else{
                             mDataRef2.addValueEventListener(new ValueEventListener() {
@@ -162,6 +174,7 @@ public class Chat extends AppCompatActivity {
                                         intent.putExtra("isdesc", listOfClubs.getDesc());
                                         intent.putExtra("isimg", listOfClubs.getImage());
                                         intent.putExtra("isuid", listOfClubs.getMyUid());
+                                        intent.putExtra("fromchat", 1);
                                         startActivity(intent);
                                     }
                                 }
@@ -430,7 +443,6 @@ public class Chat extends AppCompatActivity {
                     }
                     String send_email;
 
-                    //This is a Simple Logic to Send Notification different Device Programmatically....
                     send_email = UserDetails.chatWith;
                     Log.d("******************", "" + send_email);
                     try {

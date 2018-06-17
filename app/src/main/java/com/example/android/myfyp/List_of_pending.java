@@ -64,15 +64,6 @@ public class List_of_pending extends AppCompatActivity {
         mUserDatabase = FirebaseDatabase.getInstance().getReference("join_list").child("members").child(firebaseAuth.getCurrentUser().getUid());
         mUserDatabase2 = FirebaseDatabase.getInstance().getReference("Users");
 
-//        toolbar = (Toolbar) findViewById(R.id.toolbarMain);
-//        toolbar.setTitle("Pending joined");
-//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                finish();
-//            }
-//        });
-
         textReminder = findViewById(R.id.textReminder);
         mSearchField = (EditText) findViewById(R.id.search_field);
         mSearchBtn = (ImageButton) findViewById(R.id.search_btn);
@@ -112,7 +103,6 @@ public class List_of_pending extends AppCompatActivity {
     }
 
     private void firebaseUserSearch(String searchText) {
-//        Toast.makeText(ListOfClubsActivity.this, "Started Search", Toast.LENGTH_LONG).show();
         AllClubsList.clear();
         if (!searchText.equals("")) {
             Query firebaseSearchQuery = mUserDatabase.orderByChild("myname").startAt(searchText).endAt(searchText + "\uf8ff");
@@ -178,6 +168,8 @@ public class List_of_pending extends AppCompatActivity {
                     intent.putExtra("isphone", userProfile.getStudentPhone());
                     intent.putExtra("istype", userProfile.getUserType());
                     intent.putExtra("isid", key);
+                    intent.putExtra("fromchat", 0);
+                    intent.putExtra("isurl", userProfile.getImgurl());
                     startActivity(intent);
                 }
 

@@ -160,12 +160,14 @@ public class List_of_successful extends AppCompatActivity {
                     UserProfile userProfile = AllUsers.get(position);
                     String key = profilekey.get(position);
                     Intent intent = new Intent(List_of_successful.this, ProfileActivity.class);
-                    intent.putExtra("isid", userProfile.getStudentName());
+                    intent.putExtra("isstudentid", userProfile.getStudentID());
                     intent.putExtra("isname", userProfile.getStudentName());
                     intent.putExtra("iscourse", userProfile.getStudentCourse());
                     intent.putExtra("isphone", userProfile.getStudentPhone());
                     intent.putExtra("istype", userProfile.getUserType());
                     intent.putExtra("isid", key);
+                    intent.putExtra("fromchat", 0);
+                    intent.putExtra("isurl", userProfile.getImgurl());
                     startActivity(intent);
                 }
 

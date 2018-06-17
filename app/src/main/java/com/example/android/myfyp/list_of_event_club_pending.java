@@ -172,6 +172,8 @@ public class list_of_event_club_pending extends AppCompatActivity {
                     intent.putExtra("isphone", userProfile.getStudentPhone());
                     intent.putExtra("istype", userProfile.getUserType());
                     intent.putExtra("isid", key);
+                    intent.putExtra("fromchat", 0);
+                    intent.putExtra("isurl", userProfile.getImgurl());
                     startActivity(intent);
                 }
 

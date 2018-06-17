@@ -90,6 +90,6 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="82dp"
-            android:text="Haven't join any clubs yet" />
+            android:text="Nothing here!" />
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

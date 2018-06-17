@@ -76,6 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:backgroundTint="@color/lightorangedark"
             app:srcCompat="@drawable/ic_add_black"
             app:fabSize="mini"/>
     </LinearLayout>
@@ -104,6 +105,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:backgroundTint="@color/lightorangedark"
             app:srcCompat="@drawable/ic_add_black"
             app:fabSize="mini"/>
     </LinearLayout>
@@ -125,8 +127,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:gravity="center_vertical"
+            android:backgroundTint="@color/lightorangedark"
             app:srcCompat="@drawable/ic_add_black"
-            app:fabSize="normal"/>
+            app:fabSize="normal"
+            />
     </LinearLayout>
 
 

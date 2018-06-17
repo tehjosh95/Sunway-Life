@@ -106,10 +106,10 @@ public class ViewActivity extends AppCompatActivity {
                     UserProfile userProfile = dataSnapshot.child(myid).getValue(UserProfile.class);
                     if (userProfile.getUserType().equals("student")) {
                         EditButton.setVisibility(View.GONE);
-                    } else if(userProfile.getUserType().equals("admin") && Owner.equals(myid)){
+                    } else if(userProfile.getUserType().equals("admin") && parentkey.equals("")){
                         btnchat.setVisibility(View.GONE);
                         join.setVisibility(View.GONE);
-                    }else if(userProfile.getUserType().equals("admin") && !Owner.equals(myid)){
+                    }else if(userProfile.getUserType().equals("admin") && !parentkey.equals("")){
                         btnchat.setVisibility(View.GONE);
                         join.setVisibility(View.GONE);
                         EditButton.setVisibility(View.GONE);

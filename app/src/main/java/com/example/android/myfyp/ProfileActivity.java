@@ -2,9 +2,11 @@ package com.example.android.myfyp;
 
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,6 +33,7 @@ public class ProfileActivity extends AppCompatActivity {
     private DatabaseReference mDataRef;
     private FloatingActionButton fab;
     Toolbar toolbar;
+    private TextInputLayout edit_user_contact_text_input_layout3, edit_user_contact_text_input_layout4, edit_user_contact_text_input_layout5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +43,7 @@ public class ProfileActivity extends AppCompatActivity {
         profilePic = findViewById(R.id.ivProfilePic);
 
         toolbar = (Toolbar) findViewById(R.id.toolbarMain);
-        toolbar.setTitle("My profile");
+        toolbar.setTitle("Profile");
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -47,6 +51,9 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        edit_user_contact_text_input_layout3 = findViewById(R.id.edit_user_contact_text_input_layout3);
+        edit_user_contact_text_input_layout4 = findViewById(R.id.edit_user_contact_text_input_layout4);
+        edit_user_contact_text_input_layout5 = findViewById(R.id.edit_user_contact_text_input_layout5);
         editId = findViewById(R.id.edit_user_id);
         editName = findViewById(R.id.edit_user_name);
         editCourse = findViewById(R.id.edit_user_course);
@@ -80,6 +87,14 @@ public class ProfileActivity extends AppCompatActivity {
                     editCourse.setText(userProfile.getStudentCourse());
                     editPhone.setText(userProfile.getStudentPhone());
                     editType.setText(userProfile.getUserType());
+                    Glide.with(ProfileActivity.this).load(userProfile.getImgurl()).thumbnail(0.1f).into(profilePic);
+                    Log.d("***edittype", userProfile.getUserType());
+                    if (userProfile.getUserType().equals("admin")) {
+                        edit_user_contact_text_input_layout3.setVisibility(View.GONE);
+                        edit_user_contact_text_input_layout4.setHint("Description");
+                        editCourse.setLines(4);
+                        edit_user_contact_text_input_layout5.setVisibility(View.GONE);
+                    }
                 }
 
                 @Override
@@ -93,15 +108,35 @@ public class ProfileActivity extends AppCompatActivity {
             final String course = startingIntent.getStringExtra("iscourse");
             final String phone = startingIntent.getStringExtra("isphone");
             final String type = startingIntent.getStringExtra("istype");
+            final int fromchat = startingIntent.getIntExtra("fromchat", 0);
+            final String url = startingIntent.getStringExtra("isurl");
             profileUpdate.setVisibility(View.GONE);
             changePassword.setVisibility(View.GONE);
+
+            if (type.equals("admin")) {
+                edit_user_contact_text_input_layout3.setVisibility(View.GONE);
+                edit_user_contact_text_input_layout4.setHint("Description");
+                editCourse.setLines(4);
+                edit_user_contact_text_input_layout5.setVisibility(View.GONE);
+            }
 
             editId.setText(id);
             editName.setText(name);
             editCourse.setText(course);
             editPhone.setText(phone);
             editType.setText(type);
+            Glide.with(ProfileActivity.this).load(url).thumbnail(0.1f).into(profilePic);
+            if(fromchat == 1){
+                profileChat.setVisibility(View.GONE);
+            }
         }
+
+//        if(firebaseAuth.getCurrentUser().getUid().equals("XHR842kZD3cTZTwz7nM5LWJESW72")){
+//            edit_user_contact_text_input_layout3.setVisibility(View.GONE);
+//            edit_user_contact_text_input_layout4.setHint("Description");
+//            editCourse.setLines(4);
+//            edit_user_contact_text_input_layout5.setVisibility(View.GONE);
+//        }
 
         profileUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,6 +165,7 @@ public class ProfileActivity extends AppCompatActivity {
 //            profileChat.setVisibility(View.GONE);
 //            fab.setVisibility(View.GONE);
 //        }
+
 
         profileChat.setOnClickListener(new View.OnClickListener() {
             @Override

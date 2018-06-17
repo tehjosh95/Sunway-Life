@@ -72,7 +72,7 @@ public class AddClubs extends AppCompatActivity {
     Toolbar toolbar;
     private String imageFileName;
     CatLoadingView mView;
-
+    int test = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,31 +119,13 @@ public class AddClubs extends AppCompatActivity {
             firebaseAuth2 = FirebaseAuth.getInstance(FirebaseApp.getInstance("fyp"));
         }
 
-//        final ProgressDialog progDialog = new ProgressDialog(AddClubs.this,
-//                R.style.Theme_AppCompat_DayNight_NoActionBar);
-//        progDialog.setIndeterminate(true);
-//        progDialog.setMessage("Loading user data...");
-//        progDialog.show();
-//        ValueEventListener userListener = new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                userProfile = dataSnapshot.getValue(UserProfile.class);
-//                progDialog.dismiss();
-//            }
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//            }
-//        };
-
-//        mUserRef.addValueEventListener(userListener);
-
-//        DatabaseReference databaseReference = mDatabase.getReference().child("Item Information");
-
         btnUploadItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mView = new CatLoadingView();
                 mView.show(getSupportFragmentManager(), "");
+                mView.setCanceledOnTouchOutside(false);
+                mView.setCancelable(false);
                 uploadItem();
             }
         });
@@ -157,8 +139,18 @@ public class AddClubs extends AppCompatActivity {
     }
 
     private void uploadItem() {
-        this.registration();
-//        this.uploadImageToFirebase();
+        String name = clubName.getText().toString();
+        String advisor = clubAdvisor.getText().toString();
+        String desc = clubDesc.getText().toString();
+        String email = clubEmail.getText().toString();
+        String pass = clubPass.getText().toString();
+
+        if (validate(name,advisor,desc,email,pass) && test == 0) {
+            this.registration();
+        }else{
+            mView.dismiss();
+            Toast.makeText(AddClubs.this, "Please fill in all required data", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void onSuccessfulSave() {
@@ -185,6 +177,7 @@ public class AddClubs extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     Uri selectedImage = imageReturnedIntent.getData();
                     this.imageView.setImageURI(selectedImage);
+                    test = 0;
                 }
                 break;
         }
@@ -211,7 +204,6 @@ public class AddClubs extends AppCompatActivity {
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
                 imgUrl = downloadUrl.toString();
 
@@ -221,9 +213,6 @@ public class AddClubs extends AppCompatActivity {
                 String emails = clubEmail.getText().toString().trim();
                 String usertype = "club";
 
-//        if (isInputInvalid(name, place, price)) {
-//            onFailedSave();
-//        } else {
                 btnUploadItem.setEnabled(false);
                 listofclubs.setName(name);
                 listofclubs.setAdvisor(adv);
@@ -250,6 +239,14 @@ public class AddClubs extends AppCompatActivity {
                 onSuccessfulSave();
             }
         });
+    }
+
+    private Boolean validate(String i1, String i2, String i3, String i4, String i5){
+        if(i1.isEmpty() || i2.isEmpty() || i3.isEmpty() || i4.isEmpty() || i5.isEmpty()){
+            return false;
+        }else{
+            return true;
+        }
     }
 
     private void registration() {
@@ -279,6 +276,7 @@ public class AddClubs extends AppCompatActivity {
                     firebaseAuth2.signOut();
                     Toast.makeText(AddClubs.this, "Successfully Registered, Upload complete!", Toast.LENGTH_SHORT).show();
                 } else {
+                    mView.dismiss();
                     Toast.makeText(AddClubs.this, "Registration Failed", Toast.LENGTH_SHORT).show();
                 }
 
