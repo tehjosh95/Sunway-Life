@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -50,11 +51,10 @@ public class UpdateClubProfile extends AppCompatActivity {
     private StorageReference mStorRef;
     String userType, theurl;
     private String imageFileName;
-    private String imgUrl;
+    private String imgUrl, category;
     private String theKey;
     CatLoadingView mView;
     Toolbar toolbar;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +105,7 @@ public class UpdateClubProfile extends AppCompatActivity {
                 theurl = listOfClubs.getImage();
                 Glide.with(UpdateClubProfile.this).load(theurl).into(imgView);
                 userType = listOfClubs.getUserType();
+                category = listOfClubs.getCategory();
             }
 
             @Override
@@ -219,7 +220,7 @@ public class UpdateClubProfile extends AppCompatActivity {
                 save.setEnabled(false);
                 listOfClubs.setImage(imgUrl);
 
-                final ListOfClubs listOfClubs = new ListOfClubs(name, imgUrl, adv, desc, type, myuid, email);
+                final ListOfClubs listOfClubs = new ListOfClubs(name, imgUrl, adv, desc, type, myuid, email, category);
 
                 mDataRef3.addValueEventListener(new ValueEventListener() {
                     @Override

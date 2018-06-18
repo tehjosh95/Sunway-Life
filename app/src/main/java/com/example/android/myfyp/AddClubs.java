@@ -15,10 +15,15 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemSelectedListener;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -41,10 +46,11 @@ import com.google.firebase.storage.UploadTask;
 import com.roger.catloadinglibrary.CatLoadingView;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class AddClubs extends AppCompatActivity {
+public class AddClubs extends AppCompatActivity implements OnItemSelectedListener{
     private ListOfClubs listofclubs = new ListOfClubs();
 
     private String uid;
@@ -73,6 +79,7 @@ public class AddClubs extends AppCompatActivity {
     private String imageFileName;
     CatLoadingView mView;
     int test = 1;
+    private String item;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +90,34 @@ public class AddClubs extends AppCompatActivity {
         mDataRef = mDatabase.getReference();
         mStorage = FirebaseStorage.getInstance();
         mStorRef = mStorage.getReference();
+
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+
+        spinner.setOnItemSelectedListener(this);
+
+        // Spinner Drop down elements
+        List<String> categories = new ArrayList<String>();
+        categories.add("student leadership bodies");
+        categories.add("student volunteer groups");
+        categories.add("sports clubs");
+        categories.add("martial arts clubs");
+        categories.add("international student body");
+        categories.add("religious");
+        categories.add("cultural");
+        categories.add("arts and music");
+        categories.add("business");
+        categories.add("accounting and finance");
+        categories.add("uniform or affiliate");
+        categories.add("general");
+
+        // Creating adapter for spinner
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        spinner.setAdapter(dataAdapter);
 
         toolbar = (Toolbar) findViewById(R.id.toolbarMain);
         toolbar.setTitle("Add Clubs");
@@ -136,6 +171,17 @@ public class AddClubs extends AppCompatActivity {
                 startActivity(new Intent(AddClubs.this, SecondActivity.class));
             }
         });
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        // On selecting a spinner item
+        item = parent.getItemAtPosition(position).toString();
+
+        // Showing selected spinner item
+    }
+    public void onNothingSelected(AdapterView<?> arg0) {
+        // TODO Auto-generated method stub
     }
 
     private void uploadItem() {
@@ -227,7 +273,7 @@ public class AddClubs extends AppCompatActivity {
                 progDialog.setIndeterminate(true);
                 progDialog.setMessage("Uploading....");
                 progDialog.show();
-                final ListOfClubs listofclubs = new ListOfClubs(name, imgUrl, adv, desc, usertype, uid, emails);
+                final ListOfClubs listofclubs = new ListOfClubs(name, imgUrl, adv, desc, usertype, uid, emails, item);
                 final Runnable uploadTask = new Runnable() {
                     @Override
                     public void run() {

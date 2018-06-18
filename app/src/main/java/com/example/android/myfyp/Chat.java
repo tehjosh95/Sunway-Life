@@ -175,6 +175,7 @@ public class Chat extends AppCompatActivity {
                                         intent.putExtra("isimg", listOfClubs.getImage());
                                         intent.putExtra("isuid", listOfClubs.getMyUid());
                                         intent.putExtra("fromchat", 1);
+                                        intent.putExtra("iscategory", listOfClubs.getCategory());
                                         startActivity(intent);
                                     }
                                 }
@@ -255,7 +256,7 @@ public class Chat extends AppCompatActivity {
                 } else if (chatModel.getMessage().equals("") && !userName.equals(UserDetails.username)) {
                     addMessageBox2(url, 2);
                 }
-                scrollView.fullScroll(View.FOCUS_DOWN);
+                scrollView.fullScroll(ScrollView.FOCUS_DOWN);
             }
 
             @Override
@@ -399,7 +400,7 @@ public class Chat extends AppCompatActivity {
         }
         textView.setLayoutParams(lp2);
         layout.addView(textView);
-        scrollView.fullScroll(View.FOCUS_DOWN);
+        scrollView.fullScroll(ScrollView.FOCUS_DOWN);
     }
 
     public void addMessageBox2(String url, int type) {
@@ -419,7 +420,7 @@ public class Chat extends AppCompatActivity {
         }
         imageView.setLayoutParams(lp2);
         layout.addView(imageView);
-        scrollView.fullScroll(View.FOCUS_DOWN);
+        scrollView.fullScroll(ScrollView.FOCUS_DOWN);
     }
 
     private void sendNotification() {

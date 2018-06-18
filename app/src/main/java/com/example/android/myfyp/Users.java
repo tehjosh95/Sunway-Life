@@ -87,7 +87,9 @@ public class Users extends AppCompatActivity {
 
                 if (searchText.length() > 0) {
                     firebaseUserSearch(searchText);
+                    Log.d("more than 0", "more than 0");
                 } else {
+                    Log.d("less than 0", "less than 0");
                     al.clear();
                     mDataRef.addListenerForSingleValueEvent(valueEventListener);
                 }
@@ -137,6 +139,7 @@ public class Users extends AppCompatActivity {
     ValueEventListener valueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
+            Log.d("***triggered", "triggered");
             al.clear();
             al2.clear();
             for (DataSnapshot postsnapshot : dataSnapshot.getChildren()) {

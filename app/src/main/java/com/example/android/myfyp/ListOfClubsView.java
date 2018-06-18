@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
@@ -30,7 +31,7 @@ public class ListOfClubsView extends AppCompatActivity {
     Toolbar toolbar;
     private ImageView profilePic;
     private TextView averagetext;
-    private EditText edit_name, edit_advisor, edit_email, edit_desc;
+    private EditText edit_name, edit_advisor, edit_email, edit_desc, mycategory;
     private Button EditButton, btnJoin, rate;
     private FloatingActionButton fabbb;
     private FirebaseAuth firebaseAuth;
@@ -60,6 +61,7 @@ public class ListOfClubsView extends AppCompatActivity {
         rate = findViewById(R.id.rate);
         btnJoin = findViewById(R.id.btnJoin);
         fabbb = (FloatingActionButton) findViewById(R.id.fabbb);
+        mycategory = findViewById(R.id.category);
 
         toolbar = (Toolbar) findViewById(R.id.toolbarMain);
         toolbar.setTitle("Clubs Profile");
@@ -85,6 +87,7 @@ public class ListOfClubsView extends AppCompatActivity {
         final String Desc = startingIntent.getStringExtra("isdesc");
         final String Myuid = startingIntent.getStringExtra("isuid");
         final String email = startingIntent.getStringExtra("isemail");
+        final String category = startingIntent.getStringExtra("iscategory");
         final int fromchat = startingIntent.getIntExtra("fromchat", 0);
 
         if(fromchat == 1){
@@ -119,6 +122,7 @@ public class ListOfClubsView extends AppCompatActivity {
         edit_advisor.setText(Adv);
         edit_email.setText(email);
         edit_desc.setText(Desc);
+        mycategory.setText(category);
 
         fabbb.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -186,7 +190,6 @@ public class ListOfClubsView extends AppCompatActivity {
                                         ratingbar2.setRating(count);
 
                                         TextView text = (TextView) rankDialog.findViewById(R.id.rank_dialog_text1);
-//                                      text.setText(name);
 
                                         Button updateButton = (Button) rankDialog.findViewById(R.id.rank_dialog_button);
                                         updateButton.setOnClickListener(new View.OnClickListener() {

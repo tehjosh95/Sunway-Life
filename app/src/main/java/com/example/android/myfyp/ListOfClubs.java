@@ -8,6 +8,8 @@ public class ListOfClubs {
     private String desc;
     private String myUid;
 
+    private String category;
+
     private String email;
 
     private String userType;
@@ -67,7 +69,11 @@ public class ListOfClubs {
 
     public void setEmail(String email) { this.email = email; }
 
-    public ListOfClubs(String name, String image, String advisor, String desc, String userType, String myUid, String email) {
+    public String getCategory() { return category; }
+
+    public void setCategory(String category) { this.category = category; }
+
+    public ListOfClubs(String name, String image, String advisor, String desc, String userType, String myUid, String email, String category) {
         this.name = name;
         this.image = image;
         this.advisor = advisor;
@@ -75,5 +81,6 @@ public class ListOfClubs {
         this.userType = userType;
         this.myUid = myUid;
         this.email = email;
+        this.category = category;
     }
 }

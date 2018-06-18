@@ -186,6 +186,7 @@ public class List_of_joined extends AppCompatActivity {
                     intent.putExtra("isdesc", listOfClubs.getDesc());
                     intent.putExtra("isimg", listOfClubs.getImage());
                     intent.putExtra("isuid", listOfClubs.getMyUid());
+                    intent.putExtra("iscategory", listOfClubs.getCategory());
                     intent.putExtra("fromchat", 0);
                     Log.d("^^^^^^^", "" + listOfClubs.getMyUid());
                     startActivity(intent);
