@@ -315,16 +315,16 @@ public class AddActivity extends AppCompatActivity {
                     ClubModel.setItem_position(position);
                     ClubModel.setImageLink(imgUrl);
                     ClubModel.setImgName(imageFileName);
-                    ClubModel.setParentkey("");
                     ClubModel.setOwnerName(ownername);
 
-                    final clubModel ClubModel = new clubModel(name, desc, date, starttime, endtime, memberfee, nonmemberfee, venue, ownername, owner, position, imgUrl, imageFileName, "");
+                    final String mGroupId = mDataRef.child("Item Information").push().getKey();
+                    final clubModel ClubModel = new clubModel(name, desc, date, starttime, endtime, memberfee, nonmemberfee, venue, ownername, owner, position, imgUrl, imageFileName, mGroupId, false);
 
                     Log.d("&&&&&&&uid", "" + owner);
                     final Runnable uploadTask = new Runnable() {
                         @Override
                         public void run() {
-                            mDataRef.child("Item Information").push().setValue(ClubModel);
+                            mDataRef.child("Item Information").child(mGroupId).setValue(ClubModel);
                         }
                     };
                     new Thread(uploadTask).start();

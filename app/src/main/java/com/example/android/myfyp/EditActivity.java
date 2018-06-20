@@ -63,6 +63,7 @@ public class EditActivity extends AppCompatActivity {
     Calendar myCalendar = Calendar.getInstance();
     int hour = myCalendar.get(Calendar.HOUR_OF_DAY);
     int minute = myCalendar.get(Calendar.MINUTE);
+    Boolean thefinish;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +107,7 @@ public class EditActivity extends AppCompatActivity {
         String theMemberfee = startingIntent.getStringExtra("thememberfee");
         String theNonmemberfee = startingIntent.getStringExtra("thenonmemberfee");
         String theVenue = startingIntent.getStringExtra("thevenue");
+        thefinish = startingIntent.getBooleanExtra("theisfinish", false);
 
         String theOwner = startingIntent.getStringExtra("theowner");
         theKey = startingIntent.getStringExtra("thekey");
@@ -331,7 +333,7 @@ public class EditActivity extends AppCompatActivity {
                 progDialog.setIndeterminate(true);
                 progDialog.setMessage("Uploading....");
                 progDialog.show();
-                final clubModel ClubModel = new clubModel(name, desc, date, starttime, endtime, feeformember, feefornonmember, venue, ownername, owner, position, imgUrl, imageFileName, theKey);
+                final clubModel ClubModel = new clubModel(name, desc, date, starttime, endtime, feeformember, feefornonmember, venue, ownername, owner, position, imgUrl, imageFileName, theKey, thefinish);
 
                 Log.d("&&&&&&&uid", "" + owner);
                 final Runnable uploadTask = new Runnable() {

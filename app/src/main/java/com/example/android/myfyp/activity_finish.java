@@ -51,11 +51,12 @@ import java.util.List;
 
 import static java.security.AccessController.getContext;
 
-public class ActivityPosted extends AppCompatActivity {
+public class activity_finish extends AppCompatActivity {
 
     Toolbar toolbar;
     RecyclerView recyclerView;
     ArrayList<clubModel> clubModelList;
+    ArrayList<String> itemKey;
 
     private ProgressDialog progDialog;
     private FirebaseAuth firebaseAuth;
@@ -80,7 +81,7 @@ public class ActivityPosted extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_posted);
+        setContentView(R.layout.activity_finish);
 
         fab = (FloatingActionButton) findViewById(R.id.fabbb);
         textReminder = findViewById(R.id.textReminder);
@@ -91,7 +92,7 @@ public class ActivityPosted extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.rvv);
         toolbar = (Toolbar) findViewById(R.id.toolbarMain);
-        toolbar.setTitle("Activity Posted");
+        toolbar.setTitle("Finished activity");
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,10 +101,12 @@ public class ActivityPosted extends AppCompatActivity {
         });
 
         clubModelList = new ArrayList<>();
+        itemKey = new ArrayList<>();
         mDataRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 clubModelList.clear();
+                itemKey.clear();
                 arrayPosition = new int[(int) snapshot.getChildrenCount()];
                 arrayUrl = new String[(int) snapshot.getChildrenCount()];
                 pos = 0;
@@ -112,20 +115,21 @@ public class ActivityPosted extends AppCompatActivity {
                     clubModel ClubModel = child.getValue(clubModel.class);
                     String owner = firebaseAuth.getCurrentUser().getUid();
 
-                    if (owner.equals(ClubModel.getItem_owner()) && !ClubModel.getFinish()) {
+                    if (owner.equals(ClubModel.getItem_owner()) && ClubModel.getFinish()) {
                         ClubModel.setItem_position(pos);
                         ClubModel.setParentkey(child.getKey().toString());
                         mDataRef.child(child.getKey()).setValue(ClubModel);
                         arrayPosition[x] = pos;
                         arrayUrl[x] = ClubModel.getImageLink();
                         clubModelList.add(ClubModel);
+                        itemKey.add(ClubModel.getParentkey());
                         x += 1;
                     }
                     pos += 1;
                 }
                 arrayName = new clubModel[clubModelList.size()];
                 arrayName = clubModelList.toArray(arrayName);
-                adapter = new clubAdapter(ActivityPosted.this, clubModelList);
+                adapter = new clubAdapter(activity_finish.this, clubModelList);
                 recyclerView.setAdapter(adapter);
 
                 if(clubModelList.size()>0){
@@ -149,10 +153,10 @@ public class ActivityPosted extends AppCompatActivity {
         recyclerView.setNestedScrollingEnabled(false);
 
         recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(ActivityPosted.this, new RecyclerItemClickListener.OnItemClickListener() {
+                new RecyclerItemClickListener(activity_finish.this, new RecyclerItemClickListener.OnItemClickListener() {
                     public void onItemClick(View view, int position) {
                         clubModel ClubModel1 = clubModelList.get(position);
-                        Intent intent = new Intent(ActivityPosted.this, ViewActivity.class);
+                        Intent intent = new Intent(activity_finish.this, ViewActivity.class);
                         intent.putExtra("myname", ClubModel1.getItem_name());
                         intent.putExtra("mydesc", ClubModel1.getItem_desc());
                         intent.putExtra("mydate", ClubModel1.getItem_date());
@@ -172,8 +176,8 @@ public class ActivityPosted extends AppCompatActivity {
 
                     public void onItemLongPress(View childView, final int position) {
 
-                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(ActivityPosted.this);
-                        alertDialog.setTitle("Delete?");
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity_finish.this);
+                        alertDialog.setTitle("Undo?");
 
                         alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -186,17 +190,7 @@ public class ActivityPosted extends AppCompatActivity {
                                 mDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
-                                        arrayDelete = new String[(int) dataSnapshot.getChildrenCount()];
-                                        int x = 0;
-                                        for (DataSnapshot postsnapshot : dataSnapshot.getChildren()) {
-                                            key = postsnapshot.getKey();
-                                            arrayDelete[x] = key;
-                                            x += 1;
-                                        }
-                                        String getUrl = arrayUrl[position];
-                                        storageRef = storage.getReferenceFromUrl(getUrl);
-                                        storageRef.delete();
-                                        dataSnapshot.getRef().child(arrayDelete[arrayPosition[position]]).removeValue();
+                                        mDataRef.child(itemKey.get(position)).child("finish").setValue(false);
                                     }
 
                                     @Override
@@ -218,7 +212,7 @@ public class ActivityPosted extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
-                startActivity(new Intent(ActivityPosted.this, SecondActivity.class));
+                startActivity(new Intent(activity_finish.this, SecondActivity.class));
             }
         });
     }

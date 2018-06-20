@@ -11,6 +11,7 @@ public class clubModel {
     private String fee_for_nonmember;
     private String venue;
 
+    private Boolean isFinish;
     private String item_owner;
     private String imgName;
     private String ownerName;
@@ -35,7 +36,7 @@ public class clubModel {
 //        this.parentkey = parentkey;
 //    }
 
-    public clubModel(String item_name, String item_desc, String item_date, String item_start_time, String item_end_time, String fee_for_member, String fee_for_nonmember, String venue, String ownerName, String item_owner, int item_position, String imageLink, String imgName, String parentkey) {
+    public clubModel(String item_name, String item_desc, String item_date, String item_start_time, String item_end_time, String fee_for_member, String fee_for_nonmember, String venue, String ownerName, String item_owner, int item_position, String imageLink, String imgName, String parentkey, Boolean isFinish) {
         this.item_name = item_name;
         this.item_desc = item_desc;
         this.item_date = item_date;
@@ -50,6 +51,7 @@ public class clubModel {
         this.imageLink = imageLink;
         this.imgName = imgName;
         this.parentkey = parentkey;
+        this.isFinish = isFinish;
     }
 
     public clubModel() {
@@ -134,4 +136,8 @@ public class clubModel {
     public String getVenue() { return venue; }
 
     public void setVenue(String venue) { this.venue = venue; }
+
+    public Boolean getFinish() { return isFinish; }
+
+    public void setFinish(Boolean finish) { isFinish = finish; }
 }

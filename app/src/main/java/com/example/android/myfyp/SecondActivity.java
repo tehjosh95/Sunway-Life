@@ -276,10 +276,12 @@ public class SecondActivity extends AppCompatActivity {
 
                     PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName("Profile");
                     PrimaryDrawerItem item2 = new PrimaryDrawerItem().withIdentifier(2).withName("Inbox");
-                    PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(3).withName("Event posted");
-                    PrimaryDrawerItem item4 = new PrimaryDrawerItem().withIdentifier(4).withName("All Clubs");
-                    PrimaryDrawerItem item5 = new PrimaryDrawerItem().withIdentifier(5).withName("All Students");
-                    PrimaryDrawerItem item6 = new PrimaryDrawerItem().withIdentifier(6).withName("Logout");
+                    PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(3).withName("Ongoing events");
+                    PrimaryDrawerItem item4 = new PrimaryDrawerItem().withIdentifier(4).withName("Finished events");
+                    PrimaryDrawerItem item5 = new PrimaryDrawerItem().withIdentifier(5).withName("All Clubs");
+                    PrimaryDrawerItem item6 = new PrimaryDrawerItem().withIdentifier(6).withName("All Students");
+                    PrimaryDrawerItem item7 = new PrimaryDrawerItem().withIdentifier(7).withName("My Events");
+                    PrimaryDrawerItem item8 = new PrimaryDrawerItem().withIdentifier(8).withName("Logout");
 
                     Drawer result = new DrawerBuilder()
                             .withActivity(SecondActivity.this)
@@ -291,8 +293,10 @@ public class SecondActivity extends AppCompatActivity {
                                     item3,
                                     item4,
                                     item5,
+                                    item6,
+                                    item7,
                                     new DividerDrawerItem(),
-                                    item6
+                                    item8
                                     )
                             .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                                 @Override
@@ -308,14 +312,20 @@ public class SecondActivity extends AppCompatActivity {
                                             startActivity(new Intent(SecondActivity.this, ActivityPosted.class));
                                             break;
                                         case 4:
-                                            startActivity(new Intent(SecondActivity.this, ListOfClubsActivity.class));
+                                            startActivity(new Intent(SecondActivity.this, activity_finish.class));
                                             break;
                                         case 5:
-                                            startActivity(new Intent(SecondActivity.this, Users.class));
+                                            startActivity(new Intent(SecondActivity.this, ListOfClubsActivity.class));
                                             break;
                                         case 6:
+                                            startActivity(new Intent(SecondActivity.this, Users.class));
                                             break;
                                         case 7:
+                                            startActivity(new Intent(SecondActivity.this, list_of_event_club.class));
+                                            break;
+                                        case 8:
+                                            break;
+                                        case 9:
                                             Logout();
                                             break;
                                     }
@@ -345,11 +355,12 @@ public class SecondActivity extends AppCompatActivity {
 
                     PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName("Profile");
                     PrimaryDrawerItem item2 = new PrimaryDrawerItem().withIdentifier(2).withName("Inbox");
-                    PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(3).withName("Event posted");
-                    PrimaryDrawerItem item4 = new PrimaryDrawerItem().withIdentifier(4).withName("All Clubs");
-                    PrimaryDrawerItem item5 = new PrimaryDrawerItem().withIdentifier(5).withName("Members");
-                    PrimaryDrawerItem item6 = new PrimaryDrawerItem().withIdentifier(6).withName("Events");
-                    PrimaryDrawerItem item7 = new PrimaryDrawerItem().withIdentifier(7).withName("Logout");
+                    PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(3).withName("Ongoing events");
+                    PrimaryDrawerItem item4 = new PrimaryDrawerItem().withIdentifier(4).withName("Finished events");
+                    PrimaryDrawerItem item5 = new PrimaryDrawerItem().withIdentifier(5).withName("All Clubs");
+                    PrimaryDrawerItem item6 = new PrimaryDrawerItem().withIdentifier(6).withName("My Members");
+                    PrimaryDrawerItem item7 = new PrimaryDrawerItem().withIdentifier(7).withName("My Events");
+                    PrimaryDrawerItem item8 = new PrimaryDrawerItem().withIdentifier(8).withName("Logout");
 
                     Drawer result = new DrawerBuilder()
                             .withActivity(SecondActivity.this)
@@ -362,8 +373,9 @@ public class SecondActivity extends AppCompatActivity {
                                     item4,
                                     item5,
                                     item6,
+                                    item7,
                                     new DividerDrawerItem(),
-                                    item7
+                                    item8
                             )
                             .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                                 @Override
@@ -379,17 +391,20 @@ public class SecondActivity extends AppCompatActivity {
                                             startActivity(new Intent(SecondActivity.this, ActivityPosted.class));
                                             break;
                                         case 4:
-                                            startActivity(new Intent(SecondActivity.this, ListOfClubsActivity.class));
+                                            startActivity(new Intent(SecondActivity.this, activity_finish.class));
                                             break;
                                         case 5:
-                                            startActivity(new Intent(SecondActivity.this, tabs.class));
+                                            startActivity(new Intent(SecondActivity.this, ListOfClubsActivity.class));
                                             break;
                                         case 6:
-                                            startActivity(new Intent(SecondActivity.this, list_of_event_club.class));
+                                            startActivity(new Intent(SecondActivity.this, tabs.class));
                                             break;
                                         case 7:
+                                            startActivity(new Intent(SecondActivity.this, list_of_event_club.class));
                                             break;
                                         case 8:
+                                            break;
+                                        case 9:
                                             Logout();
                                             break;
                                     }
@@ -506,7 +521,9 @@ public class SecondActivity extends AppCompatActivity {
                 clubModelList.clear();
                 for (DataSnapshot child : snapshot.getChildren()) {
                     clubModel ClubModel = child.getValue(clubModel.class);
+                    if(!ClubModel.getFinish()){
                     clubModelList.add(ClubModel);
+                    }
                 }
                 arrayName = new clubModel[clubModelList.size()];
                 arrayName = clubModelList.toArray(arrayName);

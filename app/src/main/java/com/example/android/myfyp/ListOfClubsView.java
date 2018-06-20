@@ -100,14 +100,14 @@ public class ListOfClubsView extends AppCompatActivity {
                 if(dataSnapshot.hasChild(myid)){
                     UserProfile userProfile = dataSnapshot.child(myid).getValue(UserProfile.class);
                     if(!userProfile.getUserType().equals("student")){
-                        EditButton.setVisibility(View.INVISIBLE);
-                        rate.setVisibility(View.INVISIBLE);
-                        btnJoin.setVisibility(View.INVISIBLE);
+                        EditButton.setVisibility(View.GONE);
+                        rate.setVisibility(View.GONE);
+                        btnJoin.setVisibility(View.GONE);
                     }
                 }else{
-                    EditButton.setVisibility(View.INVISIBLE);
-                    rate.setVisibility(View.INVISIBLE);
-                    btnJoin.setVisibility(View.INVISIBLE);
+                    EditButton.setVisibility(View.GONE);
+                    rate.setVisibility(View.GONE);
+                    btnJoin.setVisibility(View.GONE);
                 }
             }
 

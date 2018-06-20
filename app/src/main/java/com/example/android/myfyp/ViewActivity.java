@@ -1,5 +1,8 @@
 package com.example.android.myfyp;
 
+import android.content.DialogInterface;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.content.Intent;
@@ -14,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,11 +30,11 @@ public class ViewActivity extends AppCompatActivity {
     Toolbar toolbar;
     private ImageView profilePic;
     private EditText item_name, item_description, item_date, item_start_time, item_end_time, item_fee_member, item_fee_nonmember, item_venue;
-    private Button EditButton, btnchat, join;
+    private Button EditButton, btnchat, join, btnFinish;
     private FloatingActionButton fabbb;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference mDataRef, mDataRef2;
+    private DatabaseReference mDataRef, mDataRef2, mDataRef3;
     private TextView displaytext;
 
     @Override
@@ -39,6 +44,7 @@ public class ViewActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
+        btnFinish = findViewById(R.id.btnFinish);
         displaytext = findViewById(R.id.displaytext);
         profilePic = findViewById(R.id.ivimage);
         toolbar = (Toolbar) findViewById(R.id.toolbarMain);
@@ -66,6 +72,7 @@ public class ViewActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         mDataRef = firebaseDatabase.getReference();
         mDataRef = firebaseDatabase.getReference().child("join_event");
+        mDataRef3 = firebaseDatabase.getReference().child("Item Information");
 
         final String myid = firebaseAuth.getCurrentUser().getUid();
         mDataRef2 = firebaseDatabase.getReference().child("Users");
@@ -84,6 +91,7 @@ public class ViewActivity extends AppCompatActivity {
         final String myKey = startingIntent.getStringExtra("mykey");
         final String ownername = startingIntent.getStringExtra("myownername");
         final String parentkey = startingIntent.getStringExtra("myparentkey");
+        final Boolean isfinish = startingIntent.getBooleanExtra("myisfinish", false);
 
         Log.d("***ownername", "" + ownername);
 
@@ -106,6 +114,7 @@ public class ViewActivity extends AppCompatActivity {
                     UserProfile userProfile = dataSnapshot.child(myid).getValue(UserProfile.class);
                     if (userProfile.getUserType().equals("student")) {
                         EditButton.setVisibility(View.GONE);
+                        btnFinish.setVisibility(View.GONE);
                     } else if(userProfile.getUserType().equals("admin") && parentkey.equals("")){
                         btnchat.setVisibility(View.GONE);
                         join.setVisibility(View.GONE);
@@ -113,12 +122,14 @@ public class ViewActivity extends AppCompatActivity {
                         btnchat.setVisibility(View.GONE);
                         join.setVisibility(View.GONE);
                         EditButton.setVisibility(View.GONE);
+                        btnFinish.setVisibility(View.GONE);
                     }
                 }else{
                     if(Owner.equals(myid) && !parentkey.equals("")){
                         btnchat.setVisibility(View.GONE);
                         join.setVisibility(View.GONE);
                         EditButton.setVisibility(View.GONE);
+                        btnFinish.setVisibility(View.GONE);
                     }else if(Owner.equals(myid) && parentkey.equals("")){
                         btnchat.setVisibility(View.GONE);
                         join.setVisibility(View.GONE);
@@ -126,6 +137,7 @@ public class ViewActivity extends AppCompatActivity {
                         btnchat.setVisibility(View.GONE);
                         join.setVisibility(View.GONE);
                         EditButton.setVisibility(View.GONE);
+                        btnFinish.setVisibility(View.GONE);
                     }
                 }
             }
@@ -159,7 +171,7 @@ public class ViewActivity extends AppCompatActivity {
         join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                mDataRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (!dataSnapshot.child(parentkey).hasChild(firebaseAuth.getCurrentUser().getUid())){
@@ -180,6 +192,55 @@ public class ViewActivity extends AppCompatActivity {
             }
         });
 
+        btnFinish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(ViewActivity.this);
+                alertDialog.setTitle("Finish?");
+
+                alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        mDataRef3.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot postsnap : dataSnapshot.getChildren()) {
+                                    clubModel clubModel1 = postsnap.getValue(clubModel.class);
+                                    Log.d("***datasnapshot", "" + postsnap);
+                                    Log.d("***getitemname", "" + clubModel1.getItem_name());
+                                    Log.d("***getfinish", "" + clubModel1.getFinish());
+                                    Log.d("***parentkey", "" + parentkey);
+                                    if (!clubModel1.getFinish()) {
+                                        Log.d("***parentkey", "" + parentkey);
+                                        mDataRef3.child(postsnap.getKey()).child("finish").setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                finish();
+                                            }
+                                        });
+                                    } else {
+                                        Toast.makeText(ViewActivity.this, "Event already finish!!", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+                    }
+                });
+                alertDialog.show();
+            }
+        });
+
         EditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -196,6 +257,7 @@ public class ViewActivity extends AppCompatActivity {
                 intent.putExtra("theurl", myurl);
                 intent.putExtra("theowner", Owner);
                 intent.putExtra("thekey", myKey);
+                intent.putExtra("theisfinish", isfinish);
                 startActivity(intent);
             }
         });

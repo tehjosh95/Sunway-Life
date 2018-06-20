@@ -49,7 +49,7 @@ public class ListOfClubsActivity extends AppCompatActivity {
     private ImageButton mSearchBtn, filter_btn;
     private ClubListAdapter adapter;
     private Dialog rankDialog;
-
+    private TextView textReminder;
     private RecyclerView mResultList;
 //    ArrayList<String> selectedItems;
 //    ArrayList<Integer> checked;
@@ -77,7 +77,7 @@ public class ListOfClubsActivity extends AppCompatActivity {
                 finish();
             }
         });
-
+        textReminder = findViewById(R.id.textReminder);
         mSearchField = (EditText) findViewById(R.id.search_field);
         mSearchBtn = (ImageButton) findViewById(R.id.search_btn);
         mSearchBtn.setVisibility(View.GONE);
@@ -199,6 +199,14 @@ public class ListOfClubsActivity extends AppCompatActivity {
 
             adapter = new ClubListAdapter(ListOfClubsActivity.this, AllClubsList);
             recyclerView.setAdapter(adapter);
+
+            if (AllClubsList.size() > 0){
+                recyclerView.setVisibility(View.VISIBLE);
+                textReminder.setVisibility(View.GONE);
+            }else{
+                textReminder.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            }
 
             recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(ListOfClubsActivity.this, new RecyclerItemClickListener.OnItemClickListener() {
                 @Override
