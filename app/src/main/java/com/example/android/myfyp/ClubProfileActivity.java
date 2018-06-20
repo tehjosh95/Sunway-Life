@@ -26,7 +26,7 @@ public class ClubProfileActivity extends AppCompatActivity {
     Toolbar toolbar;
     private ImageView profilePic;
     private Button profileUpdate, changePassword;
-    private EditText edit_user_type, edit_user_name, edit_user_advisor, edit_user_email;
+    private EditText edit_user_type, edit_user_name, edit_user_advisor, edit_user_email, edit_user_category;
     private TextView edit_user_desc;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
@@ -38,6 +38,7 @@ public class ClubProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_club_profile);
 
+        edit_user_category = findViewById(R.id.edit_user_category);
         profilePic = findViewById(R.id.ivProfilePic);
         edit_user_type = findViewById(R.id.edit_user_type);
         edit_user_name = findViewById(R.id.edit_user_name);
@@ -69,6 +70,7 @@ public class ClubProfileActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ListOfClubs listOfClubs = dataSnapshot.getValue(ListOfClubs.class);
+                edit_user_category.setText(listOfClubs.getCategory());
                 edit_user_type.setText(listOfClubs.getUserType());
                 edit_user_name.setText(listOfClubs.getName());
                 edit_user_advisor.setText(listOfClubs.getAdvisor());
