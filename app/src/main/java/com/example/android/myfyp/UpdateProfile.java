@@ -101,7 +101,7 @@ public class UpdateProfile extends AppCompatActivity {
             edit_user_contact_text_input_layout4.setVisibility(View.GONE);
         }
 
-        mDataRef.addValueEventListener(new ValueEventListener() {
+        mDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);

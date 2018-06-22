@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -57,6 +58,7 @@ public class Inbox extends AppCompatActivity {
     ArrayList<String> al4 = new ArrayList<>();
     ArrayList<String> al5 = new ArrayList<>();
     ArrayList<String> al6 = new ArrayList<>();
+    ArrayList<String> al7 = new ArrayList<>();
     int totalUsers = 0;
     ProgressDialog pd;
 
@@ -166,6 +168,7 @@ public class Inbox extends AppCompatActivity {
                 al4.clear();
                 al5.clear();
                 al6.clear();
+                al7.clear();
                 String currentuser = firebaseAuth.getCurrentUser().getUid();
                 int x = 0;
                 for (DataSnapshot child : snapshot.getChildren()) {
@@ -201,14 +204,31 @@ public class Inbox extends AppCompatActivity {
                                                 String simple = sdf2.format(al2.get(loop2));
                                                 Date netDate = (new Date(al2.get(loop2)));
 //                                              al6.add(loop1, al5.get(loop2) + "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t" + "(" + simple + ")");
+                                                al7.add(loop1, simple);
                                                 al6.add(loop1, al5.get(loop2));
                                             }
                                         }
                                     }
                                 }
 
-                                myAdapter = new ArrayAdapter<String>(Inbox.this, android.R.layout.simple_list_item_1, al6);
-                                usersList.setAdapter(myAdapter);
+//                                myAdapter = new ArrayAdapter<String>(Inbox.this, android.R.layout.simple_list_item_2, al6);
+//                                usersList.setAdapter(myAdapter);
+
+                                ArrayAdapter adapter = new ArrayAdapter(Inbox.this, android.R.layout.simple_list_item_2, android.R.id.text1, al6) {
+                                    @Override
+                                    public View getView(int position, View convertView, ViewGroup parent) {
+                                        View view = super.getView(position, convertView, parent);
+                                        TextView text1 = (TextView) view.findViewById(android.R.id.text1);
+                                        TextView text2 = (TextView) view.findViewById(android.R.id.text2);
+
+                                        text1.setText(al6.get(position));
+                                        text2.setText(al7.get(position));
+                                        return view;
+                                    }
+                                };
+
+                                usersList.setAdapter(adapter);
+
 
                                 if(al6.size()>0){
                                     usersList.setVisibility(View.VISIBLE);

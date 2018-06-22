@@ -171,7 +171,7 @@ public class ViewActivity extends AppCompatActivity {
         join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDataRef.addValueEventListener(new ValueEventListener() {
+                mDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (!dataSnapshot.child(parentkey).hasChild(firebaseAuth.getCurrentUser().getUid())){
@@ -218,7 +218,7 @@ public class ViewActivity extends AppCompatActivity {
                                     Log.d("***parentkey", "" + parentkey);
                                     if (!clubModel1.getFinish()) {
                                         Log.d("***parentkey", "" + parentkey);
-                                        mDataRef3.child(postsnap.getKey()).child("finish").setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        mDataRef3.child(myKey).child("finish").setValue(true).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 finish();

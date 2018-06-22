@@ -44,7 +44,7 @@ public class UpdateClubProfile extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private ImageView imgView;
     private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference mDataRef, mDataRef2, mDataRef3;
+    private DatabaseReference mDataRef, mDataRef2, mDataRef3, mDataRef4;
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private FirebaseStorage mStorage;
     private StorageReference storageRef;
@@ -92,8 +92,10 @@ public class UpdateClubProfile extends AppCompatActivity {
         mDataRef2 = mDataRef2.child("messages");
         mDataRef3 = firebaseDatabase.getReference();
         mDataRef3 = mDataRef3.child("join_list").child("members");
+        mDataRef4 = firebaseDatabase.getReference();
+        mDataRef4 = mDataRef4.child("join_event");
 
-        mDataRef.addValueEventListener(new ValueEventListener() {
+        mDataRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ListOfClubs listOfClubs = dataSnapshot.getValue(ListOfClubs.class);
@@ -157,7 +159,7 @@ public class UpdateClubProfile extends AppCompatActivity {
         save.setEnabled(true);
         mView.dismiss();
         finish();
-        startActivity(new Intent(UpdateClubProfile.this, ClubProfileActivity.class));
+        Log.d("test6666", "test6");
     }
 
 
@@ -184,6 +186,7 @@ public class UpdateClubProfile extends AppCompatActivity {
     }
 
     private void uploadImageToFirebase() {
+        Log.d("test11111", "test1");
         // Get the data from an ImageView as bytes
         this.imgView.setDrawingCacheEnabled(true);
         this.imgView.buildDrawingCache();
@@ -222,9 +225,10 @@ public class UpdateClubProfile extends AppCompatActivity {
 
                 final ListOfClubs listOfClubs = new ListOfClubs(name, imgUrl, adv, desc, type, myuid, email, category);
 
-                mDataRef3.addValueEventListener(new ValueEventListener() {
+                mDataRef3.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.d("test3333", "test3");
                         for (DataSnapshot postsnap : dataSnapshot.getChildren()){
                             for (DataSnapshot nextsnap : postsnap.getChildren()){
                                 if(nextsnap.child("clubname").getValue(String.class).equals(firebaseAuth.getCurrentUser().getDisplayName())){
@@ -240,9 +244,28 @@ public class UpdateClubProfile extends AppCompatActivity {
                     }
                 });
 
-                mDataRef2.addValueEventListener(new ValueEventListener() {
+                mDataRef4.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot postsnap : dataSnapshot.getChildren()){
+                            for (DataSnapshot nextsnap : postsnap.getChildren()){
+                                if(nextsnap.child("ownerName").getValue(String.class).equals(firebaseAuth.getCurrentUser().getDisplayName())){
+                                    mDataRef4.child(postsnap.getKey()).child(nextsnap.getKey()).child("ownerName").setValue(name);                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+                mDataRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Log.d("test4444", "test4");
                         for (DataSnapshot postsnap : dataSnapshot.getChildren()) {
                             if (postsnap.child("others").getValue(String.class).equals(firebaseAuth.getCurrentUser().getDisplayName())) {
                                 mDataRef2.child(postsnap.getKey()).child("others").setValue(name);
@@ -265,10 +288,11 @@ public class UpdateClubProfile extends AppCompatActivity {
                             @Override
                             public void run() {
                                 mDataRef.setValue(listOfClubs);
-//                                progDialog.dismiss();
+                                Log.d("test222", "test2");
                             }
                         };
                         new Thread(uploadTask).start();
+                        Log.d("test5555", "test5");
                         onSuccessfulSave();
                     }
 

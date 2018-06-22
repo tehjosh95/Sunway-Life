@@ -59,7 +59,7 @@ public class ActivityPosted extends AppCompatActivity {
 
     private ProgressDialog progDialog;
     private FirebaseAuth firebaseAuth;
-    private DatabaseReference mDataRef;
+    private DatabaseReference mDataRef, mDataRef2;
     private FirebaseDatabase mDatabase;
     private TextView textReminder;
     private Button logout;
@@ -88,6 +88,7 @@ public class ActivityPosted extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
 
         mDataRef = firebaseDatabase.getReference().child("Item Information");
+        mDataRef2 = firebaseDatabase.getReference().child("join_event");
 
         recyclerView = findViewById(R.id.rvv);
         toolbar = (Toolbar) findViewById(R.id.toolbarMain);
@@ -171,7 +172,7 @@ public class ActivityPosted extends AppCompatActivity {
                     }
 
                     public void onItemLongPress(View childView, final int position) {
-
+                        final clubModel clubModel1 = clubModelList.get(position);
                         AlertDialog.Builder alertDialog = new AlertDialog.Builder(ActivityPosted.this);
                         alertDialog.setTitle("Delete?");
 
@@ -196,6 +197,7 @@ public class ActivityPosted extends AppCompatActivity {
                                         String getUrl = arrayUrl[position];
                                         storageRef = storage.getReferenceFromUrl(getUrl);
                                         storageRef.delete();
+                                        mDataRef2.child(clubModel1.getParentkey()).removeValue();
                                         dataSnapshot.getRef().child(arrayDelete[arrayPosition[position]]).removeValue();
                                     }
 

@@ -19,6 +19,7 @@
         android:layout_gravity="center"
         android:background="@drawable/buttonstyle"
         android:onClick="showSelectedItems"
+        android:visibility="gone"
         android:text="Filter" />
 
 </LinearLayout>

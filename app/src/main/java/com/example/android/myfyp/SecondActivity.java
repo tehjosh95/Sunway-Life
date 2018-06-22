@@ -68,7 +68,7 @@ public class SecondActivity extends AppCompatActivity {
 
     private ProgressDialog progDialog;
     private FirebaseAuth firebaseAuth;
-    private DatabaseReference mDataRef, mDataRef2, mDataRef3;
+    private DatabaseReference mDataRef, mDataRef2, mDataRef3, mDataRef4;
     private FirebaseDatabase mDatabase;
     private Button logout;
     private String key;
@@ -104,6 +104,7 @@ public class SecondActivity extends AppCompatActivity {
         mDataRef = firebaseDatabase.getReference().child("Item Information");
         mDataRef2 = firebaseDatabase.getReference().child("Clubs");
         mDataRef3 = firebaseDatabase.getReference().child("Users");
+        mDataRef4 = firebaseDatabase.getReference().child("join_event");
 
         recyclerView = findViewById(R.id.rvv);
         toolbar = (Toolbar) findViewById(R.id.toolbarMain);
@@ -161,6 +162,7 @@ public class SecondActivity extends AppCompatActivity {
                                             storageRef = storage.getReferenceFromUrl(getUrl);
                                             storageRef.delete();
                                             dataSnapshot.getRef().child(arrayDelete[position]).removeValue();
+                                            mDataRef4.child(arrayDelete[position]).removeValue();
                                         }
 
                                         @Override
@@ -207,8 +209,8 @@ public class SecondActivity extends AppCompatActivity {
                     PrimaryDrawerItem item2 = new PrimaryDrawerItem().withIdentifier(2).withName("Inbox");
                     PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(3).withName("All Clubs");
                     PrimaryDrawerItem item4 = new PrimaryDrawerItem().withIdentifier(4).withName("Clubs joined");
-                    PrimaryDrawerItem item5 = new PrimaryDrawerItem().withIdentifier(4).withName("Events joined");
-                    PrimaryDrawerItem item6 = new PrimaryDrawerItem().withIdentifier(5).withName("Logout");
+                    PrimaryDrawerItem item5 = new PrimaryDrawerItem().withIdentifier(5).withName("Events joined");
+                    PrimaryDrawerItem item6 = new PrimaryDrawerItem().withIdentifier(6).withName("Logout");
 
                     Drawer result = new DrawerBuilder()
                             .withActivity(SecondActivity.this)

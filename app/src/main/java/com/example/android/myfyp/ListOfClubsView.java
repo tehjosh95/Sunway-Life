@@ -100,7 +100,6 @@ public class ListOfClubsView extends AppCompatActivity {
                 if(dataSnapshot.hasChild(myid)){
                     UserProfile userProfile = dataSnapshot.child(myid).getValue(UserProfile.class);
                     if(!userProfile.getUserType().equals("student")){
-                        EditButton.setVisibility(View.GONE);
                         rate.setVisibility(View.GONE);
                         btnJoin.setVisibility(View.GONE);
                     }
