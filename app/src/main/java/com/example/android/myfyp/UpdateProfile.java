@@ -94,7 +94,7 @@ public class UpdateProfile extends AppCompatActivity {
         mDataRef3 = firebaseDatabase.getReference();
         mDataRef3 = mDataRef3.child("join_list").child("members");
 
-        if(firebaseAuth.getCurrentUser().getUid().equals("XHR842kZD3cTZTwz7nM5LWJESW72")){
+        if(firebaseAuth.getCurrentUser().getUid().equals("zcGqxtICaEgXibH7PjaHTCT4ltK2")){
             edit_user_contact_text_input_layout2.setVisibility(View.GONE);
             edit_user_contact_text_input_layout3.setHint("Description");
             newUserCourse.setLines(4);

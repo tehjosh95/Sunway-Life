@@ -264,8 +264,8 @@ public class RegistrationActivity extends AppCompatActivity {
                                         mDataRef.child("Users").child(firebaseAuth.getCurrentUser().getUid()).setValue(userProfile).addOnCompleteListener(RegistrationActivity.this, new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
-//                                                sendEmailVerification();
-                                                mView.dismiss();
+                                                sendEmailVerification();
+//                                                mView.dismiss();
                                                 firebaseAuth.signOut();
                                                 finish();
                                             }

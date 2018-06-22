@@ -135,7 +135,7 @@ public class SecondActivity extends AppCompatActivity {
                     }
 
                     public void onItemLongPress(View childView, final int position) {
-                        if (firebaseAuth.getCurrentUser().getUid().equals("XHR842kZD3cTZTwz7nM5LWJESW72")) {
+                        if (firebaseAuth.getCurrentUser().getUid().equals("zcGqxtICaEgXibH7PjaHTCT4ltK2")) {
                             final clubModel ClubModel1 = clubModelList.get(position);
                             AlertDialog.Builder alertDialog = new AlertDialog.Builder(SecondActivity.this);
                             alertDialog.setTitle("Delete?");
@@ -189,7 +189,7 @@ public class SecondActivity extends AppCompatActivity {
         mDataRef3.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild(firebaseAuth.getCurrentUser().getUid()) && !firebaseAuth.getCurrentUser().getUid().equals("XHR842kZD3cTZTwz7nM5LWJESW72")) {
+                if (dataSnapshot.hasChild(firebaseAuth.getCurrentUser().getUid()) && !firebaseAuth.getCurrentUser().getUid().equals("zcGqxtICaEgXibH7PjaHTCT4ltK2")) {
                     AccountHeader headerResult = new AccountHeaderBuilder()
                             .withActivity(SecondActivity.this)
                             .withHeaderBackground(R.drawable.header)
@@ -257,7 +257,7 @@ public class SecondActivity extends AppCompatActivity {
                     Log.d("***second", "second");
                     getData();
 
-                } else if (dataSnapshot.hasChild(firebaseAuth.getCurrentUser().getUid()) && firebaseAuth.getCurrentUser().getUid().equals("XHR842kZD3cTZTwz7nM5LWJESW72")) {
+                } else if (dataSnapshot.hasChild(firebaseAuth.getCurrentUser().getUid()) && firebaseAuth.getCurrentUser().getUid().equals("zcGqxtICaEgXibH7PjaHTCT4ltK2")) {
                     Log.d("***second", "second");
 
                     AccountHeader headerResult = new AccountHeaderBuilder()
@@ -429,7 +429,7 @@ public class SecondActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild(firebaseAuth.getCurrentUser().getUid())) {
-                    if (!firebaseAuth.getCurrentUser().getUid().equals("XHR842kZD3cTZTwz7nM5LWJESW72")) {
+                    if (!firebaseAuth.getCurrentUser().getUid().equals("zcGqxtICaEgXibH7PjaHTCT4ltK2")) {
                         fab.setVisibility(View.GONE);
                     } else {
                         fab.setOnClickListener(new View.OnClickListener() {

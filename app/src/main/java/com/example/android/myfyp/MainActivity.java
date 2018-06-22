@@ -103,16 +103,16 @@ public class MainActivity extends AppCompatActivity {
         FirebaseUser firebaseUser = firebaseAuth.getInstance().getCurrentUser();
         Boolean emailflag = firebaseUser.isEmailVerified();
 
-        startActivity(new Intent(MainActivity.this, SecondActivity.class));
-        finish();
+//        startActivity(new Intent(MainActivity.this, SecondActivity.class));
+//        finish();
 
-//        if (emailflag) {
-//            finish();
-//            startActivity(new Intent(MainActivity.this, SecondActivity.class));
-//        } else {
-//            Toast.makeText(this, "Verify your email", Toast.LENGTH_SHORT).show();
-//            firebaseAuth.signOut();
-//        }
+        if (emailflag) {
+            finish();
+            startActivity(new Intent(MainActivity.this, SecondActivity.class));
+        } else {
+            Toast.makeText(this, "Verify your email", Toast.LENGTH_SHORT).show();
+            firebaseAuth.signOut();
+        }
     }
 
 }
