@@ -200,7 +200,6 @@ public class AddClubs extends AppCompatActivity implements OnItemSelectedListene
     }
 
     public void onSuccessfulSave() {
-        Toast.makeText(AddClubs.this, "Successfully uploaded item.", Toast.LENGTH_LONG).show();
         btnUploadItem.setEnabled(true);
         mView.dismiss();
         finish();
@@ -319,14 +318,30 @@ public class AddClubs extends AppCompatActivity implements OnItemSelectedListene
                                 }
                             });
                     uploadImageToFirebase();
-                    firebaseAuth2.signOut();
-                    Toast.makeText(AddClubs.this, "Successfully Registered, Upload complete!", Toast.LENGTH_SHORT).show();
+                    sendEmailVerification();
                 } else {
                     mView.dismiss();
                     Toast.makeText(AddClubs.this, "Registration Failed", Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
+    }
+
+    private void sendEmailVerification() {
+        FirebaseUser firebaseUser = firebaseAuth2.getCurrentUser();
+        if (firebaseUser != null) {
+            firebaseUser.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(AddClubs.this, "Successfully Registered, Verification mail sent!", Toast.LENGTH_SHORT).show();
+                        firebaseAuth2.signOut();
+                        finish();
+                    } else {
+                        Toast.makeText(AddClubs.this, "Verification mail has'nt been sent!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
     }
 }
