@@ -95,7 +95,7 @@ public class list_of_event_club_successful extends AppCompatActivity {
         mSearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String searchText = mSearchField.getText().toString();
+                String searchText = mSearchField.getText().toString().toUpperCase();
 
                 if (searchText.length() > 0) {
                     firebaseUserSearch(searchText);

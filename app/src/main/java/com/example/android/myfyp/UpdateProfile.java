@@ -97,7 +97,6 @@ public class UpdateProfile extends AppCompatActivity {
         if(firebaseAuth.getCurrentUser().getUid().equals("zcGqxtICaEgXibH7PjaHTCT4ltK2")){
             edit_user_contact_text_input_layout2.setVisibility(View.GONE);
             edit_user_contact_text_input_layout3.setHint("Description");
-            newUserCourse.setLines(4);
             edit_user_contact_text_input_layout4.setVisibility(View.GONE);
         }
 

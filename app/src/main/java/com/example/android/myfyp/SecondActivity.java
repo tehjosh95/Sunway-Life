@@ -112,6 +112,13 @@ public class SecondActivity extends AppCompatActivity {
 
         clubModelList = new ArrayList<>();
 
+        fabBGLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                closeFABMenu();
+            }
+        });
+
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(SecondActivity.this, new RecyclerItemClickListener.OnItemClickListener() {
                     public void onItemClick(View view, int position) {

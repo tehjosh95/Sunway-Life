@@ -252,7 +252,7 @@ public class AddClubs extends AppCompatActivity implements OnItemSelectedListene
                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
                 imgUrl = downloadUrl.toString();
 
-                String name = clubName.getText().toString().trim();
+                String name = clubName.getText().toString().trim().toUpperCase();
                 String adv = clubAdvisor.getText().toString().trim();
                 String desc = clubDesc.getText().toString().trim();
                 String emails = clubEmail.getText().toString().trim();
@@ -308,7 +308,7 @@ public class AddClubs extends AppCompatActivity implements OnItemSelectedListene
                     FirebaseUser user = firebaseAuth2.getCurrentUser();
 
                     UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                            .setDisplayName(clubName.getText().toString())
+                            .setDisplayName(clubName.getText().toString().toUpperCase())
                             .build();
 
                     user.updateProfile(profileUpdates)

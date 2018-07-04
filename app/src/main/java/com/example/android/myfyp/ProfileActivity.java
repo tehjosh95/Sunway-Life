@@ -6,6 +6,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -92,8 +93,8 @@ public class ProfileActivity extends AppCompatActivity {
                     if (userProfile.getUserType().equals("admin")) {
                         edit_user_contact_text_input_layout3.setVisibility(View.GONE);
                         edit_user_contact_text_input_layout4.setHint("Description");
-                        editCourse.setLines(4);
                         edit_user_contact_text_input_layout5.setVisibility(View.GONE);
+//                        editCourse.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                     }
                 }
 

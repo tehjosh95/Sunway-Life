@@ -297,7 +297,7 @@ public class EditActivity extends AppCompatActivity {
                 imgUrl = downloadUrl.toString();
                 Log.d("*****url", "" + imgUrl);
 
-                String name = item_name.getText().toString().trim();
+                String name = item_name.getText().toString().trim().toUpperCase();
                 String desc = item_description.getText().toString().trim();
                 String date = item_date.getText().toString().trim();
                 String starttime = item_start_time.getText().toString().trim();

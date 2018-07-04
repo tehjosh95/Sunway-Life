@@ -83,7 +83,7 @@ public class Users extends AppCompatActivity {
         mSearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String searchText = mSearchField.getText().toString();
+                String searchText = mSearchField.getText().toString().toUpperCase();
 
                 if (searchText.length() > 0) {
                     firebaseUserSearch(searchText);

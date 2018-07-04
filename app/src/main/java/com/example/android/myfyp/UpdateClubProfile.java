@@ -212,7 +212,7 @@ public class UpdateClubProfile extends AppCompatActivity {
                 imgUrl = downloadUrl.toString();
                 Log.d("*****url", "" + imgUrl);
 
-                final String name = newUserName.getText().toString();
+                final String name = newUserName.getText().toString().toUpperCase();
                 String adv = newUserAdvisor.getText().toString();
                 String email = newUserEmail.getText().toString();
                 String desc = newUserDesc.getText().toString();

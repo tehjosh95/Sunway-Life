@@ -141,6 +141,7 @@
                 android:id="@+id/edit_user_course"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
                 android:enabled="false"
                 android:hint="Course" />
         </android.support.design.widget.TextInputLayout>

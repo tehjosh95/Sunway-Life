@@ -173,8 +173,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:enabled="false"
-                    android:hint="Club Description"
-                    android:lines="2" />
+                    android:inputType="textMultiLine"
+                    android:hint="Club Description" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.FloatingActionButton

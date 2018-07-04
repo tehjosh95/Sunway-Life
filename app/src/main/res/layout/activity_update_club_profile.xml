@@ -171,8 +171,8 @@
                 android:id="@+id/etDescUpdate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Club Description"
-                android:lines="4" />
+                android:inputType="textMultiLine"
+                android:hint="Club Description" />
         </android.support.design.widget.TextInputLayout>
 
 
